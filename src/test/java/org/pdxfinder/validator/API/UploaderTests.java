@@ -1,5 +1,6 @@
 package org.pdxfinder.validator.API;
 
+import java.io.File;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,29 @@ public class UploaderTests {
         .file(mockMultipartFile))
         .andExpect(ok);
   }
+
+  @Test
+  public void when_postToUploaderNoContent_then_returnNoContent() throws Exception {
+    ResultMatcher noContent = MockMvcResultMatchers.status().isNoContent();
+    MockMultipartFile mockMultipartFile = new MockMultipartFile("file",FILENAME,
+        CONTENT_TYPE, "".getBytes());
+    mockMvc.perform(MockMvcRequestBuilders
+        .multipart(UPLOADER_URL)
+        .file(mockMultipartFile))
+        .andExpect(noContent);
+  }
+
+  @Test
+  public void when_postToUploaderNoContent_then_returnUnsupportedMediaType() throws Exception {
+    ResultMatcher unsupportedMediaType = MockMvcResultMatchers.status().isUnsupportedMediaType();
+    MockMultipartFile mockMultipartFile = new MockMultipartFile("file",FILENAME,
+        "application/json", "test body".getBytes());
+    mockMvc.perform(MockMvcRequestBuilders
+        .multipart(UPLOADER_URL)
+        .file(mockMultipartFile))
+        .andExpect(unsupportedMediaType);
+  }
+
+
 
 }
