@@ -1,35 +1,32 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
+import java.util.List;
+import java.util.Map;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 
-import java.util.List;
-import java.util.Map;
-
 @Component
 public class MissingColumnErrorCreator extends ErrorCreator {
 
-    public List<ValidationError> generateErrors(
-        Map<String, Table> tableSet,
-        TableSetSpecification tableSetSpecification
-    ) {
-        for (ColumnReference required : tableSetSpecification.getRequiredColumns()) {
-            if (tableIsMissingColumn(tableSet, required)) {
-                errors.add(create(required, tableSetSpecification.getProvider()));
-            }
-        }
-
-        return errors;
+  public List<ValidationError> generateErrors(
+      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
+    for (ColumnReference required : tableSetSpecification.getRequiredColumns()) {
+      if (tableIsMissingColumn(tableSet, required)) {
+        errors.add(create(required, tableSetSpecification.getProvider()));
+      }
     }
 
-    private boolean tableIsMissingColumn(Map<String, Table> tableSet, ColumnReference columnReference) {
-        return !tableSet.get(columnReference.table()).columnNames().contains(columnReference.column());
-    }
+    return errors;
+  }
 
-    public MissingColumnError create(ColumnReference columnReference, String provider) {
-        return new MissingColumnError(columnReference, provider);
-    }
+  private boolean tableIsMissingColumn(
+      Map<String, Table> tableSet, ColumnReference columnReference) {
+    return !tableSet.get(columnReference.table()).columnNames().contains(columnReference.column());
+  }
 
+  public MissingColumnError create(ColumnReference columnReference, String provider) {
+    return new MissingColumnError(columnReference, provider);
+  }
 }

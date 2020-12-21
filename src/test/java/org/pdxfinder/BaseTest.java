@@ -8,7 +8,4 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Ignore
-public class BaseTest {
-
-
-}
+public class BaseTest {}

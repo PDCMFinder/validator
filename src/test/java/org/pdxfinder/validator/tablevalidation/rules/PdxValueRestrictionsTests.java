@@ -10,14 +10,14 @@ import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 public class PdxValueRestrictionsTests {
 
   @Test
-  public void UrlSafeRegex_worksAppropriately(){
+  public void UrlSafeRegex_worksAppropriately() {
     String expectedFail = "TEST99";
     String expectedFail2 = " ";
     String expectedFail3 = ".T90-E S_T~";
     String expectedPass = "/T*J+*^|#@";
 
-    Predicate<String> urlSafeRegex = PdxValueRestrictions.getUrlSafeCharset()
-        .getInvalidValuePredicate();
+    Predicate<String> urlSafeRegex =
+        PdxValueRestrictions.getUrlSafeCharset().getInvalidValuePredicate();
 
     Assert.assertFalse(urlSafeRegex.test(expectedFail));
     Assert.assertFalse(urlSafeRegex.test(expectedFail2));
@@ -26,33 +26,35 @@ public class PdxValueRestrictionsTests {
   }
 
   @Test
-  public void given_BlankString_Then_haveDefinedBehavior(){
+  public void given_BlankString_Then_haveDefinedBehavior() {
     String blank = "";
 
-    Predicate<String> urlSafeRegex = PdxValueRestrictions.getUrlSafeCharset()
-        .getInvalidValuePredicate();
+    Predicate<String> urlSafeRegex =
+        PdxValueRestrictions.getUrlSafeCharset().getInvalidValuePredicate();
 
-    Predicate<String> FreeTextRegex = PdxValueRestrictions.getFreeTextCharset()
-        .getInvalidValuePredicate();
+    Predicate<String> FreeTextRegex =
+        PdxValueRestrictions.getFreeTextCharset().getInvalidValuePredicate();
 
     Assert.assertTrue(urlSafeRegex.test(blank));
     Assert.assertTrue(FreeTextRegex.test(blank));
   }
 
-  @Test public void FreeTextRegex_worksAppropriately(){
+  @Test
+  public void FreeTextRegex_worksAppropriately() {
     String expectedFail = "TEST";
     String expectedFail2 = ".', ST";
     String expectedPass = "/T*J+*^|#@";
 
-    Predicate<String> FreeTextRegex = PdxValueRestrictions.getFreeTextCharset()
-        .getInvalidValuePredicate();
+    Predicate<String> FreeTextRegex =
+        PdxValueRestrictions.getFreeTextCharset().getInvalidValuePredicate();
 
     Assert.assertFalse(FreeTextRegex.test(expectedFail));
     Assert.assertFalse(FreeTextRegex.test(expectedFail2));
     Assert.assertTrue(FreeTextRegex.test(expectedPass));
   }
 
-  @Test public void numberRegex_worksAppropriately(){
+  @Test
+  public void numberRegex_worksAppropriately() {
     String expectedFail = "0930934.323";
     String expectedFail2 = "10-20";
     String expectedFail3 = "10,20,30,40";
@@ -60,8 +62,8 @@ public class PdxValueRestrictionsTests {
     String expectedPass2 = "..,9:;_~8-S_T~";
     String expectedPass3 = "/T*J+8*^|#@";
 
-    Predicate<String> numberRegex = PdxValueRestrictions.getNumericalCharset()
-        .getInvalidValuePredicate();
+    Predicate<String> numberRegex =
+        PdxValueRestrictions.getNumericalCharset().getInvalidValuePredicate();
 
     Assert.assertFalse(numberRegex.test(expectedFail));
     Assert.assertFalse(numberRegex.test(expectedFail2));
@@ -71,18 +73,17 @@ public class PdxValueRestrictionsTests {
     Assert.assertTrue(numberRegex.test(expectedPass3));
   }
 
-
-  @Test public void ListToRegex_givenList_regexHasDiscreteCategories(){
-    List<String> categories = Arrays
-        .asList("a", "test", "for", "regex", "categories", "value with space");
+  @Test
+  public void ListToRegex_givenList_regexHasDiscreteCategories() {
+    List<String> categories =
+        Arrays.asList("a", "test", "for", "regex", "categories", "value with space");
     String expectedfail = "test";
     String expectedfail2 = "value with space";
     String expectedpass = "atestfor";
     String expectedpass2 = " regex ";
     String expectedpass3 = "pd'x fi;nder !!?!?!";
-    Predicate<String> categoriesPredicate = ValueRestrictions
-        .of(categories)
-        .getInvalidValuePredicate();
+    Predicate<String> categoriesPredicate =
+        ValueRestrictions.of(categories).getInvalidValuePredicate();
 
     Assert.assertFalse(categoriesPredicate.test(expectedfail));
     Assert.assertFalse(categoriesPredicate.test(expectedfail2));
@@ -91,4 +92,3 @@ public class PdxValueRestrictionsTests {
     Assert.assertTrue(categoriesPredicate.test(expectedpass3));
   }
 }
-

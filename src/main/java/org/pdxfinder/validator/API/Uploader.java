@@ -15,19 +15,14 @@ public class Uploader {
   private static final String EXCEL_CONTENT_TYPE =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-  @PostMapping(path = "upload",consumes = "multipart/form-data")
-  public ResponseEntity<?> upload(
-      @RequestParam("file") MultipartFile multipartFile
-  )
-  {
+  @PostMapping(path = "upload", consumes = "multipart/form-data")
+  public ResponseEntity<?> upload(@RequestParam("file") MultipartFile multipartFile) {
     HttpStatus responseStatus = HttpStatus.OK;
-    if(multipartFile.isEmpty()){
+    if (multipartFile.isEmpty()) {
       responseStatus = HttpStatus.NO_CONTENT;
-    }
-    else if(!multipartFile.getContentType().equals(EXCEL_CONTENT_TYPE)) {
+    } else if (!multipartFile.getContentType().equals(EXCEL_CONTENT_TYPE)) {
       responseStatus = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
-    }
-    else{
+    } else {
       System.out.println(multipartFile.getName());
       System.out.println(multipartFile.getContentType());
     }
