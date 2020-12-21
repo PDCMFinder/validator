@@ -1,0 +1,43 @@
+package org.pdxfinder.validator.API;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+public class UploaderTests {
+
+  private MockMvc mockMvc;
+
+  private static final String UPLOADER_URL = "/validation/upload";
+  private static final String FILENAME = "metadata.xlsx";
+  private static final String CONTENT_TYPE =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+  @Autowired
+  void UploadTests(MockMvc mockMvc){
+    this.mockMvc = mockMvc;
+  }
+
+  @Test
+  public void when_postToUploader_then_returnSuccess() throws Exception {
+    ResultMatcher ok = MockMvcResultMatchers.status().isOk();
+    MockMultipartFile mockMultipartFile = new MockMultipartFile("file",FILENAME,
+        CONTENT_TYPE, "test-data".getBytes());
+    mockMvc.perform(MockMvcRequestBuilders
+        .multipart(UPLOADER_URL)
+        .file(mockMultipartFile))
+        .andExpect(ok);
+  }
+
+}
