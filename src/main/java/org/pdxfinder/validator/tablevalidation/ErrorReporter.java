@@ -1,7 +1,10 @@
 package org.pdxfinder.validator.tablevalidation;
 
+import com.google.gson.Gson;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.pdxfinder.validator.tablevalidation.DTO.ErrorReport;
 import org.pdxfinder.validator.tablevalidation.error.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +12,20 @@ import org.slf4j.LoggerFactory;
 public class ErrorReporter {
 
   private List<ValidationError> errors;
+  private ErrorReport errorReport;
+  private Gson gson;
   private static final Logger log = LoggerFactory.getLogger(ErrorReporter.class);
 
   public ErrorReporter(List<ValidationError> errors) {
     this.errors = errors;
+  }
+
+  public String getJson() {
+    gson = new Gson();
+    errorReport = new ErrorReport();
+    var tableErrors =
+        errors.stream().map(ValidationError::getTableErrors).collect(Collectors.toList());
+    return gson.toJson(tableErrors);
   }
 
   public int count() {
