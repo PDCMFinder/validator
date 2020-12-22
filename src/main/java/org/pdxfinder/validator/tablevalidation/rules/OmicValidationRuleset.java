@@ -115,7 +115,7 @@ public class OmicValidationRuleset extends ValidationRuleCreator {
   }
 
   @Override
-  public TableSetSpecification generate(String provider) {
+  public TableSetSpecification generate() {
     return TableSetSpecification.create();
   }
 

@@ -2,6 +2,7 @@ package org.pdxfinder.validator.tablevalidation.error;
 
 import java.util.Set;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.DTO.TableErrors;
 
 public class DuplicateValueError implements ValidationError {
   private ColumnReference uniqueColumn;
@@ -23,6 +24,11 @@ public class DuplicateValueError implements ValidationError {
     return String.format(
         "Error in [%s] for provider [%s]: Duplicates found in column [%s]: %s",
         uniqueColumn.table(), provider, uniqueColumn.column(), getDuplicateValues());
+  }
+
+  @Override
+  public TableErrors getTableErrors() {
+    return null;
   }
 
   @Override

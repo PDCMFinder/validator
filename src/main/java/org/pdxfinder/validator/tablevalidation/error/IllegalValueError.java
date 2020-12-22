@@ -1,5 +1,6 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
+import org.pdxfinder.validator.tablevalidation.DTO.TableErrors;
 import tech.tablesaw.api.Table;
 
 public class IllegalValueError implements ValidationError {
@@ -29,6 +30,11 @@ public class IllegalValueError implements ValidationError {
   @Override
   public String message() {
     return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
+  }
+
+  @Override
+  public TableErrors getTableErrors() {
+    return null;
   }
 
   @Override

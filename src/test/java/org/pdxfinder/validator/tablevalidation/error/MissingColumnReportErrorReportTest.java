@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 
-public class MissingColumnErrorTest {
+public class MissingColumnReportErrorReportTest {
 
   private MissingColumnErrorCreator missingColumnErrorCreator = new MissingColumnErrorCreator();
   private String PROVIDER = "provider";

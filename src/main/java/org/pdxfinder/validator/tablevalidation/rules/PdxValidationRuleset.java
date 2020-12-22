@@ -46,7 +46,7 @@ public class PdxValidationRuleset extends ValidationRuleCreator {
   }
 
   @Override
-  public TableSetSpecification generate(String provider) {
+  public TableSetSpecification generate() {
     Set<String> metadataTables = getMetadataTables();
     idColumns = matchingColumnsFromAnyTable(metadataColumnReferences, "_id");
     Set<ColumnReference> uniqIdColumns = getUniqueColumns();

@@ -1,5 +1,6 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
+import org.pdxfinder.validator.tablevalidation.DTO.TableErrors;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import tech.tablesaw.api.Table;
 
@@ -33,6 +34,11 @@ public class BrokenRelationError implements ValidationError {
     return String.format(
         "Error in [%s] for provider [%s]: Broken %s relation [%s]: %s",
         tableName, provider, relation.getValidity().name(), relation, description);
+  }
+
+  @Override
+  public TableErrors getTableErrors() {
+    return null;
   }
 
   @Override
