@@ -21,6 +21,11 @@
             <version>0.38.1</version>
         </dependency>
         <dependency>
+            <groupId>tech.tablesaw</groupId>
+            <artifactId>tablesaw-excel</artifactId>
+            <version>0.38.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.11</version>
@@ -84,7 +89,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>11</source>
-                    <target>11</target>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>

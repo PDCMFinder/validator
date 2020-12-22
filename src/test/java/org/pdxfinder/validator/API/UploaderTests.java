@@ -25,19 +25,37 @@ public class UploaderTests {
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
   @Autowired
-  void UploadTests(MockMvc mockMvc){
+  void UploadTests(MockMvc mockMvc) {
     this.mockMvc = mockMvc;
   }
 
   @Test
   public void when_postToUploader_then_returnSuccess() throws Exception {
     ResultMatcher ok = MockMvcResultMatchers.status().isOk();
-    MockMultipartFile mockMultipartFile = new MockMultipartFile("file",FILENAME,
-        CONTENT_TYPE, "test-data".getBytes());
-    mockMvc.perform(MockMvcRequestBuilders
-        .multipart(UPLOADER_URL)
-        .file(mockMultipartFile))
+    MockMultipartFile mockMultipartFile =
+        new MockMultipartFile("file", FILENAME, CONTENT_TYPE, "test-data".getBytes());
+    mockMvc
+        .perform(MockMvcRequestBuilders.multipart(UPLOADER_URL).file(mockMultipartFile))
         .andExpect(ok);
   }
 
+  @Test
+  public void when_postToUploaderNoContent_then_returnNoContent() throws Exception {
+    ResultMatcher noContent = MockMvcResultMatchers.status().isNoContent();
+    MockMultipartFile mockMultipartFile =
+        new MockMultipartFile("file", FILENAME, CONTENT_TYPE, "".getBytes());
+    mockMvc
+        .perform(MockMvcRequestBuilders.multipart(UPLOADER_URL).file(mockMultipartFile))
+        .andExpect(noContent);
+  }
+
+  @Test
+  public void when_postToUploaderNoContent_then_returnUnsupportedMediaType() throws Exception {
+    ResultMatcher unsupportedMediaType = MockMvcResultMatchers.status().isUnsupportedMediaType();
+    MockMultipartFile mockMultipartFile =
+        new MockMultipartFile("file", FILENAME, "application/json", "test body".getBytes());
+    mockMvc
+        .perform(MockMvcRequestBuilders.multipart(UPLOADER_URL).file(mockMultipartFile))
+        .andExpect(unsupportedMediaType);
+  }
 }

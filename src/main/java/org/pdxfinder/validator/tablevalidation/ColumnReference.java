@@ -4,50 +4,47 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ColumnReference {
-    private String tableName;
-    private String columnName;
+  private String tableName;
+  private String columnName;
 
-    private ColumnReference(String tableName, String columnName) {
-        this.tableName = tableName;
-        this.columnName = columnName;
-    }
+  private ColumnReference(String tableName, String columnName) {
+    this.tableName = tableName;
+    this.columnName = columnName;
+  }
 
-    public static ColumnReference of(String tableName, String columnName) {
-        return new ColumnReference(tableName, columnName);
-    }
+  public static ColumnReference of(String tableName, String columnName) {
+    return new ColumnReference(tableName, columnName);
+  }
 
-    public String table() {
-        return this.tableName;
-    }
+  public String table() {
+    return this.tableName;
+  }
 
-    public String column() {
-        return this.columnName;
-    }
+  public String column() {
+    return this.columnName;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+    if (o == null || getClass() != o.getClass()) return false;
 
-        ColumnReference that = (ColumnReference) o;
+    ColumnReference that = (ColumnReference) o;
 
-        return new EqualsBuilder()
-            .append(tableName, that.tableName)
-            .append(columnName, that.columnName)
-            .isEquals();
-    }
+    return new EqualsBuilder()
+        .append(tableName, that.tableName)
+        .append(columnName, that.columnName)
+        .isEquals();
+  }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(tableName)
-            .append(columnName)
-            .toHashCode();
-    }
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37).append(tableName).append(columnName).toHashCode();
+  }
 
-    @Override
-    public String toString() {
-        return String.format("%s > %s", table(), column());
-    }
+  @Override
+  public String toString() {
+    return String.format("%s > %s", table(), column());
+  }
 }
