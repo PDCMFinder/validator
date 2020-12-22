@@ -1,6 +1,5 @@
 package org.pdxfinder.validator.tableSetUtilities;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,10 +72,6 @@ public class TableSetUtilities {
 
   static String substringAfterIfContainsSeparator(String string, String separator) {
     return string.contains(separator) ? StringUtils.substringAfter(string, separator) : string;
-  }
-
-  public static <T> List<T> concatenate(List<T>... lists) {
-    return Stream.of(lists).flatMap(Collection::stream).collect(Collectors.toList());
   }
 
   public static <T> Set<T> concatenate(Set<T>... sets) {
