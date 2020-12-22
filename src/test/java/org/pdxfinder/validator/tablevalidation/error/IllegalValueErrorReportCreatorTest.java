@@ -15,7 +15,7 @@ import org.pdxfinder.validator.tablevalidation.rules.PdxValueRestrictions;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class IllegalValueErrorCreatorTest {
+public class IllegalValueErrorReportCreatorTest {
 
   private IllegalValueErrorCreator illegalValueErrorCreator = new IllegalValueErrorCreator();
   private static final String PROVIDER = "PROVIDER-BC";

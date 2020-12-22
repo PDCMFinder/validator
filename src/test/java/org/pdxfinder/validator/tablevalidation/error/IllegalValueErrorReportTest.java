@@ -7,7 +7,7 @@ import org.junit.Test;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class IllegalValueErrorTest {
+public class IllegalValueErrorReportTest {
   private IllegalValueErrorCreator illegalValueErrorCreator = new IllegalValueErrorCreator();
 
   @Test

@@ -1,6 +1,7 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.DTO.TableErrors;
 import tech.tablesaw.api.Table;
 
 public class EmptyValueError implements ValidationError {
@@ -24,6 +25,11 @@ public class EmptyValueError implements ValidationError {
     return String.format(
         "Error in [%s] for provider [%s]: Missing value(s) in required column [%s]",
         nonEmptyColumn.table(), provider, nonEmptyColumn.column());
+  }
+
+  @Override
+  public TableErrors getTableErrors() {
+    return null;
   }
 
   private Table getInvalidRows() {

@@ -9,7 +9,7 @@ import org.pdxfinder.validator.tablevalidation.Relation;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class BrokenRelationErrorTest {
+public class BrokenRelationErrorReportTest {
   private BrokenRelationErrorCreator brokenTableRelationErrorCreator =
       new BrokenRelationErrorCreator();
 

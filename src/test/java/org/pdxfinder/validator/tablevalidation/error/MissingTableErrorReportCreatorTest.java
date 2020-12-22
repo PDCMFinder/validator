@@ -17,7 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import tech.tablesaw.api.Table;
 
-public class MissingTableErrorCreatorTest {
+public class MissingTableErrorReportCreatorTest {
 
   private Map<String, Table> completeTableSet = new HashMap<>();
   private Map<String, Table> incompleteTableSet = new HashMap<>();

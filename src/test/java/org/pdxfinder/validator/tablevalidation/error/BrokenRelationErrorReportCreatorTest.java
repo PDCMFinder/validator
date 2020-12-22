@@ -18,7 +18,7 @@ import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class BrokenRelationErrorCreatorTest {
+public class BrokenRelationErrorReportCreatorTest {
 
   private BrokenRelationErrorCreator brokenInterTableRelationErrorCreator =
       new BrokenRelationErrorCreator();

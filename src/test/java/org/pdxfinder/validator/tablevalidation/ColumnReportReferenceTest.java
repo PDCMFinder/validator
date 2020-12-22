@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 
-public class ColumnReferenceTest {
+public class ColumnReportReferenceTest {
 
   @Test
   public void getters_givenInstantiation_returnsValues() {
