@@ -45,7 +45,6 @@ public class TableReader {
     pdxTableSet.remove("metadata-checklist.tsv");
     TableSetUtilities.removeDescriptionColumn(pdxTableSet);
     pdxTableSet = TableSetUtilities.removeHeaderRows(pdxTableSet);
-    pdxTableSet = TableSetUtilities.removeBlankRows(pdxTableSet);
     pdxTableSet = TableSetUtilities.cleanValues(pdxTableSet, columnsExceptFromLowercasing);
     return pdxTableSet;
   }

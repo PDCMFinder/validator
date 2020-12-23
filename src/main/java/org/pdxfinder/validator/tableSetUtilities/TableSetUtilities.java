@@ -21,17 +21,6 @@ public class TableSetUtilities {
                 Map.Entry::getKey, e -> TableUtilities.removeHeaderRows(e.getValue(), 4)));
   }
 
-  @Deprecated
-  static Map<String, Table> removeBlankRows(Map<String, Table> tableSet) {
-    return tableSet.entrySet().stream()
-        .collect(
-            Collectors.toMap(
-                Map.Entry::getKey,
-                e ->
-                    TableUtilities.removeRowsMissingRequiredColumnValue(
-                        e.getValue(), e.getValue().column(0).asStringColumn())));
-  }
-
   static Map<String, Table> removeHeaderRowsIfPresent(Map<String, Table> tableSet) {
     return tableSet.entrySet().stream()
         .collect(Collectors.toMap(Map.Entry::getKey, e -> removeHeaderRowsIfPresent(e.getValue())));

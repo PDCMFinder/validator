@@ -6,10 +6,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.Column;
-import tech.tablesaw.selection.Selection;
 
 public final class TableUtilities {
 
@@ -66,16 +64,6 @@ public final class TableUtilities {
 
   private static boolean doesNotHaveEnoughRows(Table table, int numberOfRows) {
     return table.rowCount() <= numberOfRows;
-  }
-
-  public static Table removeRowsMissingRequiredColumnValue(Table table, String requiredColumn) {
-    Selection missing = table.column(requiredColumn).isMissing();
-    return table.dropWhere(missing);
-  }
-
-  public static Table removeRowsMissingRequiredColumnValue(
-      Table table, StringColumn requiredColumn) {
-    return removeRowsMissingRequiredColumnValue(table, requiredColumn.name());
   }
 
   public static Table fromString(String tableName, String... lines) {
