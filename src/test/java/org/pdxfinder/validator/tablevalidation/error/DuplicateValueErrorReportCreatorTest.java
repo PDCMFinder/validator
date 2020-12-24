@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import tech.tablesaw.api.StringColumn;
@@ -83,7 +84,8 @@ public class DuplicateValueErrorReportCreatorTest {
 
     Set<String> duplicateValue = Stream.of("1").collect(Collectors.toSet());
     List<ValidationError> expected =
-        Arrays.asList(duplicateValueErrorCreator.create(uniqueCol, duplicateValue, PROVIDER));
+        Arrays.asList(duplicateValueErrorCreator.create(uniqueCol, duplicateValue, PROVIDER)
+            .getValidationError());
 
     assertEquals(
         expected.toString(),

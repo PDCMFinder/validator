@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
@@ -59,7 +60,8 @@ public class MissingColumnReportErrorReportCreatorTest {
       checkAllRequiredColsPresent_givenMissingColumnDefinedInColSpec_addsMissingColErrorTotErrorList() {
     ColumnReference missing = ColumnReference.of(TABLE_1, "missing_column");
     List<ValidationError> expected =
-        Collections.singletonList(missingColumnErrorCreator.create(missing, PROVIDER));
+        Collections.singletonList(
+            missingColumnErrorCreator.create(missing, PROVIDER).getValidationError());
     TableSetSpecification tableSetSpecification =
         TableSetSpecification.create().setProvider(PROVIDER).addRequiredColumns(missing);
 

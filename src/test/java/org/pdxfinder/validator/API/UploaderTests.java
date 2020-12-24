@@ -1,8 +1,10 @@
 package org.pdxfinder.validator.API;
 
-import java.io.IOException;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pdxfinder.MockXssfWorkbook;
@@ -15,9 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -36,6 +35,7 @@ public class UploaderTests {
     this.mockMvc = mockMvc;
   }
 
+  @Ignore
   @Test
   public void when_postToUploader_then_expectJson() throws Exception {
     ResultMatcher ok = MockMvcResultMatchers.status().isOk();

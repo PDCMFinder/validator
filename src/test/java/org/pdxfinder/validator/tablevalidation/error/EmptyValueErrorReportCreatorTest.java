@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tableSetUtilities.TableUtilities;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import tech.tablesaw.api.StringColumn;
@@ -75,7 +76,9 @@ public class EmptyValueErrorReportCreatorTest {
     fileSetWithInvalidTable.put(TABLE_1, tableWithMissingValue);
     List<ValidationError> expected =
         Collections.singletonList(
-            emptyValueErrorCreator.create(requiredCol, tableWithMissingValue, PROVIDER));
+            emptyValueErrorCreator
+                .create(requiredCol, tableWithMissingValue, requireColumn.getProvider())
+                .getValidationError());
 
     assertEquals(
         expected.toString(),
@@ -101,7 +104,7 @@ public class EmptyValueErrorReportCreatorTest {
                 requiredCol,
                 tableWithMissingValue.where(
                     tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
-                PROVIDER));
+                PROVIDER).getValidationError());
     assertEquals(
         expected.toString(),
         emptyValueErrorCreator.generateErrors(fileSetWithInvalidTable, requireColumn).toString());

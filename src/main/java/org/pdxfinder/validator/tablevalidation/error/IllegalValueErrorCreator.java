@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.slf4j.Logger;
@@ -33,8 +34,13 @@ public class IllegalValueErrorCreator extends ErrorCreator {
   }
 
   public IllegalValueError create(
-      String tableName, String errorDescription, Table invalidRows, String provider) {
-    return new IllegalValueError(tableName, errorDescription, invalidRows, provider);
+      String tableName,
+      String errorDescription,
+      String columnName,
+      Table invalidRows,
+      String provider) {
+    return new IllegalValueError(tableName, errorDescription, columnName, invalidRows, provider);
+
   }
 
   private void reportIllegalValue(
@@ -74,8 +80,7 @@ public class IllegalValueErrorCreator extends ErrorCreator {
 
     if (!invalidValues.isEmpty()) {
       String errorDescriptions =
-          String.format(
-              "in column [%s] found %s values %s : %s",
+          IllegalValueError.buildDescription(
               columnReference.column(),
               invalidValues.size(),
               valueRestrictions.getErrorDescription(),
@@ -83,9 +88,10 @@ public class IllegalValueErrorCreator extends ErrorCreator {
       errors.add(
           create(
               columnReference.table(),
+              columnReference.column(),
               errorDescriptions,
               workingTable.rows(indexOfInvalids),
-              provider));
+              provider).getValidationError());
     }
   }
 

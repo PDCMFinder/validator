@@ -2,6 +2,8 @@ package org.pdxfinder.validator.tablevalidation.DTO;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ValidationError {
 
@@ -40,4 +42,32 @@ public class ValidationError {
   public void setTableName(String tableName) {
     this.tableName = tableName;
   }
+
+
+  @Override
+  public boolean equals(Object o) {
+
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof ValidationError)) {
+      return false;
+    }
+    ValidationError validationError = (ValidationError) o;
+
+    return new EqualsBuilder()
+        .append("message", tableReport.getColumnReport().getMessage())
+        .append("columName", tableReport.getColumnReport().getMessage())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(tableReport.getColumnReport().getMessage())
+        .append(tableReport.getColumnReport().getMessage())
+        .toHashCode();
+  }
+
+
 }

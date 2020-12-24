@@ -1,21 +1,28 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
-import org.pdxfinder.validator.tablevalidation.DTO.TableErrors;
 import tech.tablesaw.api.Table;
 
-public class IllegalValueError implements ValidationError {
+public class IllegalValueError extends ValidationErrorBuilder {
 
-  private String tableName;
-  private String description;
-  private String provider;
+  private String errorType = "illegal Value";
+  private String message;
   private Table invalidRows;
 
   public IllegalValueError(
-      String tableName, String description, Table invalidRows, String provider) {
-    this.tableName = tableName;
-    this.description = description;
+      String tableName, String description, String columnName, Table invalidRows, String provider) {
+    super.buildValidationErrors(errorType, tableName, description, columnName);
+    this.message = buildMessage(tableName, provider, description);
     this.invalidRows = invalidRows;
-    this.provider = provider;
+  }
+
+  static String buildDescription(
+      String column, int count, String errorDescription, String invalidValues) {
+    return String.format(
+        "in column [%s] found %s values %s : %s", column, count, errorDescription, invalidValues);
+  }
+
+  private String buildMessage(String tableName, String provider, String description) {
+    return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
   }
 
   private Table getInvalidRows() {
@@ -29,12 +36,7 @@ public class IllegalValueError implements ValidationError {
 
   @Override
   public String message() {
-    return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
-  }
-
-  @Override
-  public TableErrors getTableErrors() {
-    return null;
+    return message;
   }
 
   @Override

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
+import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.error.BrokenRelationErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.DuplicateValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.EmptyValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.IllegalValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.MissingColumnErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.MissingTableErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -50,13 +50,13 @@ public class Validator {
   }
 
   private boolean thereAreErrors(
-      List<ValidationError> validationErrors, TableSetSpecification tableSetSpecification) {
-    if (CollectionUtils.isNotEmpty(validationErrors)) {
+      List<ValidationError> ValidationErrors, TableSetSpecification tableSetSpecification) {
+    if (CollectionUtils.isNotEmpty(ValidationErrors)) {
       log.error(
           "Not all required tables where present for {}. Aborting further validation",
           tableSetSpecification.getProvider());
     }
-    return CollectionUtils.isNotEmpty(validationErrors);
+    return CollectionUtils.isNotEmpty(ValidationErrors);
   }
 
   private void checkRequiredTablesPresent(
@@ -106,12 +106,15 @@ public class Validator {
     return this.validationErrors;
   }
 
-  public static void reportAnyErrors(List<ValidationError> validationErrors) {
-    if (CollectionUtils.isNotEmpty(validationErrors))
-      for (ValidationError error : validationErrors) {
-        log.error(error.message());
+  public static void reportAnyErrors(List<ValidationError> tableReports) {
+    if (CollectionUtils.isNotEmpty(tableReports)) {
+      for (ValidationError error : tableReports) {
+        String message = error.getTableReport().getColumnReport().getMessage();
+        log.error(message);
       }
-    else log.info("There were no validation errors raised, great!");
+    } else {
+      log.info("There were no validation errors raised, great!");
+    }
   }
 
   public void resetErrors() {

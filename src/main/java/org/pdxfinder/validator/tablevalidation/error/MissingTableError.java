@@ -1,25 +1,33 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
-import org.pdxfinder.validator.tablevalidation.DTO.TableErrors;
+public class MissingTableError extends ValidationErrorBuilder {
 
-public class MissingTableError implements ValidationError {
-  private String tableName;
-  private String provider;
+  private String errorType = "missing table";
+  private String description;
+  private String message;
 
   MissingTableError(String tableName, String provider) {
-    this.tableName = tableName;
-    this.provider = provider;
+    this.description = buildDescription(tableName);
+    this.message = buildMessage(tableName, provider, description);
+    super.buildValidationErrors(errorType, tableName, description, "whole table error");
+  }
+
+  static String buildDescription(String tableName) {
+    return String.format("Missing required table: [%s]", tableName);
+  }
+
+  static String buildMessage(String tableName, String provider, String description) {
+    return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
   }
 
   @Override
   public String message() {
-    return String.format(
-        "Error in [%s] for provider [%s]: Missing required table", tableName, provider);
+    return message;
   }
 
   @Override
-  public TableErrors getTableErrors() {
-    return null;
+  String verboseMessage() {
+    return message;
   }
 
   @Override

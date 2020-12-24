@@ -12,13 +12,14 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.Relation.ValidityType;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class BrokenRelationErrorReportCreatorTest {
+public class BrokenRelationReportErrorCreatorTest {
 
   private BrokenRelationErrorCreator brokenInterTableRelationErrorCreator =
       new BrokenRelationErrorCreator();
@@ -157,13 +158,13 @@ public class BrokenRelationErrorReportCreatorTest {
     Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
     tableSetWithSimpleJoin.get(LEFT_TABLE).removeColumns("id");
 
-    BrokenRelationError expected =
+    ValidationError expected =
         brokenInterTableRelationErrorCreator.create(
             LEFT_TABLE,
             INTER_TABLE_RELATION,
             tableSetWithSimpleJoin.get(LEFT_TABLE).emptyCopy(),
             String.format("because [%s] is missing column [%s]", LEFT_TABLE, "id"),
-            PROVIDER);
+            PROVIDER).getValidationError();
 
     assertEquals(
         Collections.singletonList(expected).toString(),
@@ -177,13 +178,13 @@ public class BrokenRelationErrorReportCreatorTest {
     Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
     tableSetWithSimpleJoin.get(RIGHT_TABLE).removeColumns("table_1_id");
 
-    BrokenRelationError expected =
+    ValidationError expected =
         brokenInterTableRelationErrorCreator.create(
             RIGHT_TABLE,
             INTER_TABLE_RELATION,
             tableSetWithSimpleJoin.get(RIGHT_TABLE).emptyCopy(),
             String.format("because [%s] is missing column [%s]", RIGHT_TABLE, "table_1_id"),
-            PROVIDER);
+            PROVIDER).getValidationError();
 
     assertEquals(
         Collections.singletonList(expected).toString(),
@@ -198,13 +199,13 @@ public class BrokenRelationErrorReportCreatorTest {
     tableSetWithSimpleJoin
         .get(RIGHT_TABLE)
         .replaceColumn(StringColumn.create("table_1_id", Collections.EMPTY_LIST));
-    BrokenRelationError expected =
+    ValidationError expected =
         brokenInterTableRelationErrorCreator.create(
             RIGHT_TABLE,
             INTER_TABLE_RELATION,
             tableSetWithSimpleJoin.get(LEFT_TABLE),
             String.format("1 orphan row(s) found in [%s]", LEFT_TABLE),
-            PROVIDER);
+            PROVIDER).getValidationError();
 
     assertEquals(
         Collections.singletonList(expected).toString(),
@@ -219,13 +220,13 @@ public class BrokenRelationErrorReportCreatorTest {
     tableSetWithSimpleJoin
         .get(LEFT_TABLE)
         .replaceColumn(StringColumn.create("id", Collections.EMPTY_LIST));
-    BrokenRelationError expected =
+    ValidationError expected =
         brokenInterTableRelationErrorCreator.create(
             LEFT_TABLE,
             INTER_TABLE_RELATION,
             tableSetWithSimpleJoin.get(RIGHT_TABLE),
             String.format("1 orphan row(s) found in [%s]", RIGHT_TABLE),
-            PROVIDER);
+            PROVIDER).getValidationError();
 
     assertEquals(
         Collections.singletonList(expected).toString(),
@@ -248,13 +249,14 @@ public class BrokenRelationErrorReportCreatorTest {
                 INTER_TABLE_RELATION,
                 tableSetWithSimpleJoin.get(LEFT_TABLE),
                 String.format("1 orphan row(s) found in [%s]", LEFT_TABLE),
-                PROVIDER),
+                PROVIDER).getValidationError(),
             brokenInterTableRelationErrorCreator.create(
                 LEFT_TABLE,
                 INTER_TABLE_RELATION,
                 tableSetWithSimpleJoin.get(RIGHT_TABLE),
                 String.format("2 orphan row(s) found in [%s]", RIGHT_TABLE),
-                PROVIDER));
+                PROVIDER).getValidationError()
+        );
 
     assertEquals(
         expected.toString(),

@@ -3,6 +3,7 @@ package org.pdxfinder.validator.tablevalidation.error;
 import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
@@ -15,11 +16,9 @@ public class EmptyValueErrorCreator extends ErrorCreator {
     for (ColumnReference tested : tableSetSpecification.getNonEmptyColumns()) {
       Table table = tableSet.get(tested.table());
       Table missing = table.where(table.column(tested.column()).isMissing());
-      Table blankColumns =
-          table.where(table.column(tested.column()).asStringColumn().isEmptyString());
-
       if (missing.rowCount() > 0) {
-        errors.add(create(tested, missing, tableSetSpecification.getProvider()));
+        errors
+            .add(create(tested, missing, tableSetSpecification.getProvider()).getValidationError());
       }
     }
     return errors;
