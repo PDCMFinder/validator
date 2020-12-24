@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tableSetUtilities;
+package org.pdxfinder.validator.tablesetutilities;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.pdxfinder.MockXssfWorkbook;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
@@ -19,8 +17,6 @@ public class TableReaderTests {
 
   private static final int SHEET_COUNT = 5;
   private FileInputStream fileInputStream;
-
-  @Rule public TemporaryFolder tmpFolder = new TemporaryFolder();
 
   @Before
   public void buildWorkbookStream() throws IOException {

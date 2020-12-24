@@ -7,7 +7,8 @@ import org.pdxfinder.validator.tablevalidation.ColumnReference;
 
 public class PdxTableColumns {
 
-  private PdxTableColumns() {};
+  private PdxTableColumns() {
+  }
 
   public static Set<ColumnReference> getMetadataColumns() {
     Set<ColumnReference> tableColumns = new HashSet<>();

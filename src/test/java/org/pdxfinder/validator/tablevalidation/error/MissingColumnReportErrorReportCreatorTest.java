@@ -15,8 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 

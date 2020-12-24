@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.DTO;
+package org.pdxfinder.validator.tablevalidation.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

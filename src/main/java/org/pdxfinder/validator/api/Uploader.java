@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.API;
+package org.pdxfinder.validator.api;
 
 import org.pdxfinder.validator.ValidatorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,10 @@ public class Uploader {
       path = "upload",
       consumes = "multipart/form-data",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> upload(@RequestParam("file") MultipartFile multipartFile) {
+  public ResponseEntity<String> upload(@RequestParam("file") MultipartFile multipartFile) {
     HttpStatus responseStatus = HttpStatus.OK;
     String entity = "{ \"Error\" : \"HttpStatus Error\" }";
-    if (multipartFile.isEmpty()) {
+    if (multipartFile.isEmpty() || multipartFile.getContentType() == null) {
       responseStatus = HttpStatus.NO_CONTENT;
     } else if (!multipartFile.getContentType().equals(EXCEL_CONTENT_TYPE)) {
       responseStatus = HttpStatus.UNSUPPORTED_MEDIA_TYPE;

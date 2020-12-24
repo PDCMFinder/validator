@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
-import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.error.BrokenRelationErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.DuplicateValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.EmptyValueErrorCreator;
@@ -50,13 +50,13 @@ public class Validator {
   }
 
   private boolean thereAreErrors(
-      List<ValidationError> ValidationErrors, TableSetSpecification tableSetSpecification) {
-    if (CollectionUtils.isNotEmpty(ValidationErrors)) {
+      List<ValidationError> validationErrors, TableSetSpecification tableSetSpecification) {
+    if (CollectionUtils.isNotEmpty(validationErrors)) {
       log.error(
           "Not all required tables where present for {}. Aborting further validation",
           tableSetSpecification.getProvider());
     }
-    return CollectionUtils.isNotEmpty(ValidationErrors);
+    return CollectionUtils.isNotEmpty(validationErrors);
   }
 
   private void checkRequiredTablesPresent(

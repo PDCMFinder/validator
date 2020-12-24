@@ -8,9 +8,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import tech.tablesaw.api.Table;
 @Component
 public class IllegalValueErrorCreator extends ErrorCreator {
 
-  private static final Logger log = LoggerFactory.getLogger(IllegalValueError.class);
+  private static final Logger log = LoggerFactory.getLogger(IllegalValueErrorCreator.class);
 
   public List<ValidationError> generateErrors(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {

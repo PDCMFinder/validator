@@ -17,8 +17,7 @@ public class DuplicateValueError extends ValidationErrorBuilder {
   }
 
   public String buildDescription(String columName, String duplicateValues) {
-    return description =
-        String.format("Duplicates found in column [%s]: %s", columName, duplicateValues);
+    return String.format("Duplicates found in column [%s]: %s", columName, duplicateValues);
   }
 
   private String buildMessage(String table, String provider, String description) {

@@ -19,7 +19,7 @@ public class EmptyValueError extends ValidationErrorBuilder {
   }
 
   private String buildDescription(String columName) {
-    return description = String.format("Missing value(s) in required column [%s]", columName);
+    return String.format("Missing value(s) in required column [%s]", columName);
   }
 
   private String buildMessage(String table, String provider, String description) {

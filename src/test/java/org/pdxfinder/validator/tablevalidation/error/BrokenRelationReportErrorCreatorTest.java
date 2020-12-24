@@ -12,10 +12,10 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.Relation.ValidityType;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
@@ -66,7 +66,7 @@ public class BrokenRelationReportErrorCreatorTest {
   private final TableSetSpecification ONE_TO_ONE_SPECIFICATION =
       TableSetSpecification.create().setProvider(PROVIDER).addRelations(INTRA_TABLE_ONE_TO_ONE);
 
-  @Test(expected = Test.None.class)
+  @Test
   public void checkRelationsValid_givenNoRightTable_noExceptionThrown() {
     Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
     tableSetWithSimpleJoin.put(RIGHT_TABLE, null);
@@ -77,7 +77,7 @@ public class BrokenRelationReportErrorCreatorTest {
         is(true));
   }
 
-  @Test(expected = Test.None.class)
+  @Test
   public void checkRelationsValid_givenNoLeftTable_noExceptionThrown() {
     Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
     tableSetWithSimpleJoin.put(LEFT_TABLE, null);
@@ -88,7 +88,7 @@ public class BrokenRelationReportErrorCreatorTest {
         is(true));
   }
 
-  @Test(expected = Test.None.class)
+  @Test
   public void oneToManyNoError_givenValidOneToManyJoin_emptyErrorList() {
     Table leftTable =
         Table.create(LEFT_TABLE)
@@ -104,7 +104,7 @@ public class BrokenRelationReportErrorCreatorTest {
         is(true));
   }
 
-  @Test(expected = Test.None.class)
+  @Test
   public void oneToManyError_givenInvalidValidOneToManyJoin_hasErrorEntry() {
     Table leftTable =
         Table.create(LEFT_TABLE)
@@ -120,7 +120,7 @@ public class BrokenRelationReportErrorCreatorTest {
         is(false));
   }
 
-  @Test(expected = Test.None.class)
+  @Test
   public void oneToOne_givenValidPairOfColumns_hasNoErrorEntry() {
     Table leftTable =
         Table.create(LEFT_TABLE)
@@ -136,7 +136,7 @@ public class BrokenRelationReportErrorCreatorTest {
         is(true));
   }
 
-  @Test(expected = Test.None.class)
+  @Test
   public void oneToOneErro_givenInvalidPairOfColumns_hasErrorEntry() {
     Table leftTable =
         Table.create(LEFT_TABLE)

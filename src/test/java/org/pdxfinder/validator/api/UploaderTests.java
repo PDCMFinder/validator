@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.API;
+package org.pdxfinder.validator.api;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 

@@ -3,8 +3,8 @@ package org.pdxfinder.validator.tablevalidation.error;
 import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 

@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tableSetUtilities;
+package org.pdxfinder.validator.tablesetutilities;
 
 import java.util.List;
 import java.util.Map;

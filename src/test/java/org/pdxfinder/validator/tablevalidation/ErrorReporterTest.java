@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.error.EmptyValueErrorCreator;
 import tech.tablesaw.api.Table;
 

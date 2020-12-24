@@ -1,8 +1,8 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
-import org.pdxfinder.validator.tablevalidation.DTO.ColumnReport;
-import org.pdxfinder.validator.tablevalidation.DTO.TableReport;
-import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
+import org.pdxfinder.validator.tablevalidation.dto.ColumnReport;
+import org.pdxfinder.validator.tablevalidation.dto.TableReport;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 
 public abstract class ValidationErrorBuilder {
 
@@ -14,16 +14,16 @@ public abstract class ValidationErrorBuilder {
 
   void buildValidationErrors(
       String type, String tableName, String description, String columnDescription) {
-    var validationError = new ValidationError();
+    var error = new ValidationError();
     var tableReport = new TableReport();
     var columnReport = new ColumnReport();
     columnReport.setMessage(description);
     columnReport.setColumnName(columnDescription);
     tableReport.setColumnReport(columnReport);
-    validationError.setTableReport(tableReport);
-    validationError.setType(type);
-    validationError.setTableName(tableName);
-    this.validationError = validationError;
+    error.setTableReport(tableReport);
+    error.setType(type);
+    error.setTableName(tableName);
+    this.validationError = error;
   }
 
   public ValidationError getValidationError() {

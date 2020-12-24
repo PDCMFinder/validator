@@ -12,10 +12,10 @@ import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.Relation.ValidityType;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -144,8 +144,11 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
       int[] invalidRows = unboxSet(getIndexOfDuplicatedColumnValues(oneRestrictedColumn));
       String description =
           String.format(
-              "in [%s] one-to-many relationship [] found %s relationships with conflicts %s",
-              leftColumn.table(), relation, listOfBrokenPairs.size(), listOfBrokenPairs.toString());
+              "in [%s] %s relationship found %s relationships with conflicts %s",
+              leftColumn.table(),
+              relation.getValidity().name(),
+              listOfBrokenPairs.size(),
+              listOfBrokenPairs.toString());
       errors.add(
           create(
               leftColumn.table(),

@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.DTO;
+package org.pdxfinder.validator.tablevalidation.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -52,7 +52,6 @@ public class ValidationError {
     if (!(o instanceof ValidationError)) {
       return false;
     }
-    ValidationError validationError = (ValidationError) o;
 
     return new EqualsBuilder()
         .append("message", tableReport.getColumnReport().getMessage())

@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.pdxfinder.validator.tableSetUtilities.TableSetUtilities;
+import org.pdxfinder.validator.tablesetutilities.TableSetUtilities;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.Relation.ValidityType;
