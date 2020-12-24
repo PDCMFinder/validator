@@ -84,8 +84,10 @@ public class DuplicateValueErrorReportCreatorTest {
 
     Set<String> duplicateValue = Stream.of("1").collect(Collectors.toSet());
     List<ValidationError> expected =
-        Arrays.asList(duplicateValueErrorCreator.create(uniqueCol, duplicateValue, PROVIDER)
-            .getValidationError());
+        Arrays.asList(
+            duplicateValueErrorCreator
+                .create(uniqueCol, duplicateValue, PROVIDER)
+                .getValidationError());
 
     assertEquals(
         expected.toString(),

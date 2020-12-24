@@ -111,8 +111,6 @@ public class TableUtilitiesTest {
     assertEquals(expected.toString(), removeHeaderRows(table, 4).toString());
   }
 
- 
-
   @Test
   public void fromString_createTableWithOneColumn_matchesTableSawConstruction() {
     Table table = fromString("table_name", "column_1", "value_1");

@@ -87,7 +87,8 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               relation,
               workingTable.rows(indexOfDuplicates),
               description,
-              provider).getValidationError());
+              provider)
+              .getValidationError());
     }
   }
 
@@ -147,7 +148,11 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               leftColumn.table(), relation, listOfBrokenPairs.size(), listOfBrokenPairs.toString());
       errors.add(
           create(
-              leftColumn.table(), relation, workingTable.rows(invalidRows), description, provider)
+              leftColumn.table(),
+              relation,
+              workingTable.rows(invalidRows),
+              description,
+              provider)
               .getValidationError());
     }
   }
@@ -165,7 +170,8 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               String.format(
                   "because [%s] is missing column [%s]",
                   relation.leftTable(), relation.leftColumn()),
-              provider).getValidationError());
+              provider)
+              .getValidationError());
     }
     if (missingRightColumn(tableSet, relation)) {
       errors.add(
@@ -176,7 +182,8 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               String.format(
                   "because [%s] is missing column [%s]",
                   relation.rightTable(), relation.rightColumn()),
-              provider).getValidationError());
+              provider)
+              .getValidationError());
     }
   }
 
@@ -197,8 +204,9 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     if (orphanTable.rowCount() > 0) {
       String description =
           String.format("%s orphan row(s) found in [%s]", orphanTable.rowCount(), child.table());
-      errors.add(create(parent.table(), relation, orphanTable, description, provider)
-          .getValidationError());
+      errors.add(
+          create(parent.table(), relation, orphanTable, description, provider)
+              .getValidationError());
     }
   }
 

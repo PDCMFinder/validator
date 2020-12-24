@@ -17,9 +17,10 @@ public class ErrorReporterTest {
   public void truncate_givenTwoErrorsAndLimitToOne_returnsOneError() {
     int limit = 1;
     List<ValidationError> errors = new ArrayList<>();
-   ValidationError error =
-        emptyValueErrorCreator.create(
-            ColumnReference.of("table", "column"), Table.create(), "Provider").getValidationError();
+    ValidationError error =
+        emptyValueErrorCreator
+            .create(ColumnReference.of("table", "column"), Table.create(), "Provider")
+            .getValidationError();
     errors.add(error);
     errors.add(error);
 
@@ -32,8 +33,9 @@ public class ErrorReporterTest {
     int limit = 5;
     List<ValidationError> errors = new ArrayList<>();
     ValidationError error =
-        emptyValueErrorCreator.create(
-            ColumnReference.of("table", "column"), Table.create(), "Provider").getValidationError();
+        emptyValueErrorCreator
+            .create(ColumnReference.of("table", "column"), Table.create(), "Provider")
+            .getValidationError();
     errors.add(error);
 
     ErrorReporter errorReporter = new ErrorReporter(errors).truncate(limit);

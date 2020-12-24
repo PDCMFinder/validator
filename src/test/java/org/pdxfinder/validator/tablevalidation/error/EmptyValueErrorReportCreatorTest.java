@@ -100,11 +100,13 @@ public class EmptyValueErrorReportCreatorTest {
 
     List<ValidationError> expected =
         Collections.singletonList(
-            emptyValueErrorCreator.create(
-                requiredCol,
-                tableWithMissingValue.where(
-                    tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
-                PROVIDER).getValidationError());
+            emptyValueErrorCreator
+                .create(
+                    requiredCol,
+                    tableWithMissingValue.where(
+                        tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
+                    PROVIDER)
+                .getValidationError());
     assertEquals(
         expected.toString(),
         emptyValueErrorCreator.generateErrors(fileSetWithInvalidTable, requireColumn).toString());

@@ -11,7 +11,10 @@ public class BrokenRelationError extends ValidationErrorBuilder {
   private Table invalidRows;
 
   public BrokenRelationError(
-      String tableName, Relation relation, Table invalidRows, String additionalDescription,
+      String tableName,
+      Relation relation,
+      Table invalidRows,
+      String additionalDescription,
       String provider) {
     this.description = buildDescription(relation, additionalDescription);
     this.message = buildMessage(tableName, provider, description);

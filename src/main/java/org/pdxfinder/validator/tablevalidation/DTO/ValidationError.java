@@ -43,7 +43,6 @@ public class ValidationError {
     this.tableName = tableName;
   }
 
-
   @Override
   public boolean equals(Object o) {
 
@@ -68,6 +67,4 @@ public class ValidationError {
         .append(tableReport.getColumnReport().getMessage())
         .toHashCode();
   }
-
-
 }

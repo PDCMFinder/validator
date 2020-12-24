@@ -159,12 +159,14 @@ public class BrokenRelationReportErrorCreatorTest {
     tableSetWithSimpleJoin.get(LEFT_TABLE).removeColumns("id");
 
     ValidationError expected =
-        brokenInterTableRelationErrorCreator.create(
-            LEFT_TABLE,
-            INTER_TABLE_RELATION,
-            tableSetWithSimpleJoin.get(LEFT_TABLE).emptyCopy(),
-            String.format("because [%s] is missing column [%s]", LEFT_TABLE, "id"),
-            PROVIDER).getValidationError();
+        brokenInterTableRelationErrorCreator
+            .create(
+                LEFT_TABLE,
+                INTER_TABLE_RELATION,
+                tableSetWithSimpleJoin.get(LEFT_TABLE).emptyCopy(),
+                String.format("because [%s] is missing column [%s]", LEFT_TABLE, "id"),
+                PROVIDER)
+            .getValidationError();
 
     assertEquals(
         Collections.singletonList(expected).toString(),
@@ -179,12 +181,14 @@ public class BrokenRelationReportErrorCreatorTest {
     tableSetWithSimpleJoin.get(RIGHT_TABLE).removeColumns("table_1_id");
 
     ValidationError expected =
-        brokenInterTableRelationErrorCreator.create(
-            RIGHT_TABLE,
-            INTER_TABLE_RELATION,
-            tableSetWithSimpleJoin.get(RIGHT_TABLE).emptyCopy(),
-            String.format("because [%s] is missing column [%s]", RIGHT_TABLE, "table_1_id"),
-            PROVIDER).getValidationError();
+        brokenInterTableRelationErrorCreator
+            .create(
+                RIGHT_TABLE,
+                INTER_TABLE_RELATION,
+                tableSetWithSimpleJoin.get(RIGHT_TABLE).emptyCopy(),
+                String.format("because [%s] is missing column [%s]", RIGHT_TABLE, "table_1_id"),
+                PROVIDER)
+            .getValidationError();
 
     assertEquals(
         Collections.singletonList(expected).toString(),
@@ -200,12 +204,14 @@ public class BrokenRelationReportErrorCreatorTest {
         .get(RIGHT_TABLE)
         .replaceColumn(StringColumn.create("table_1_id", Collections.EMPTY_LIST));
     ValidationError expected =
-        brokenInterTableRelationErrorCreator.create(
-            RIGHT_TABLE,
-            INTER_TABLE_RELATION,
-            tableSetWithSimpleJoin.get(LEFT_TABLE),
-            String.format("1 orphan row(s) found in [%s]", LEFT_TABLE),
-            PROVIDER).getValidationError();
+        brokenInterTableRelationErrorCreator
+            .create(
+                RIGHT_TABLE,
+                INTER_TABLE_RELATION,
+                tableSetWithSimpleJoin.get(LEFT_TABLE),
+                String.format("1 orphan row(s) found in [%s]", LEFT_TABLE),
+                PROVIDER)
+            .getValidationError();
 
     assertEquals(
         Collections.singletonList(expected).toString(),
@@ -221,12 +227,14 @@ public class BrokenRelationReportErrorCreatorTest {
         .get(LEFT_TABLE)
         .replaceColumn(StringColumn.create("id", Collections.EMPTY_LIST));
     ValidationError expected =
-        brokenInterTableRelationErrorCreator.create(
-            LEFT_TABLE,
-            INTER_TABLE_RELATION,
-            tableSetWithSimpleJoin.get(RIGHT_TABLE),
-            String.format("1 orphan row(s) found in [%s]", RIGHT_TABLE),
-            PROVIDER).getValidationError();
+        brokenInterTableRelationErrorCreator
+            .create(
+                LEFT_TABLE,
+                INTER_TABLE_RELATION,
+                tableSetWithSimpleJoin.get(RIGHT_TABLE),
+                String.format("1 orphan row(s) found in [%s]", RIGHT_TABLE),
+                PROVIDER)
+            .getValidationError();
 
     assertEquals(
         Collections.singletonList(expected).toString(),
@@ -244,19 +252,22 @@ public class BrokenRelationReportErrorCreatorTest {
         .replaceColumn(StringColumn.create("table_1_id", Arrays.asList("not 1", "not 1")));
     List<ValidationError> expected =
         Arrays.asList(
-            brokenInterTableRelationErrorCreator.create(
-                RIGHT_TABLE,
-                INTER_TABLE_RELATION,
-                tableSetWithSimpleJoin.get(LEFT_TABLE),
-                String.format("1 orphan row(s) found in [%s]", LEFT_TABLE),
-                PROVIDER).getValidationError(),
-            brokenInterTableRelationErrorCreator.create(
-                LEFT_TABLE,
-                INTER_TABLE_RELATION,
-                tableSetWithSimpleJoin.get(RIGHT_TABLE),
-                String.format("2 orphan row(s) found in [%s]", RIGHT_TABLE),
-                PROVIDER).getValidationError()
-        );
+            brokenInterTableRelationErrorCreator
+                .create(
+                    RIGHT_TABLE,
+                    INTER_TABLE_RELATION,
+                    tableSetWithSimpleJoin.get(LEFT_TABLE),
+                    String.format("1 orphan row(s) found in [%s]", LEFT_TABLE),
+                    PROVIDER)
+                .getValidationError(),
+            brokenInterTableRelationErrorCreator
+                .create(
+                    LEFT_TABLE,
+                    INTER_TABLE_RELATION,
+                    tableSetWithSimpleJoin.get(RIGHT_TABLE),
+                    String.format("2 orphan row(s) found in [%s]", RIGHT_TABLE),
+                    PROVIDER)
+                .getValidationError());
 
     assertEquals(
         expected.toString(),

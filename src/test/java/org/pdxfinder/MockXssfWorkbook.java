@@ -8,7 +8,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MockXssfWorkbook {
 
-  private MockXssfWorkbook(){}
+  private MockXssfWorkbook() {
+  }
 
   public static File createTempWorkbook(int sheetCount) throws IOException {
     File tempWorkbook = File.createTempFile("temp", ".xlsx");

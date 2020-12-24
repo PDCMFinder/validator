@@ -40,7 +40,6 @@ public class IllegalValueErrorCreator extends ErrorCreator {
       Table invalidRows,
       String provider) {
     return new IllegalValueError(tableName, errorDescription, columnName, invalidRows, provider);
-
   }
 
   private void reportIllegalValue(
@@ -91,7 +90,8 @@ public class IllegalValueErrorCreator extends ErrorCreator {
               columnReference.column(),
               errorDescriptions,
               workingTable.rows(indexOfInvalids),
-              provider).getValidationError());
+              provider)
+              .getValidationError());
     }
   }
 
