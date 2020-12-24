@@ -1,5 +1,6 @@
 package org.pdxfinder.validator.API;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.Test;
@@ -14,6 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -33,15 +37,16 @@ public class UploaderTests {
   }
 
   @Test
-  public void when_postToUploader_then_returnSuccess() throws Exception {
+  public void when_postToUploader_then_expectJson() throws Exception {
     ResultMatcher ok = MockMvcResultMatchers.status().isOk();
     String tempWorkbook = MockXssfWorkbook.createTempWorkbook(2).getAbsolutePath();
     MockMultipartFile mockMultipartFile =
-        new MockMultipartFile("file", FILENAME, CONTENT_TYPE,
-            Files.readAllBytes(Path.of(tempWorkbook)));
+        new MockMultipartFile(
+            "file", FILENAME, CONTENT_TYPE, Files.readAllBytes(Path.of(tempWorkbook)));
     mockMvc
         .perform(MockMvcRequestBuilders.multipart(UPLOADER_URL).file(mockMultipartFile))
-        .andExpect(ok);
+        .andExpect(ok)
+        .andExpect(content().string("[null,null,null,null,null,null]"));
   }
 
   @Test
@@ -63,7 +68,4 @@ public class UploaderTests {
         .perform(MockMvcRequestBuilders.multipart(UPLOADER_URL).file(mockMultipartFile))
         .andExpect(unsupportedMediaType);
   }
-
-
-
 }

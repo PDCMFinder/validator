@@ -8,13 +8,13 @@ public class ErrorReport {
 
   @SerializedName("tableErrors")
   @Expose
-  private List<TableErrors> tableErrors;
+  private List<ValidationError> validationErrors;
 
-  public List<TableErrors> getTableErrors() {
-    return tableErrors;
+  public List<ValidationError> getValidationErrors() {
+    return validationErrors;
   }
 
-  public void setTableErrors(List<TableErrors> tableErrors) {
-    this.tableErrors = tableErrors;
+  public void setValidationErrors(List<ValidationError> validationErrors) {
+    this.validationErrors = validationErrors;
   }
 }

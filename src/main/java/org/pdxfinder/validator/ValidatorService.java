@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tableSetUtilities.TableReader;
+import org.pdxfinder.validator.tablevalidation.DTO.ValidationError;
 import org.pdxfinder.validator.tablevalidation.ErrorReporter;
 import org.pdxfinder.validator.tablevalidation.Validator;
 import org.pdxfinder.validator.tablevalidation.rules.PdxValidationRuleset;
@@ -29,7 +30,7 @@ public class ValidatorService {
     logRequest(multipartFile);
     Map<String, Table> tableSet = getTables(multipartFile);
     var cleanedTableSet = TableReader.cleanPdxTables(tableSet);
-    var validationErrors =
+    List<ValidationError> validationErrors =
         validator.validate(cleanedTableSet, new PdxValidationRuleset().generate());
     return new ErrorReporter(validationErrors).getJson();
   }

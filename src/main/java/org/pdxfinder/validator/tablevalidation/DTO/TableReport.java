@@ -3,7 +3,7 @@ package org.pdxfinder.validator.tablevalidation.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TableName {
+public class TableReport {
 
   @SerializedName("column")
   @Expose

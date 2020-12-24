@@ -9,11 +9,23 @@ public class ColumnReport {
   @Expose
   private String message;
 
+  @SerializedName("columnName")
+  @Expose
+  private String columnName;
+
   public String getMessage() {
     return message;
   }
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public String getColumnName() {
+    return columnName;
+  }
+
+  public void setColumnName(String columnName) {
+    this.columnName = columnName;
   }
 }
