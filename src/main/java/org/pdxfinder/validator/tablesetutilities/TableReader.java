@@ -41,8 +41,6 @@ public class TableReader {
             "project",
             "internal_url",
             "internal_dosing_url");
-    pdxTableSet = TableSetUtilities.removeProviderNameFromFilename(pdxTableSet);
-    pdxTableSet.remove("metadata-checklist.tsv");
     TableSetUtilities.removeDescriptionColumn(pdxTableSet);
     pdxTableSet = TableSetUtilities.removeHeaderRows(pdxTableSet);
     pdxTableSet = TableSetUtilities.cleanValues(pdxTableSet, columnsExceptFromLowercasing);

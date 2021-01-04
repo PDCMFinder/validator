@@ -47,7 +47,7 @@ public class PdxValidationRuleset extends ValidationRuleCreator {
 
   @Override
   public TableSetSpecification generate() {
-    Set<String> metadataTables = getMetadataTables();
+    Set<String> metadataTables = getMetadataWorkbookTables();
     idColumns = matchingColumnsFromAnyTable(metadataColumnReferences, "_id");
     Set<ColumnReference> uniqIdColumns = getUniqueColumns();
     Set<ColumnReference> essentialColumns = getEssentialColumns();
@@ -66,22 +66,22 @@ public class PdxValidationRuleset extends ValidationRuleCreator {
             new HashSet<>(
                 Arrays.asList(
                     Relation.betweenTableKeys(
-                        ColumnReference.of("metadata-patient.tsv", "patient_id"),
-                        ColumnReference.of("metadata-sample.tsv", "patient_id")),
+                        ColumnReference.of("patient", "patient_id"),
+                        ColumnReference.of("sample", "patient_id")),
                     Relation.betweenTableKeys(
-                        ColumnReference.of("metadata-sample.tsv", "model_id"),
-                        ColumnReference.of("metadata-model.tsv", "model_id")),
+                        ColumnReference.of("sample", "model_id"),
+                        ColumnReference.of("model", "model_id")),
                     Relation.betweenTableKeys(
-                        ColumnReference.of("metadata-model.tsv", "model_id"),
-                        ColumnReference.of("metadata-sharing.tsv", "model_id")),
+                        ColumnReference.of("model", "model_id"),
+                        ColumnReference.of("sharing", "model_id")),
                     Relation.betweenTableColumns(
                         ValidityType.ONE_TO_MANY,
-                        ColumnReference.of("metadata-sample.tsv", "sample_id"),
-                        ColumnReference.of("metadata-sample.tsv", "patient_id")),
+                        ColumnReference.of("sample", "sample_id"),
+                        ColumnReference.of("sample", "patient_id")),
                     Relation.betweenTableColumns(
                         ValidityType.ONE_TO_ONE,
-                        ColumnReference.of("metadata-sample.tsv", "sample_id"),
-                        ColumnReference.of("metadata-sample.tsv", "model_id")))));
+                        ColumnReference.of("sample", "sample_id"),
+                        ColumnReference.of("sample", "model_id")))));
   }
 
   private Map<Set<ColumnReference>, ValueRestrictions> regexRestrictions() {
@@ -116,17 +116,19 @@ public class PdxValidationRuleset extends ValidationRuleCreator {
     return numericalColumns;
   }
 
-  private Set<String> getMetadataTables() {
+  private Set<String> getMetadataWorkbookTables() {
     return metadataColumnReferences.stream()
         .map(ColumnReference::table)
         .filter(c -> c.contains("metadata"))
+        .map(c -> c.replaceAll("metadata-", ""))
+        .map(c -> c.replaceAll(".tsv", ""))
         .collect(Collectors.toSet());
   }
 
   private Set<ColumnReference> getUniqueColumns() {
     Set<ColumnReference> uniqIdColumns = new HashSet<>();
-    uniqIdColumns.addAll(matchingColumnFromMetadata("metadata-patient.tsv", "patient_id"));
-    uniqIdColumns.addAll(matchingColumnFromMetadata("metadata-sharing.tsv", "model_id"));
+    uniqIdColumns.addAll(matchingColumnFromMetadata("patient", "patient_id"));
+    uniqIdColumns.addAll(matchingColumnFromMetadata("sharing", "model_id"));
     return uniqIdColumns;
   }
 

@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pdxfinder.MockXssfWorkbook;
@@ -35,11 +34,10 @@ public class UploaderTests {
     this.mockMvc = mockMvc;
   }
 
-  @Ignore
   @Test
   public void when_postToUploader_then_expectJson() throws Exception {
     ResultMatcher ok = MockMvcResultMatchers.status().isOk();
-    String tempWorkbook = MockXssfWorkbook.createTempWorkbook(2).getAbsolutePath();
+    String tempWorkbook = MockXssfWorkbook.createStandardizedTempWorkbook(5).getAbsolutePath();
     MockMultipartFile mockMultipartFile =
         new MockMultipartFile(
             "file", FILENAME, CONTENT_TYPE, Files.readAllBytes(Path.of(tempWorkbook)));

@@ -14,6 +14,16 @@ public class TableSetUtilities {
     throw new IllegalStateException("Utility class");
   }
 
+  public static List<Table> cleanTableNames(List<Table> tables) {
+    return tables.stream()
+        .map(e -> e.setName(removeHashmarksAndNewlines(e)))
+        .collect(Collectors.toList());
+  }
+
+  private static String removeHashmarksAndNewlines(Table table) {
+    return (table.name() != null) ? table.name().replaceAll("#|\\n", "") : "";
+  }
+
   public static Map<String, Table> removeHeaderRows(Map<String, Table> tableSet) {
     return tableSet.entrySet().stream()
         .collect(
@@ -40,6 +50,7 @@ public class TableSetUtilities {
     if (table.columnNames().contains(columnToRemove)) table.removeColumns(columnToRemove);
   }
 
+  @Deprecated
   static Map<String, Table> removeProviderNameFromFilename(Map<String, Table> tableSet) {
     return tableSet.entrySet().stream()
         .collect(

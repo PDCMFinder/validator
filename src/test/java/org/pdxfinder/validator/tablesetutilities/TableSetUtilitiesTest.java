@@ -151,4 +151,20 @@ public class TableSetUtilitiesTest {
         expectedTableSet.toString(),
         cleanValues(tableSet, Collections.singletonList(exceptionColumn)).toString());
   }
+
+  @Test
+  public void cleanTablenames_givenHashMarkAndNewlines_clean() {
+    List<Column<?>> tableColumns =
+        Collections.singletonList(
+            StringColumn.create("column_1", Collections.singletonList("test")));
+    List<Column<?>> expectedColumns =
+        Collections.singletonList(
+            StringColumn.create("column_1", Collections.singletonList("test")));
+
+    List<Table> tableSet = List.of(Table.create("#tableName\n\n", tableColumns));
+    List<Table> expectedTableSet = List.of(Table.create("tableName", expectedColumns));
+
+    assertEquals(
+        expectedTableSet.get(0).name(), TableSetUtilities.cleanTableNames(tableSet).get(0).name());
+  }
 }

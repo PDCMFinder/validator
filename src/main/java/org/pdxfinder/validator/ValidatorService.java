@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tablesetutilities.TableReader;
+import org.pdxfinder.validator.tablesetutilities.TableSetUtilities;
 import org.pdxfinder.validator.tablevalidation.ErrorReporter;
 import org.pdxfinder.validator.tablevalidation.Validator;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
@@ -37,12 +38,14 @@ public class ValidatorService {
 
   private Map<String, Table> getTables(MultipartFile multipartFile) {
     List<Table> tables = new ArrayList<>();
+    List<Table> cleanedTables = new ArrayList<>();
     try {
       tables = TableReader.readXlsx(multipartFile.getInputStream());
+      cleanedTables = TableSetUtilities.cleanTableNames(tables);
     } catch (IOException e) {
       log.error("Error reading multipartfile into table ", e);
     }
-    return TableReader.listToMap(tables);
+    return TableReader.listToMap(cleanedTables);
   }
 
   private void logRequest(MultipartFile multipartFile) {
