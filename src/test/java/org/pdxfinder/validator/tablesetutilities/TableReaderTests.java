@@ -47,7 +47,7 @@ public class TableReaderTests {
     List<String> columnValuesWithMissing =
         Arrays.asList("Header", "Header2", "Header3", "Header4", "", "", ROW_VALUE);
     Table tableWithBlanks =
-        Table.create()
+        Table.create(TABLE_NAME)
             .addColumns(
                 StringColumn.create("column_1", columnValues),
                 StringColumn.create("column_2", columnValuesWithMissing));

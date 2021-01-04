@@ -31,7 +31,7 @@ public class PdxTableColumns {
         "diagnosis",
         "tumour_type",
         "primary_site",
-            "collection_site",
+        "collection_site",
         "stage",
         "staging_system",
         "grade",
@@ -70,6 +70,11 @@ public class PdxTableColumns {
         "provider_abbreviation",
         "project")
         .forEach(s -> tableColumns.add(ColumnReference.of("sharing", s)));
+    return tableColumns;
+  }
+
+  public static Set<ColumnReference> getLoaderParameterColumns() {
+    Set<ColumnReference> tableColumns = new HashSet<>();
     Arrays.asList("name", "abbreviation", "internal_url", "internal_dosing_url")
         .forEach(s -> tableColumns.add(ColumnReference.of("load-parameters", s)));
     return tableColumns;

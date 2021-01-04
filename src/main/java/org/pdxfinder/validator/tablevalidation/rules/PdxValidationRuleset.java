@@ -119,9 +119,6 @@ public class PdxValidationRuleset extends ValidationRuleCreator {
   private Set<String> getMetadataWorkbookTables() {
     return metadataColumnReferences.stream()
         .map(ColumnReference::table)
-        .filter(c -> c.contains("metadata"))
-        .map(c -> c.replaceAll("metadata-", ""))
-        .map(c -> c.replaceAll(".tsv", ""))
         .collect(Collectors.toSet());
   }
 

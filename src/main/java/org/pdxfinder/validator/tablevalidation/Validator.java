@@ -35,14 +35,17 @@ public class Validator {
   public List<ValidationError> validate(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     checkRequiredTablesPresent(tableSet, tableSetSpecification);
-    performColumnValidations(tableSet, tableSetSpecification);
+    if (!thereAreErrors(validationErrors, tableSetSpecification)) {
+      checkRequiredColumnsPresent(tableSet, tableSetSpecification);
+      if (!thereAreErrors(validationErrors, tableSetSpecification)) {
+        performColumnValidation(tableSet, tableSetSpecification);
+      }
+    }
     return validationErrors;
   }
 
-  private void performColumnValidations(
+  private void performColumnValidation(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
-    if (thereAreErrors(validationErrors, tableSetSpecification)) return;
-    checkRequiredColumnsPresent(tableSet, tableSetSpecification);
     checkAllNonEmptyValuesPresent(tableSet, tableSetSpecification);
     checkForIllegalValues(tableSet, tableSetSpecification);
     checkAllUniqueColumnsForDuplicates(tableSet, tableSetSpecification);
