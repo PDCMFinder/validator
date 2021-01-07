@@ -1,3 +1,5 @@
+image: java:latest
+
 stages:
   - deploy
 
