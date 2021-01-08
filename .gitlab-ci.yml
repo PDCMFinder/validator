@@ -1,6 +1,3 @@
-job:
-  cache: {}
-
 stages:
   - deploy
 
@@ -10,7 +7,7 @@ maven-build-test-deploy:
   script:
     - echo $(mvn --version)
     - echo $(java --version)
-    - mvn test
+    - mvn clean install
     - echo "pushing to $CI_COMMIT_REF_NAME"
     - mvn compile jib:build -Djib.to.image="$DOCKERHUB_REPO"/validator:"$CI_COMMIT_REF_NAME" \
       -Djib.to.auth.username="$DOCKERHUB_USER" \
