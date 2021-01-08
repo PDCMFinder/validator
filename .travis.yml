@@ -27,4 +27,4 @@ addons:
       secure: "0dc1c4f716ec8d6f7a432f89e3286a7a374e0cc6"
 
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=pdxfinder
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=pdxfinder-validator
