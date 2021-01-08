@@ -4,7 +4,7 @@ stages:
   - deploy
 
 maven-build-test-deploy:
-  image: maven:3.6.3-jdk-11
+  image: maven:3.6.3-openjdk-11
   stage: deploy
   script:
     - mvn test
