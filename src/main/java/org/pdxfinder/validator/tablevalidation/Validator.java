@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.error.BrokenRelationErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.DuplicateValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.EmptyValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.IllegalValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.MissingColumnErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.MissingTableErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -35,14 +35,17 @@ public class Validator {
   public List<ValidationError> validate(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     checkRequiredTablesPresent(tableSet, tableSetSpecification);
-    performColumnValidations(tableSet, tableSetSpecification);
+    if (!thereAreErrors(validationErrors, tableSetSpecification)) {
+      checkRequiredColumnsPresent(tableSet, tableSetSpecification);
+      if (!thereAreErrors(validationErrors, tableSetSpecification)) {
+        performColumnValidation(tableSet, tableSetSpecification);
+      }
+    }
     return validationErrors;
   }
 
-  private void performColumnValidations(
+  private void performColumnValidation(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
-    if (thereAreErrors(validationErrors, tableSetSpecification)) return;
-    checkRequiredColumnsPresent(tableSet, tableSetSpecification);
     checkAllNonEmptyValuesPresent(tableSet, tableSetSpecification);
     checkForIllegalValues(tableSet, tableSetSpecification);
     checkAllUniqueColumnsForDuplicates(tableSet, tableSetSpecification);
@@ -106,12 +109,15 @@ public class Validator {
     return this.validationErrors;
   }
 
-  public static void reportAnyErrors(List<ValidationError> validationErrors) {
-    if (CollectionUtils.isNotEmpty(validationErrors))
-      for (ValidationError error : validationErrors) {
-        log.error(error.message());
+  public static void reportAnyErrors(List<ValidationError> tableReports) {
+    if (CollectionUtils.isNotEmpty(tableReports)) {
+      for (ValidationError error : tableReports) {
+        String message = error.getTableReport().getColumnReport().getMessage();
+        log.error(message);
       }
-    else log.info("There were no validation errors raised, great!");
+    } else {
+      log.info("There were no validation errors raised, great!");
+    }
   }
 
   public void resetErrors() {

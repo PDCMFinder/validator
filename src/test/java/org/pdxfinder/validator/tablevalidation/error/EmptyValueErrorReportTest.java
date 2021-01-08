@@ -7,7 +7,7 @@ import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class EmptyValueErrorTest {
+public class EmptyValueErrorReportTest {
 
   private EmptyValueErrorCreator emptyValueErrorCreator = new EmptyValueErrorCreator();
   private String PROVIDER = "provider";

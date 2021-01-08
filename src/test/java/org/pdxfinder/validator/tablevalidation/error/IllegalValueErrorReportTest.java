@@ -7,7 +7,7 @@ import org.junit.Test;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class IllegalValueErrorTest {
+public class IllegalValueErrorReportTest {
   private IllegalValueErrorCreator illegalValueErrorCreator = new IllegalValueErrorCreator();
 
   @Test
@@ -20,7 +20,11 @@ public class IllegalValueErrorTest {
     Table tableMissingColumn = Table.create().addColumns(StringColumn.create("not_foo_id"));
     IllegalValueError error =
         illegalValueErrorCreator.create(
-            "bar.tsv", "because [bar.tsv] is missing column [foo_id]", tableMissingColumn, "TEST");
+            "bar.tsv",
+            "because [bar.tsv] is missing column [foo_id]",
+            tableMissingColumn.name(),
+            tableMissingColumn,
+            "TEST");
     assertEquals(expected, error.verboseMessage());
   }
 
@@ -40,6 +44,7 @@ public class IllegalValueErrorTest {
         illegalValueErrorCreator.create(
             "bar.tsv",
             "in column [foo_id] found 1 values has characters not contained in US ASCII Alphabet and ._~- : TE#/ST",
+            "foo_id",
             tableInvalidColumns,
             "PROVIDER-BC");
 
@@ -60,6 +65,7 @@ public class IllegalValueErrorTest {
         illegalValueErrorCreator.create(
             "bar.tsv",
             "in column [foo_id] found 1 values has characters not contained in US ASCII Alphabet and ._~- : TE#/ST",
+            "foo_id",
             tableInvalidColumns,
             "PROVIDER-BC");
 

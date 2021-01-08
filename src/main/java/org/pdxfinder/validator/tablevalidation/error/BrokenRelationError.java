@@ -3,40 +3,48 @@ package org.pdxfinder.validator.tablevalidation.error;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import tech.tablesaw.api.Table;
 
-public class BrokenRelationError implements ValidationError {
-  private String tableName;
-  private Relation relation;
-  private Table invalidRows;
+public class BrokenRelationError extends ValidationErrorBuilder {
+
+  private String errorType = "Broken Relation";
+  private String message;
   private String description;
-  private String provider;
+  private Table invalidRows;
 
   public BrokenRelationError(
-      String tableName, Relation relation, Table invalidRows, String description, String provider) {
-    this.tableName = tableName;
-    this.relation = relation;
+      String tableName,
+      Relation relation,
+      Table invalidRows,
+      String additionalDescription,
+      String provider) {
+    this.description = buildDescription(relation, additionalDescription);
+    this.message = buildMessage(tableName, provider, description);
     this.invalidRows = invalidRows;
-    this.description = description;
-    this.provider = provider;
+    super.buildValidationErrors(tableName, errorType, description, relation.toString());
+  }
+
+  static String buildDescription(Relation relation, String additionalDescription) {
+    return String.format(
+        "Broken %s relation [%s]: %s",
+        relation.getValidity(), relation.toString(), additionalDescription);
+  }
+
+  private static String buildMessage(String tableName, String provider, String description) {
+    return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
   }
 
   private Table getInvalidRows() {
     return this.invalidRows;
   }
 
-  @Override
-  public String verboseMessage() {
-    return String.format("%s:%n%s", message(), getInvalidRows());
-  }
-
-  @Override
   public String message() {
-    return String.format(
-        "Error in [%s] for provider [%s]: Broken %s relation [%s]: %s",
-        tableName, provider, relation.getValidity().name(), relation, description);
+    return message;
   }
 
-  @Override
   public String toString() {
     return verboseMessage();
+  }
+
+  public String verboseMessage() {
+    return String.format("%s:%n%s", message(), getInvalidRows());
   }
 }

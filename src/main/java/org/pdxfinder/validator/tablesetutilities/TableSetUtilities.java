@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tableSetUtilities;
+package org.pdxfinder.validator.tablesetutilities;
 
 import java.util.List;
 import java.util.Map;
@@ -14,22 +14,21 @@ public class TableSetUtilities {
     throw new IllegalStateException("Utility class");
   }
 
+  public static List<Table> cleanTableNames(List<Table> tables) {
+    return tables.stream()
+        .map(e -> e.setName(removeHashmarksAndNewlines(e)))
+        .collect(Collectors.toList());
+  }
+
+  private static String removeHashmarksAndNewlines(Table table) {
+    return (table.name() != null) ? table.name().replaceAll("#|\\n", "") : "";
+  }
+
   public static Map<String, Table> removeHeaderRows(Map<String, Table> tableSet) {
     return tableSet.entrySet().stream()
         .collect(
             Collectors.toMap(
                 Map.Entry::getKey, e -> TableUtilities.removeHeaderRows(e.getValue(), 4)));
-  }
-
-  @Deprecated
-  static Map<String, Table> removeBlankRows(Map<String, Table> tableSet) {
-    return tableSet.entrySet().stream()
-        .collect(
-            Collectors.toMap(
-                Map.Entry::getKey,
-                e ->
-                    TableUtilities.removeRowsMissingRequiredColumnValue(
-                        e.getValue(), e.getValue().column(0).asStringColumn())));
   }
 
   static Map<String, Table> removeHeaderRowsIfPresent(Map<String, Table> tableSet) {
@@ -51,6 +50,7 @@ public class TableSetUtilities {
     if (table.columnNames().contains(columnToRemove)) table.removeColumns(columnToRemove);
   }
 
+  @Deprecated
   static Map<String, Table> removeProviderNameFromFilename(Map<String, Table> tableSet) {
     return tableSet.entrySet().stream()
         .collect(

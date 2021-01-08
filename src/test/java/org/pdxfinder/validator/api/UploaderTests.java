@@ -1,7 +1,10 @@
-package org.pdxfinder.validator.API;
+package org.pdxfinder.validator.api;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.pdxfinder.MockXssfWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,10 +33,12 @@ public class UploaderTests {
   }
 
   @Test
-  public void when_postToUploader_then_returnSuccess() throws Exception {
+  public void when_postToUploader_with_emptySpreadSheet_doNotThrowExceptions() throws Exception {
     ResultMatcher ok = MockMvcResultMatchers.status().isOk();
+    String tempWorkbook = MockXssfWorkbook.createStandardizedTempWorkbook(5).getAbsolutePath();
     MockMultipartFile mockMultipartFile =
-        new MockMultipartFile("file", FILENAME, CONTENT_TYPE, "test-data".getBytes());
+        new MockMultipartFile(
+            "file", FILENAME, CONTENT_TYPE, Files.readAllBytes(Path.of(tempWorkbook)));
     mockMvc
         .perform(MockMvcRequestBuilders.multipart(UPLOADER_URL).file(mockMultipartFile))
         .andExpect(ok);

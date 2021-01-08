@@ -2,20 +2,35 @@ package org.pdxfinder.validator.tablevalidation.error;
 
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 
-public class MissingColumnError implements ValidationError {
-  private ColumnReference columnReference;
-  private String provider;
+public class MissingColumnError extends ValidationErrorBuilder {
+
+  private String errorType = "missing column";
+  private String description;
+  private String message;
 
   MissingColumnError(ColumnReference columnReference, String provider) {
-    this.columnReference = columnReference;
-    this.provider = provider;
+    this.description = buildDescription(columnReference.column());
+    this.message = buildMessage(columnReference.table(), provider, description);
+    super.buildValidationErrors(
+        errorType, columnReference.table(), description, columnReference.column());
   }
 
   @Override
   public String message() {
-    return String.format(
-        "Error in [%s] for provider [%s]: Missing column: [%s]",
-        columnReference.table(), provider, columnReference.column());
+    return message;
+  }
+
+  @Override
+  String verboseMessage() {
+    return message;
+  }
+
+  static String buildDescription(String columnName) {
+    return String.format("Missing column: [%s]", columnName);
+  }
+
+  static String buildMessage(String tableName, String provider, String description) {
+    return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
   }
 
   @Override

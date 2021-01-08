@@ -8,7 +8,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 
-public class DuplicateValueErrorTest {
+public class DuplicateValueErrorReportTest {
   private DuplicateValueErrorCreator duplicateValueErrorCreator = new DuplicateValueErrorCreator();
   private String PROVIDER = "provider";
 

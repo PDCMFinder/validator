@@ -5,9 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.error.EmptyValueError;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.error.EmptyValueErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error.ValidationError;
 import tech.tablesaw.api.Table;
 
 public class ErrorReporterTest {
@@ -18,9 +17,10 @@ public class ErrorReporterTest {
   public void truncate_givenTwoErrorsAndLimitToOne_returnsOneError() {
     int limit = 1;
     List<ValidationError> errors = new ArrayList<>();
-    EmptyValueError error =
-        emptyValueErrorCreator.create(
-            ColumnReference.of("table", "column"), Table.create(), "Provider");
+    ValidationError error =
+        emptyValueErrorCreator
+            .create(ColumnReference.of("table", "column"), Table.create(), "Provider")
+            .getValidationError();
     errors.add(error);
     errors.add(error);
 
@@ -32,9 +32,10 @@ public class ErrorReporterTest {
   public void truncate_givenErrorsLowerThanLimit_doNotTruncate() {
     int limit = 5;
     List<ValidationError> errors = new ArrayList<>();
-    EmptyValueError error =
-        emptyValueErrorCreator.create(
-            ColumnReference.of("table", "column"), Table.create(), "Provider");
+    ValidationError error =
+        emptyValueErrorCreator
+            .create(ColumnReference.of("table", "column"), Table.create(), "Provider")
+            .getValidationError();
     errors.add(error);
 
     ErrorReporter errorReporter = new ErrorReporter(errors).truncate(limit);

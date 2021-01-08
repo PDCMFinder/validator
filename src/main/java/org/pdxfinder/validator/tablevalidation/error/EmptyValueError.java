@@ -3,15 +3,27 @@ package org.pdxfinder.validator.tablevalidation.error;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import tech.tablesaw.api.Table;
 
-public class EmptyValueError implements ValidationError {
-  private ColumnReference nonEmptyColumn;
+public class EmptyValueError extends ValidationErrorBuilder {
+
   private Table invalidRows;
-  private String provider;
+  private String errorType = "Empty value error";
+  private String message;
+  private String description;
 
   EmptyValueError(ColumnReference nonEmptyColumn, Table invalidRows, String provider) {
-    this.nonEmptyColumn = nonEmptyColumn;
+    description = buildDescription(nonEmptyColumn.column());
+    super.buildValidationErrors(
+        errorType, nonEmptyColumn.table(), description, nonEmptyColumn.column());
+    this.message = buildMessage(nonEmptyColumn.table(), provider, description);
     this.invalidRows = invalidRows;
-    this.provider = provider;
+  }
+
+  private String buildDescription(String columName) {
+    return String.format("Missing value(s) in required column [%s]", columName);
+  }
+
+  private String buildMessage(String table, String provider, String description) {
+    return String.format("Error in [%s] for provider [%s]: %s", table, provider, description);
   }
 
   @Override
@@ -21,9 +33,7 @@ public class EmptyValueError implements ValidationError {
 
   @Override
   public String message() {
-    return String.format(
-        "Error in [%s] for provider [%s]: Missing value(s) in required column [%s]",
-        nonEmptyColumn.table(), provider, nonEmptyColumn.column());
+    return message;
   }
 
   private Table getInvalidRows() {

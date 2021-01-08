@@ -1,10 +1,9 @@
-package org.pdxfinder.validator.tableSetUtilities;
+package org.pdxfinder.validator.tablesetutilities;
 
 import static org.junit.Assert.assertEquals;
-import static org.pdxfinder.validator.tableSetUtilities.TableUtilities.cleanTableValues;
-import static org.pdxfinder.validator.tableSetUtilities.TableUtilities.fromString;
-import static org.pdxfinder.validator.tableSetUtilities.TableUtilities.removeHeaderRows;
-import static org.pdxfinder.validator.tableSetUtilities.TableUtilities.removeRowsMissingRequiredColumnValue;
+import static org.pdxfinder.validator.tablesetutilities.TableUtilities.cleanTableValues;
+import static org.pdxfinder.validator.tablesetutilities.TableUtilities.fromString;
+import static org.pdxfinder.validator.tablesetutilities.TableUtilities.removeHeaderRows;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -110,80 +109,6 @@ public class TableUtilitiesTest {
                         "essential",
                         "A0088")));
     assertEquals(expected.toString(), removeHeaderRows(table, 4).toString());
-  }
-
-  @Test
-  public void
-      removeRowsMissingRequiredColumnValue_givenTableWithOnlyOneEmptyRow_returnEmptyTable() {
-    Table table =
-        Table.create().addColumns(StringColumn.create("required_column_1", Arrays.asList("")));
-    Table expected = table.emptyCopy();
-    assertEquals(
-        expected.toString(),
-        removeRowsMissingRequiredColumnValue(table, "required_column_1").toString());
-  }
-
-  @Test
-  public void removeRowsMissingRequiredColumnValue_givenTableWithOneEmptyRow_removeEmptyRow() {
-    Table table =
-        Table.create()
-            .addColumns(StringColumn.create("required_column_1", Arrays.asList("value_1", "")));
-    Table expected =
-        Table.create()
-            .addColumns(StringColumn.create("required_column_1", Arrays.asList("value_1")));
-    assertEquals(
-        expected.toString(),
-        removeRowsMissingRequiredColumnValue(table, "required_column_1").toString());
-  }
-
-  @Test
-  public void
-      removeRowsMissingRequiredColumnValue_givenTableWithOneMissingValue_doesNotRemoveRow() {
-    Table table =
-        Table.create()
-            .addColumns(
-                StringColumn.create("required_column_1", Arrays.asList("value_1", "value_2")),
-                StringColumn.create("column_2", Arrays.asList("value_3", "")));
-    assertEquals(
-        table.toString(),
-        removeRowsMissingRequiredColumnValue(table, "required_column_1").toString());
-  }
-
-  @Test
-  public void
-      removeRowsMissingRequiredColumnValue_givenTableWithOneMissingValueInRequired_removesInvalidRow() {
-    Table table =
-        Table.create()
-            .addColumns(
-                StringColumn.create("required_column_1", Arrays.asList("value_1", "")),
-                StringColumn.create("column_2", Arrays.asList("value2", "value_3")));
-    Table expected =
-        Table.create()
-            .addColumns(
-                StringColumn.create("required_column_1", Arrays.asList("value_1")),
-                StringColumn.create("column_2", Arrays.asList("value2")));
-    assertEquals(
-        expected.toString(),
-        removeRowsMissingRequiredColumnValue(table, "required_column_1").toString());
-  }
-
-  @Test
-  public void removeRowsMissingRequiredColumnValue_givenColumnObject_removesInvalidRow() {
-    Table table =
-        Table.create()
-            .addColumns(
-                StringColumn.create("required_column_1", Arrays.asList("value_1", "")),
-                StringColumn.create("column_2", Arrays.asList("value2", "value_3")));
-    Table expected =
-        Table.create()
-            .addColumns(
-                StringColumn.create("required_column_1", Arrays.asList("value_1")),
-                StringColumn.create("column_2", Arrays.asList("value2")));
-    assertEquals(
-        expected.toString(),
-        removeRowsMissingRequiredColumnValue(
-                table, table.column("required_column_1").asStringColumn())
-            .toString());
   }
 
   @Test

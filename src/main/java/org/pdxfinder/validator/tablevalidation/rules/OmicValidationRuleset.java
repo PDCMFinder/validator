@@ -3,7 +3,7 @@ package org.pdxfinder.validator.tablevalidation.rules;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.pdxfinder.validator.tableSetUtilities.TableSetUtilities;
+import org.pdxfinder.validator.tablesetutilities.TableSetUtilities;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
@@ -115,7 +115,7 @@ public class OmicValidationRuleset extends ValidationRuleCreator {
   }
 
   @Override
-  public TableSetSpecification generate(String provider) {
+  public TableSetSpecification generate() {
     return TableSetSpecification.create();
   }
 

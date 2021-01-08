@@ -14,14 +14,15 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.pdxfinder.validator.tableSetUtilities.TableUtilities;
+import org.pdxfinder.validator.tablesetutilities.TableUtilities;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class EmptyValueErrorCreatorTest {
+public class EmptyValueErrorReportCreatorTest {
 
   private Map<String, Table> completeTableSet = new HashMap<>();
   private final String TABLE_1 = "table_1.tsv";
@@ -75,7 +76,9 @@ public class EmptyValueErrorCreatorTest {
     fileSetWithInvalidTable.put(TABLE_1, tableWithMissingValue);
     List<ValidationError> expected =
         Collections.singletonList(
-            emptyValueErrorCreator.create(requiredCol, tableWithMissingValue, PROVIDER));
+            emptyValueErrorCreator
+                .create(requiredCol, tableWithMissingValue, requireColumn.getProvider())
+                .getValidationError());
 
     assertEquals(
         expected.toString(),
@@ -97,11 +100,13 @@ public class EmptyValueErrorCreatorTest {
 
     List<ValidationError> expected =
         Collections.singletonList(
-            emptyValueErrorCreator.create(
-                requiredCol,
-                tableWithMissingValue.where(
-                    tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
-                PROVIDER));
+            emptyValueErrorCreator
+                .create(
+                    requiredCol,
+                    tableWithMissingValue.where(
+                        tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
+                    PROVIDER)
+                .getValidationError());
     assertEquals(
         expected.toString(),
         emptyValueErrorCreator.generateErrors(fileSetWithInvalidTable, requireColumn).toString());

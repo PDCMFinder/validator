@@ -1,0 +1,16 @@
+stages:
+  - deploy
+
+maven-build-test-deploy:
+  image: maven:3.6.3-openjdk-11
+  stage: deploy
+  script:
+    - echo $(mvn --version)
+    - echo $(java --version)
+    - mvn test
+    - echo "pushing to $CI_COMMIT_REF_NAME"
+    - mvn compile jib:build -Djib.to.image="$DOCKERHUB_REPO"/validator:"$CI_COMMIT_REF_NAME" \
+      -Djib.to.auth.username="$DOCKERHUB_USER" \
+      -Djib.to.auth.password="$DOCKERHUB_TOKEN"
+    - echo "$CI_REGISTRY_IMAGE"
+      mvn compile jib:dockerBuild -Djib.to.image=/"$CI_REGISTRY_IMAGE" \

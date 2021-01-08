@@ -1,8 +1,10 @@
 package org.pdxfinder.validator.tablevalidation;
 
+import com.google.gson.Gson;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
-import org.pdxfinder.validator.tablevalidation.error.ValidationError;
+import org.pdxfinder.validator.tablevalidation.dto.ErrorReport;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,13 @@ public class ErrorReporter {
     this.errors = errors;
   }
 
+  public String getJson() {
+    Gson gson = new Gson();
+    ErrorReport errorReport = new ErrorReport();
+    errorReport.setValidationErrors(errors);
+    return gson.toJson(errorReport);
+  }
+
   public int count() {
     return errors.size();
   }
@@ -23,7 +32,8 @@ public class ErrorReporter {
     if (CollectionUtils.isNotEmpty(errors)) {
       log.error("{} validation errors found:", errors.size());
       for (ValidationError error : errors) {
-        log.error(error.message());
+        String message = error.getTableReport().getColumnReport().getMessage();
+        log.error(message);
       }
     } else {
       log.info("There were no validation errors raised, great!");

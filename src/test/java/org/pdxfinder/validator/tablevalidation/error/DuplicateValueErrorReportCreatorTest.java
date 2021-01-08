@@ -17,10 +17,11 @@ import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class DuplicateValueErrorCreatorTest {
+public class DuplicateValueErrorReportCreatorTest {
 
   private Map<String, Table> completeTableSet = new HashMap<>();
   private final String TABLE_1 = "table_1.tsv";
@@ -83,7 +84,10 @@ public class DuplicateValueErrorCreatorTest {
 
     Set<String> duplicateValue = Stream.of("1").collect(Collectors.toSet());
     List<ValidationError> expected =
-        Arrays.asList(duplicateValueErrorCreator.create(uniqueCol, duplicateValue, PROVIDER));
+        Arrays.asList(
+            duplicateValueErrorCreator
+                .create(uniqueCol, duplicateValue, PROVIDER)
+                .getValidationError());
 
     assertEquals(
         expected.toString(),

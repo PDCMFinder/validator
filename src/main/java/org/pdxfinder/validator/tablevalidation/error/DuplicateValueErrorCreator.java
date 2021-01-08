@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
@@ -20,7 +21,8 @@ public class DuplicateValueErrorCreator extends ErrorCreator {
       Set<String> duplicates = findDuplicatesInColumn(columnFromTableSet(tableSet, tested));
 
       if (CollectionUtils.isNotEmpty(duplicates)) {
-        errors.add(create(tested, duplicates, tableSetSpecification.getProvider()));
+        errors.add(
+            create(tested, duplicates, tableSetSpecification.getProvider()).getValidationError());
       }
     }
     return errors;

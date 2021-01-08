@@ -9,12 +9,14 @@ import org.pdxfinder.validator.tablevalidation.Relation;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class BrokenRelationErrorTest {
+public class BrokenRelationReportErrorTest {
+
   private BrokenRelationErrorCreator brokenTableRelationErrorCreator =
       new BrokenRelationErrorCreator();
 
   @Test
   public void toString_givenBrokenRelationMissingRightColumn_returnsAppropriateMessage() {
+    int count = 1;
     String expected =
         "Error in [bar.tsv] for provider [TEST]: Broken TABLE_KEY relation [(foo.tsv) foo_id -> foo_id (bar.tsv)]"
             + ": because [bar.tsv] is missing column [foo_id]:\n"
@@ -24,6 +26,7 @@ public class BrokenRelationErrorTest {
         Relation.betweenTableKeys(
             ColumnReference.of("foo.tsv", "foo_id"), ColumnReference.of("bar.tsv", "foo_id"));
     Table tableMissingColumn = Table.create().addColumns(StringColumn.create("not_foo_id"));
+
     BrokenRelationError error =
         brokenTableRelationErrorCreator.create(
             "bar.tsv",
