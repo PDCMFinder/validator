@@ -9,6 +9,5 @@ maven-build-test-deploy:
     - echo $(java --version)
     - mvn clean install
     - echo "pushing to $CI_COMMIT_REF_NAME"
-    - mvn compile jib:build -Djib.to.image=docker.io/"$DOCKERHUB_REPO"/validator:"$CI_COMMIT_REF_NAME" -Djib.to.auth.username="$DOCKERHUB_USER" -Djib.to.auth.password="$DOCKERHUB_TOKEN"
-    - echo "$CI_REGISTRY_IMAGE"
-      mvn compile jib:dockerBuild -Djib.to.image=/"$CI_REGISTRY_IMAGE"
+    - mvn compile jib:build -Djib.to.image=docker.io/"$DOCKERHUB_REPO"/pdx-validator:"$CI_COMMIT_REF_NAME" -Djib.to.auth.username="$DOCKERHUB_USER" -Djib.to.auth.password="$DOCKERHUB_TOKEN"
+    - mvn compile jib:build -Djib.to.image=dockerhub.ebi.ac.uk/mouse-informatics/pdxfinder-validator
