@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/validation/")
+@RequestMapping("pdxfinder/validation/")
 public class Uploader {
 
   private ValidatorService validatorService;
