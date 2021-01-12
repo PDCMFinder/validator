@@ -1,9 +1,10 @@
 stages:
+  - build
   - deploy
 
 maven-build:
   image: maven:3.6.3-openjdk-11
-  stage: deploy
+  stage: build
   script:
     - mvn clean install
     - mvn compile jib:build -Djib.to.image=docker.io/"$DOCKERHUB_REPO"/pdx-validator:"$CI_COMMIT_REF_NAME" -Djib.to.auth.username="$DOCKERHUB_USER" -Djib.to.auth.password="$DOCKERHUB_TOKEN" -Djib.to.tags=${CI_COMMIT_SHA}
