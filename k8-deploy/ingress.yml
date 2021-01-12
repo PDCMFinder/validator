@@ -14,7 +14,7 @@ spec:
     - host:
       http:
         paths:
-          - path: /dev/pdx-validator(/|$)(.*)
+          - path: /pdxfinder/dev(/|$)(.*)
             backend:
               serviceName: pdx-validator-dev
               servicePort: 80
