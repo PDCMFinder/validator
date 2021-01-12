@@ -26,4 +26,5 @@ deploy:
     - kubectl rollout status -f k8-deploy/deployment.yml
 
     - kubectl apply -f k8-deploy/service.yml --record
+    - kubectl applyl -f k8-deploy/ingress.yml --record
     - kubectl get all,ing
