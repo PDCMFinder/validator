@@ -15,18 +15,3 @@ spec:
           ports:
             - containerPort: 8080
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: pdx-validator-dev-service
-  labels:
-    name: pdx-validator-dev-service
-spec:
-  ports:
-    - port: 8080
-      protocol: HTTP
-  selector:
-    app: pdx-validator
-  type: NodePort
-
