@@ -2,22 +2,11 @@ language: java
 sudo: false
 jdk:
   - openjdk11
+addons:
+  sonarcloud:
+    organization: pdxfinder
 script:
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=pdxfinder-validator
 env:
   global:
-    - JAVA_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmn48M -Xmx512M"
-    - NUM_THREADS=2
-    - secure: HHKo7U3N6+MwoNPRKLa+nX8sIhBHIxtq3v2Lx99S8+ryOif89h5xxciZ08mRww4Hfe7JIXBLG9F6twArnak7TOeacxgyJ0w+o6fUc+eQ/WfOtuZYHphmK/6j9mDr9iCgRKIFs/r1jE1mWBmrjuZlbIJGqXkXWo3srI/sHGcDSnJIttGB2ZmVW3gEy43xPcfGtkGreRUK9S7UGJmtki+vApp9S3YvGXul0j1QHlAnrYSwfGY8p2vzBXLmrZx30JZC2W+2BIf5vvAF9lhwJhPfXP388TfAQY2xTs+QWCIQK+d2/L3LSZW2TUj8QYTebhCKhaN8cxWHRZHYqHrNZv9pj+DFCLS4b/2lcEln5NBLQg01SjC2glZOQRU579ikqcFCQg/3tAgBxT/H0bxs4xWVtcavA3GjwzPA2hirnOmDdrM9dp7Me4pm+nBfYldR/6N47wsIbon4ArUj/Y/lZ+ryZHUdq6hm+tLGHGWPr1dh6Cq8pYc445DhfXR8J66tvpa3d1O/B0vbkafnxzvNf3BiX1rAVxDaugK3/vRHCY9Y9oMFgOxIb6RqT6lIQzw+BqNdTvAoBUkIv2WmFoE1cC4g6efVuI/xIHHoLqce3VAaWEJQugL2BMQb2HmcPsKXsoMG5GMDVVhPsfHYEijOGIZTLgj0xKrz6q3kQ1TBuM9w/mA=
-notifications:
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/969b5598af30afd3e0a2
-    on_success: always
-    on_failure: always
-    on_start: never
-addons:
-  sonarcloud:
-    organization: pdxfinder
-    token:
-      secure: 0dc1c4f716ec8d6f7a432f89e3286a7a374e0cc6
+    secure: 2gkNUyjpGwIWPauQqSpWoKFcJW9/4b/F6Zd4TgcdQ787MLIoc/p5T6HBt9Yh3ERecvLTBII0GqBx1VkGg5fKf5KJ7f09Ns81AfnqZZ8Sc3GAAjqk3tm0pgISfJjCHwxRgxK6SyU1Zyl/yiO43R8hU4mnsmqvZWN/LtdZYQsI3KQ+vnGwLdSQ9u5iqnWGT0vkWqQTOj5p2GBgizY67Y/xtdA0TACUcxxZXJZurKaxJX0yzqTY/zpqbEL11Y9XYHLIsUndTIgstAEl1WWDE90dt33S7Xc2W8lr/9E9HFdOCZPF3nn9yjPsDHlO5USVJrO25OQo8TRC0zQT5P9tsrzsT4f1VemBE92DPEiyKZ6u0BJLAeeyQKLfR7f46Wb7sh8Qg5pB+SS/3JiZtUu6Qt5Tw+CeyR9wNn7Q2NLVWheQQNDKCdS0s+N8E2ZgDYZomYo0In+p9h4wq1uJgaBFK/d09RrjWZ8qjfhYTsp6S7El1r63lDVWAEQZkMWTHWhGTKiG3nlGtQTQr5e754OB006YtRL5IArYOaf+8pbbzpaY1Erw3VCPIFf3t/q2x5pAqN71H6NEHxUbcL5kZK+WPoubyXjqtk/7H63I9qlcXqmbR+2SsCOinjjP9ofEvyrY4otDb5Dka9WZN2Yo4iimhn6BcvBqPKadWAAZb01jZfSEvvM=
