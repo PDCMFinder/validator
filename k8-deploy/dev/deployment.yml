@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: pdx-validator
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: pdx-validator
+    spec:
+      containers:
+        - name: pdx-validator-dev
+          image: 'pdxfinder/pdx-validator:dev'
+          ports:
+            - containerPort: 8080
+
