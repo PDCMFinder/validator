@@ -1,16 +1,31 @@
 stages:
+  - build
   - deploy
 
-maven-build-test-deploy:
+maven-build:
   image: maven:3.6.3-openjdk-11
-  stage: deploy
+  stage: build
   script:
-    - echo $(mvn --version)
-    - echo $(java --version)
-    - mvn test
-    - echo "pushing to $CI_COMMIT_REF_NAME"
-    - mvn compile jib:build -Djib.to.image="$DOCKERHUB_REPO"/validator:"$CI_COMMIT_REF_NAME" \
-      -Djib.to.auth.username="$DOCKERHUB_USER" \
-      -Djib.to.auth.password="$DOCKERHUB_TOKEN"
-    - echo "$CI_REGISTRY_IMAGE"
-      mvn compile jib:dockerBuild -Djib.to.image=/"$CI_REGISTRY_IMAGE" \
+    - mvn clean install
+    - mvn compile jib:build -Djib.to.image=docker.io/"$DOCKERHUB_REPO"/pdx-validator:"$CI_COMMIT_REF_NAME" -Djib.to.auth.username="$DOCKERHUB_USER" -Djib.to.auth.password="$DOCKERHUB_TOKEN" -Djib.to.tags=${CI_COMMIT_SHA}
+    - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD} -Djib.to.image=${CI_REGISTRY_IMAGE}:"$CI_COMMIT_REF_NAME" -Djib.to.tags=${CI_COMMIT_SHA}
+
+deploy:
+  stage: deploy
+  image: dtzar/helm-kubectl:2.13.0
+  script:
+    - kubectl config set-cluster local --server="${KUBERNETES_ENDPOINT}"
+    - kubectl config set clusters.local.certificate-authority-data "${KUBERNETES_CERTIFICATE_AUTHORITY_DATA}"
+    - kubectl config set-credentials ${KUBERNETES_USER} --token="${KUBERNETES_USER_TOKEN}"
+    - kubectl config set-context "${KUBERNETES_NAMESPACE}" --cluster=local --user=${KUBERNETES_USER} --namespace="${KUBERNETES_NAMESPACE}"
+    - kubectl config use-context "${KUBERNETES_NAMESPACE}"
+    - kubectl version
+
+    - kubectl delete all --all -n "${KUBERNETES_NAMESPACE}"
+
+    - kubectl apply -f k8-deploy/deployment.yml --record
+    - kubectl rollout status -f k8-deploy/deployment.yml
+
+    - kubectl apply -f k8-deploy/service.yml --record
+    - kubectl apply -f k8-deploy/ingress.yml --record
+    - kubectl get all,ing

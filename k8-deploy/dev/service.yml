@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pdx-validator
+  labels:
+    app: pdx-validator
+  namespace: pdx-validator-dev
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: pdx-validator
+  type: ClusterIP  # To use an Ingress Controller
