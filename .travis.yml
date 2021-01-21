@@ -2,6 +2,11 @@ language: java
 sudo: false
 jdk:
   - openjdk11
+env:
+  global:
+    - JAVA_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmn48M -Xmx512M"
+    - NUM_THREADS=2
+
 addons:
   sonarcloud:
     organization: pdxfinder
