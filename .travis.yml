@@ -1,17 +1,14 @@
 language: java
-
 sudo: false
-
 jdk:
   - openjdk11
-
-script: mvn clean package
-
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=pdxfinder-validator
 env:
   global:
     - JAVA_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmn48M -Xmx512M"
     - NUM_THREADS=2
-
+    - secure: HHKo7U3N6+MwoNPRKLa+nX8sIhBHIxtq3v2Lx99S8+ryOif89h5xxciZ08mRww4Hfe7JIXBLG9F6twArnak7TOeacxgyJ0w+o6fUc+eQ/WfOtuZYHphmK/6j9mDr9iCgRKIFs/r1jE1mWBmrjuZlbIJGqXkXWo3srI/sHGcDSnJIttGB2ZmVW3gEy43xPcfGtkGreRUK9S7UGJmtki+vApp9S3YvGXul0j1QHlAnrYSwfGY8p2vzBXLmrZx30JZC2W+2BIf5vvAF9lhwJhPfXP388TfAQY2xTs+QWCIQK+d2/L3LSZW2TUj8QYTebhCKhaN8cxWHRZHYqHrNZv9pj+DFCLS4b/2lcEln5NBLQg01SjC2glZOQRU579ikqcFCQg/3tAgBxT/H0bxs4xWVtcavA3GjwzPA2hirnOmDdrM9dp7Me4pm+nBfYldR/6N47wsIbon4ArUj/Y/lZ+ryZHUdq6hm+tLGHGWPr1dh6Cq8pYc445DhfXR8J66tvpa3d1O/B0vbkafnxzvNf3BiX1rAVxDaugK3/vRHCY9Y9oMFgOxIb6RqT6lIQzw+BqNdTvAoBUkIv2WmFoE1cC4g6efVuI/xIHHoLqce3VAaWEJQugL2BMQb2HmcPsKXsoMG5GMDVVhPsfHYEijOGIZTLgj0xKrz6q3kQ1TBuM9w/mA=
 notifications:
   webhooks:
     urls:
@@ -19,12 +16,8 @@ notifications:
     on_success: always
     on_failure: always
     on_start: never
-
 addons:
   sonarcloud:
-    organization: "pdxfinder"
+    organization: pdxfinder
     token:
-      secure: "0dc1c4f716ec8d6f7a432f89e3286a7a374e0cc6"
-
-script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=pdxfinder-validator
+      secure: 0dc1c4f716ec8d6f7a432f89e3286a7a374e0cc6
