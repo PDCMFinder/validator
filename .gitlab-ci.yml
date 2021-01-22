@@ -21,8 +21,6 @@ deploy:
     - kubectl config use-context "${KUBERNETES_NAMESPACE}"
     - kubectl version
 
-    - kubectl delete all --all -n "${KUBERNETES_NAMESPACE}"
-
     - kubectl apply -f k8-deploy/deployment.yml --record
     - kubectl rollout status -f k8-deploy/deployment.yml
 
