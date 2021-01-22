@@ -6,9 +6,8 @@ maven-build:
   image: maven:3.6.3-openjdk-11
   stage: build
   script:
-    - mvn clean install
-    - mvn compile jib:build -Djib.to.image=docker.io/"$DOCKERHUB_REPO"/pdx-validator:"$CI_COMMIT_REF_NAME" -Djib.to.auth.username="$DOCKERHUB_USER" -Djib.to.auth.password="$DOCKERHUB_TOKEN" -Djib.to.tags=${CI_COMMIT_SHA}
-    - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD} -Djib.to.image=${CI_REGISTRY_IMAGE}:"$CI_COMMIT_REF_NAME" -Djib.to.tags=${CI_COMMIT_SHA}
+    - mvn clean install jib:build -Djib.to.image=docker.io/"$DOCKERHUB_REPO"/pdx-validator:"$CI_COMMIT_REF_NAME" -Djib.to.auth.username="$DOCKERHUB_USER" -Djib.to.auth.password="$DOCKERHUB_TOKEN" -Djib.to.tags=${CI_COMMIT_SHA}
+    - mvn jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD} -Djib.to.image=${CI_REGISTRY_IMAGE}:"$CI_COMMIT_REF_NAME" -Djib.to.tags=${CI_COMMIT_SHA}
 
 deploy:
   stage: deploy
@@ -22,8 +21,8 @@ deploy:
     - kubectl version
 
     - kubectl apply -f k8-deploy/deployment.yml --record
-    - kubectl rollout status -f k8-deploy/deployment.yml
+    - kubectl rollout status -f k8-deploy/dev/deployment.yml
 
-    - kubectl apply -f k8-deploy/service.yml --record
-    - kubectl apply -f k8-deploy/ingress.yml --record
+    - kubectl apply -f k8-deploy/dev/service.yml --record
+    - kubectl apply -f k8-deploy/dev/ingress.yml --record
     - kubectl get all,ing
