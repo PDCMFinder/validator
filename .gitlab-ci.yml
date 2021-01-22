@@ -20,7 +20,7 @@ deploy:
     - kubectl config use-context "${KUBERNETES_NAMESPACE}"
     - kubectl version
 
-    - kubectl apply -f k8-deploy/deployment.yml --record
+    - kubectl apply -f k8-deploy/dev/deployment.yml --record
     - kubectl rollout status -f k8-deploy/dev/deployment.yml
 
     - kubectl apply -f k8-deploy/dev/service.yml --record
