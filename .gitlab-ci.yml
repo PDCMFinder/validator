@@ -9,7 +9,7 @@ maven-build:
     - mvn clean install jib:build -Djib.to.image=docker.io/"$DOCKERHUB_REPO"/pdx-validator:"$CI_COMMIT_REF_NAME" -Djib.to.auth.username="$DOCKERHUB_USER" -Djib.to.auth.password="$DOCKERHUB_TOKEN" -Djib.to.tags=${CI_COMMIT_SHA}
     - mvn jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD} -Djib.to.image=${CI_REGISTRY_IMAGE}:"$CI_COMMIT_REF_NAME" -Djib.to.tags=${CI_COMMIT_SHA}
 
-deploy:
+deploy-dev:
   stage: deploy
   image: dtzar/helm-kubectl:2.13.0
   script:
@@ -25,4 +25,7 @@ deploy:
 
     - kubectl apply -f k8-deploy/dev/service.yml --record
     - kubectl apply -f k8-deploy/dev/ingress.yml --record
-    - kubectl get all,ing
+    - kubectl get pods,service,deploy,replicaset,ing
+  only:
+    refs:
+      - dev
