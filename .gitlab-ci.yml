@@ -8,6 +8,10 @@ maven-build:
   script:
     - mvn clean install jib:build -Djib.to.image=docker.io/"$DOCKERHUB_REPO"/pdx-validator:"$CI_COMMIT_REF_NAME" -Djib.to.auth.username="$DOCKERHUB_USER" -Djib.to.auth.password="$DOCKERHUB_TOKEN" -Djib.to.tags=${CI_COMMIT_SHA}
     - mvn jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD} -Djib.to.image=${CI_REGISTRY_IMAGE}:"$CI_COMMIT_REF_NAME" -Djib.to.tags=${CI_COMMIT_SHA}
+  only:
+    ref:
+      - master
+      - dev
 
 deploy-HH-WP-WEBADMIN-dev:
   stage: deploy
@@ -32,25 +36,25 @@ deploy-HH-WP-WEBADMIN-dev:
     refs:
       - dev
 
-  deploy-HH-WP-WEBADMIN-master:
-    stage: deploy
-    image: dtzar/helm-kubectl:2.13.0
-    script:
-      - kubectl config set-cluster local --server="${HH_WP_WEBADMIN_ENDPOINT}"
-      - kubectl config set clusters.local.certificate-authority-data "${HH_WP_WEBADMIN_CERTIFICATE_AUTHORITY}"
-      - kubectl config set-credentials ${HH_WP_WEBADMIN_USER} --token="${HH_WP_WEBADMIN_USER_TOKEN}"
-      - kubectl config set-context "${HH_WP_WEBADMIN_NAMESPACE}" --cluster=local --user=${HH_WP_WEBADMIN_USER} --namespace="${HH_WP_WEBADMIN_NAMESPACE}"
-      - kubectl config use-context "${HH_WP_WEBADMIN_NAMESPACE}"
-      - kubectl version
+deploy-HH-WP-WEBADMIN-master:
+  stage: deploy
+  image: dtzar/helm-kubectl:2.13.0
+  script:
+    - kubectl config set-cluster local --server="${HH_WP_WEBADMIN_ENDPOINT}"
+    - kubectl config set clusters.local.certificate-authority-data "${HH_WP_WEBADMIN_CERTIFICATE_AUTHORITY}"
+    - kubectl config set-credentials ${HH_WP_WEBADMIN_USER} --token="${HH_WP_WEBADMIN_USER_TOKEN}"
+    - kubectl config set-context "${HH_WP_WEBADMIN_NAMESPACE}" --cluster=local --user=${HH_WP_WEBADMIN_USER} --namespace="${HH_WP_WEBADMIN_NAMESPACE}"
+    - kubectl config use-context "${HH_WP_WEBADMIN_NAMESPACE}"
+    - kubectl version
 
-      - sed -i "s/master/$CI_COMMIT_SHA/g' /k8-deploy/prod/deployment
+    - sed -i "s/master/$CI_COMMIT_SHA/g' /k8-deploy/prod/deployment
 
-      - kubectl apply -f k8-deploy/prod/deployment.yml --record
-      - kubectl rollout status -f k8-deploy/prod/deployment.yml
+    - kubectl apply -f k8-deploy/prod/deployment.yml --record
+    - kubectl rollout status -f k8-deploy/prod/deployment.yml
 
-      - kubectl apply -f k8-deploy/prod/service.yml --record
-      - kubectl apply -f k8-deploy/prod/ingress.yml --record
-      - kubectl get pods,service,deploy,replicaset,ing
-    only:
-      refs:
-        - master
+    - kubectl apply -f k8-deploy/prod/service.yml --record
+    - kubectl apply -f k8-deploy/prod/ingress.yml --record
+    - kubectl get pods,service,deploy,replicaset,ing
+  only:
+    refs:
+      - master
