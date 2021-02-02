@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: pdx-validator
-          image: 'pdxfinder/pdx-validator:master'
+          image: 'pdxfinder/pdx-validator:dev'
           ports:
             - containerPort: 8080
 
@@ -24,8 +24,10 @@ metadata:
     name: pdx-validator-service
 spec:
   ports:
-    - port: 8080
-      protocol: HTTP
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30930
   selector:
     app: pdx-validator
   type: NodePort

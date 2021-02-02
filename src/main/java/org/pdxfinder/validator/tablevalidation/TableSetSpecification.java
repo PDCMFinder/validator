@@ -97,7 +97,7 @@ public class TableSetSpecification {
     return this;
   }
 
-  public Set<ColumnReference> getNonEmptyColumns() {
+  public Set<ColumnReference> getRequiredNonEmptyColumns() {
     return this.nonEmptyColumns;
   }
 
@@ -137,7 +137,7 @@ public class TableSetSpecification {
       mergedTableSetSpecifications.setProvider(tss.getProvider());
       mergedTableSetSpecifications.addRequiredTables(tss.getRequiredTables());
       mergedTableSetSpecifications.addRequiredColumns(tss.getRequiredColumns());
-      mergedTableSetSpecifications.addNonEmptyColumns(tss.getNonEmptyColumns());
+      mergedTableSetSpecifications.addNonEmptyColumns(tss.getRequiredNonEmptyColumns());
       mergedTableSetSpecifications.addUniqueColumns(tss.getUniqueColumns());
       mergedTableSetSpecifications.addRelations(tss.getRelations());
       mergedTableSetSpecifications.addAllValueRestrictions(tss.getCharSetRestrictions());
@@ -148,25 +148,37 @@ public class TableSetSpecification {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     TableSetSpecification that = (TableSetSpecification) o;
 
     if (getRequiredTables() != null
         ? !getRequiredTables().equals(that.getRequiredTables())
-        : that.getRequiredTables() != null) return false;
+        : that.getRequiredTables() != null) {
+      return false;
+    }
     if (getRequiredColumns() != null
         ? !getRequiredColumns().equals(that.getRequiredColumns())
-        : that.getRequiredColumns() != null) return false;
-    if (getNonEmptyColumns() != null
-        ? !getNonEmptyColumns().equals(that.getNonEmptyColumns())
-        : that.getNonEmptyColumns() != null) return false;
+        : that.getRequiredColumns() != null) {
+      return false;
+    }
+    if (getRequiredNonEmptyColumns() != null
+        ? !getRequiredNonEmptyColumns().equals(that.getRequiredNonEmptyColumns())
+        : that.getRequiredNonEmptyColumns() != null) {
+      return false;
+    }
     if (getUniqueColumns() != null
         ? !getUniqueColumns().equals(that.getUniqueColumns())
-        : that.getUniqueColumns() != null) return false;
+        : that.getUniqueColumns() != null) {
+      return false;
+    }
     if (getRelations() != null
         ? !getRelations().equals(that.getRelations())
-        : that.getRelations() != null) return false;
+        : that.getRelations() != null) {
+      return false;
+    }
     return getProvider().equals(that.getProvider());
   }
 
@@ -174,7 +186,8 @@ public class TableSetSpecification {
   public int hashCode() {
     int result = getRequiredTables() != null ? getRequiredTables().hashCode() : 0;
     result = 31 * result + (getRequiredColumns() != null ? getRequiredColumns().hashCode() : 0);
-    result = 31 * result + (getNonEmptyColumns() != null ? getNonEmptyColumns().hashCode() : 0);
+    result = 31 * result + (getRequiredNonEmptyColumns() != null ? getRequiredNonEmptyColumns()
+        .hashCode() : 0);
     result = 31 * result + (getUniqueColumns() != null ? getUniqueColumns().hashCode() : 0);
     result = 31 * result + (getRelations() != null ? getRelations().hashCode() : 0);
     result = 31 * result + getProvider().hashCode();

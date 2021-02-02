@@ -19,7 +19,7 @@ public class ErrorReporterTest {
     List<ValidationError> errors = new ArrayList<>();
     ValidationError error =
         emptyValueErrorCreator
-            .create(ColumnReference.of("table", "column"), Table.create(), "Provider")
+            .create(ColumnReference.of("table", "column"), Table.create(), "Provider", "0")
             .getValidationError();
     errors.add(error);
     errors.add(error);
@@ -34,7 +34,7 @@ public class ErrorReporterTest {
     List<ValidationError> errors = new ArrayList<>();
     ValidationError error =
         emptyValueErrorCreator
-            .create(ColumnReference.of("table", "column"), Table.create(), "Provider")
+            .create(ColumnReference.of("table", "column"), Table.create(), "Provider", "0")
             .getValidationError();
     errors.add(error);
 

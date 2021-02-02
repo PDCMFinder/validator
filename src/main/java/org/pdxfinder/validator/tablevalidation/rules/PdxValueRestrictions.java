@@ -43,7 +43,8 @@ public class PdxValueRestrictions {
           Arrays.asList("male", "female", "other", getNOTCOLLECTED(), getNOTPROVIDED()));
 
   private static final ValueRestrictions ETHNICITY_ASSESSMENT_CATEGORIES =
-      ValueRestrictions.of("self-assessed", "genetic");
+      ValueRestrictions.of(
+          Arrays.asList("self-assessed", "genetic"));
 
   private static final ValueRestrictions TUMOUR_TYPE_CATEGORIES =
       ValueRestrictions.of(
