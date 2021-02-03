@@ -10,16 +10,18 @@ public class EmptyValueError extends ValidationErrorBuilder {
   private String message;
   private String description;
 
-  EmptyValueError(ColumnReference nonEmptyColumn, Table invalidRows, String provider) {
-    description = buildDescription(nonEmptyColumn.column());
+  EmptyValueError(ColumnReference nonEmptyColumn, Table invalidRows, String provider,
+      String missingRowNumbers) {
+    description = buildDescription(nonEmptyColumn.column(), missingRowNumbers);
     super.buildValidationErrors(
         errorType, nonEmptyColumn.table(), description, nonEmptyColumn.column());
     this.message = buildMessage(nonEmptyColumn.table(), provider, description);
     this.invalidRows = invalidRows;
   }
 
-  private String buildDescription(String columName) {
-    return String.format("Missing value(s) in required column [%s]", columName);
+  private String buildDescription(String columName, String missingColumns) {
+    return String.format("Missing value(s) in required column [%s] row numbers [%s]", columName,
+        missingColumns);
   }
 
   private String buildMessage(String table, String provider, String description) {

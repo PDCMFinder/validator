@@ -77,7 +77,7 @@ public class EmptyValueErrorReportCreatorTest {
     List<ValidationError> expected =
         Collections.singletonList(
             emptyValueErrorCreator
-                .create(requiredCol, tableWithMissingValue, requireColumn.getProvider())
+                .create(requiredCol, tableWithMissingValue, requireColumn.getProvider(), "[6]")
                 .getValidationError());
 
     assertEquals(
@@ -105,7 +105,9 @@ public class EmptyValueErrorReportCreatorTest {
                     requiredCol,
                     tableWithMissingValue.where(
                         tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
-                    PROVIDER)
+                    PROVIDER,
+                    "[7]"
+                )
                 .getValidationError());
     assertEquals(
         expected.toString(),

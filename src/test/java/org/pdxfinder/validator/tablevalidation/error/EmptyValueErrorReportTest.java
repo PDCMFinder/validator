@@ -15,14 +15,15 @@ public class EmptyValueErrorReportTest {
   @Test
   public void verboseMessage_givenMissingValue_returnsAppropriateError() {
     String expected =
-        "Error in [table] for provider [provider]: Missing value(s) in required column [column]:\n"
+        "Error in [table] for provider [provider]: Missing value(s) in required column [column] row numbers [0]:\n"
             + "  invalid  \n"
             + " column1  |\n"
             + "-----------\n"
             + "          |";
     ColumnReference columnReference = ColumnReference.of("table", "column");
     Table invalidRows = Table.create("invalid", StringColumn.create("column1", ""));
-    EmptyValueError error = emptyValueErrorCreator.create(columnReference, invalidRows, PROVIDER);
+    EmptyValueError error = emptyValueErrorCreator
+        .create(columnReference, invalidRows, PROVIDER, "0");
 
     assertEquals(expected, error.verboseMessage());
   }
@@ -30,11 +31,12 @@ public class EmptyValueErrorReportTest {
   @Test
   public void message_givenMissingValue_returnsAppropriateError() {
     String expected =
-        "Error in [table] for provider [provider]: Missing value(s) in required column [column]";
+        "Error in [table] for provider [provider]: Missing value(s) in required column [column] row numbers [0]";
     ColumnReference columnReference = ColumnReference.of("table", "column");
     Table invalidRows = Table.create("invalid", StringColumn.create("column1", ""));
 
-    EmptyValueError error = emptyValueErrorCreator.create(columnReference, invalidRows, PROVIDER);
+    EmptyValueError error = emptyValueErrorCreator
+        .create(columnReference, invalidRows, PROVIDER, "0");
 
     assertEquals(expected, error.message());
   }

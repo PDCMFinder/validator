@@ -1,5 +1,6 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -78,12 +79,14 @@ public class IllegalValueErrorCreator extends ErrorCreator {
             .toArray();
 
     if (!invalidValues.isEmpty()) {
+
+      HashSet<String> uniqueInvalidValues = new HashSet<String>(invalidValues);
       String errorDescriptions =
           IllegalValueError.buildDescription(
               columnReference.column(),
               invalidValues.size(),
               valueRestrictions.getErrorDescription(),
-              invalidValues.toString());
+              uniqueInvalidValues.toString());
       errors.add(
           create(
               columnReference.table(),
