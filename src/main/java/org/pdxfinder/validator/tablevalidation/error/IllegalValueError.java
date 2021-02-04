@@ -16,9 +16,9 @@ public class IllegalValueError extends ValidationErrorBuilder {
   }
 
   static String buildDescription(
-      String column, int count, String errorDescription, String invalidValues) {
+      int count, String errorDescription, String invalidValues) {
     return String.format(
-        "in column [%s] found %s values %s : %s", column, count, errorDescription, invalidValues);
+        "found %s values %s : %s", count, errorDescription, invalidValues);
   }
 
   private String buildMessage(String tableName, String provider, String description) {

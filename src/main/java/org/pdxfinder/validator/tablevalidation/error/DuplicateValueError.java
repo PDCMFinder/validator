@@ -10,14 +10,14 @@ public class DuplicateValueError extends ValidationErrorBuilder {
   private String message;
 
   DuplicateValueError(ColumnReference uniqueColumn, Set<String> duplicateValues, String provider) {
-    this.description = buildDescription(uniqueColumn.column(), duplicateValues.toString());
+    this.description = buildDescription(duplicateValues.toString());
     this.message = buildMessage(uniqueColumn.table(), provider, description);
     super.buildValidationErrors(
-        errorType, uniqueColumn.table(), description, duplicateValues.toString());
+        errorType, uniqueColumn.table(), description, uniqueColumn.column());
   }
 
-  public String buildDescription(String columName, String duplicateValues) {
-    return String.format("Duplicates found in column [%s]: %s", columName, duplicateValues);
+  public String buildDescription(String duplicateValues) {
+    return String.format("Duplicates found : %s", duplicateValues);
   }
 
   private String buildMessage(String table, String provider, String description) {
