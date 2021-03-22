@@ -3,7 +3,7 @@ stages:
   - deploy
 
 maven-build:
-  image: mouse-informatics/maven
+  image: $CI_REGISTRY/mouse-informatics/maven:latest
   stage: build
   script:
     - export
