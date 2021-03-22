@@ -3,7 +3,7 @@ stages:
   - deploy
 
 maven-build:
-  image: $CI_REGISTRY/mouse-informatics/maven:latest
+  image: maven:3.6.3-openjdk-11
   stage: build
   script:
     - export
