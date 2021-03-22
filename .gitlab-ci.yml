@@ -3,7 +3,7 @@ stages:
   - deploy
 
 maven-build:
-  image: maven:3.6.3-openjdk-11
+  image: mouse-informatics/maven
   stage: build
   script:
     - export
