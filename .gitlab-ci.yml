@@ -27,7 +27,7 @@ deploy-HH-WP-WEBADMIN-dev:
     - kubectl config use-context "${HH_WP_WEBADMIN_DEV_NAMESPACE}"
     - kubectl version
 
-    - sed -i "s/dev/$CI_COMMIT_SHA/g" /k8-deploy/dev/deployment
+    - sed -i "s/dev/$CI_COMMIT_SHA/g" k8-deploy/dev/deployment
 
     - kubectl apply -f k8-deploy/dev/deployment.yml --record
     - kubectl rollout status -f k8-deploy/dev/deployment.yml
@@ -50,7 +50,7 @@ deploy-HH-WP-WEBADMIN-master:
     - kubectl config use-context "${HH_WP_WEBADMIN_NAMESPACE}"
     - kubectl version
 
-    - sed -i "s/master/$CI_COMMIT_SHA/g" /k8-deploy/prod/deployment
+    - sed -i "s/master/$CI_COMMIT_SHA/g" k8-deploy/prod/deployment
 
     - kubectl apply -f k8-deploy/prod/deployment.yml --record
     - kubectl rollout status -f k8-deploy/prod/deployment.yml
