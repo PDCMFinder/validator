@@ -31,8 +31,6 @@ deploy-HH-WP-WEBADMIN-dev:
     - sed -i "s/dev_image/$CI_COMMIT_SHA/g" k8-deploy/nodeport_deploy/dev/deployment.yml
 
     - kubectl apply -f k8-deploy/nodeport_deploy/dev/deployment.yml --record
-    - kubectl rollout status -f k8-deploy/nodeport_deploy/dev/deployment.yml
-
     - kubectl get pods,service,deploy
   only:
     refs:
@@ -53,8 +51,6 @@ deploy-HH-WP-WEBADMIN-master:
     - sed -i "s/prod_image/$CI_COMMIT_SHA/g" k8-deploy/nodeport_deploy/prod/deployment.yml
 
     - kubectl apply -f k8-deploy/nodeport_deploy/prod/deployment.yml --record
-    - kubectl rollout status -f k8-deploy/nodeport_deploy/prod/deployment.yml
-
     - kubectl get pods,service,deploy
   only:
     refs:
