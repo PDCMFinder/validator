@@ -27,13 +27,13 @@ deploy-HH-WP-WEBADMIN-dev:
     - kubectl config use-context "${HH_WP_WEBADMIN_DEV_NAMESPACE}"
     - kubectl version
 
-    - sed -i "s/dev/$CI_COMMIT_SHA/g" k8-deploy/dev/deployment
+    - sed -i "s/dev/$CI_COMMIT_SHA/g" k8-deploy/dev/nodeport_deploy/deployment.yml
 
-    - kubectl apply -f k8-deploy/dev/deployment.yml --record
-    - kubectl rollout status -f k8-deploy/dev/deployment.yml
+    - kubectl apply -f k8-deploy/nodeport_deploy/deployment.yml --record
+    - kubectl rollout status -f k8-deploy/nodeport_deploy/deployment.yml
 
-    - kubectl apply -f k8-deploy/dev/service.yml --record
-    - kubectl apply -f k8-deploy/dev/ingress.yml --record
+    - kubectl apply -f k8-deploy/nodeport_deploy/service.yml --record
+    - kubectl apply -f k8-deploy/nodeport_deploy/ingress.yml --record
     - kubectl get pods,service,deploy,replicaset,ing
   only:
     refs:
@@ -50,13 +50,13 @@ deploy-HH-WP-WEBADMIN-master:
     - kubectl config use-context "${HH_WP_WEBADMIN_NAMESPACE}"
     - kubectl version
 
-    - sed -i "s/master/$CI_COMMIT_SHA/g" k8-deploy/prod/deployment
+    - sed -i "s/dev/$CI_COMMIT_SHA/g" k8-deploy/dev/nodeport_deploy/deployment.yml
 
-    - kubectl apply -f k8-deploy/prod/deployment.yml --record
-    - kubectl rollout status -f k8-deploy/prod/deployment.yml
+    - kubectl apply -f k8-deploy/nodeport_deploy/deployment.yml --record
+    - kubectl rollout status -f k8-deploy/nodeport_deploy/deployment.yml
 
-    - kubectl apply -f k8-deploy/prod/service.yml --record
-    - kubectl apply -f k8-deploy/prod/ingress.yml --record
+    - kubectl apply -f k8-deploy/nodeport_deploy/service.yml --record
+    - kubectl apply -f k8-deploy/nodeport_deploy/ingress.yml --record
     - kubectl get pods,service,deploy,replicaset,ing
   only:
     refs:
