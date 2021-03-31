@@ -15,7 +15,7 @@ public class DuplicateValueErrorReportTest {
   @Test
   public void message() {
     String expected =
-        "Error in [table] for provider [provider]: Duplicates found in column [column]: [a]";
+        "Error in [table] for provider [provider]: Duplicates found : [a]";
     ColumnReference uniqueColumn = ColumnReference.of("table", "column");
     Set<String> duplicateValues = new HashSet<>(Arrays.asList("a"));
 

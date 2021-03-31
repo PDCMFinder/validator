@@ -27,7 +27,7 @@ public class PdxValueRestrictions {
 
   private static final ValueRestrictions COLLECTION_EVENT_FORMAT =
       ValueRestrictions.of(
-          "(?i)^collection event [0-9]{1,3}", "Not of type: collection event [0-9]");
+          "(?i)(^collection event [0-9]{1,3})?", "Not of type: collection event [0-9] or blank");
 
   private static final ValueRestrictions COLLECTION_DATE_FORMAT =
       ValueRestrictions.of(
@@ -44,7 +44,7 @@ public class PdxValueRestrictions {
 
   private static final ValueRestrictions ETHNICITY_ASSESSMENT_CATEGORIES =
       ValueRestrictions.of(
-          Arrays.asList("self-assessed", "genetic"));
+          Arrays.asList("self-assessed", "genetic", getNOTPROVIDED()));
 
   private static final ValueRestrictions TUMOUR_TYPE_CATEGORIES =
       ValueRestrictions.of(

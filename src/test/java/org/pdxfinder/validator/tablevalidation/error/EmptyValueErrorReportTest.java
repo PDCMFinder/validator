@@ -15,7 +15,7 @@ public class EmptyValueErrorReportTest {
   @Test
   public void verboseMessage_givenMissingValue_returnsAppropriateError() {
     String expected =
-        "Error in [table] for provider [provider]: Missing value(s) in required column [column] row numbers [0]:\n"
+        "Error in [table] for provider [provider]: Missing value(s) in row numbers [0]:\n"
             + "  invalid  \n"
             + " column1  |\n"
             + "-----------\n"
@@ -31,7 +31,7 @@ public class EmptyValueErrorReportTest {
   @Test
   public void message_givenMissingValue_returnsAppropriateError() {
     String expected =
-        "Error in [table] for provider [provider]: Missing value(s) in required column [column] row numbers [0]";
+        "Error in [table] for provider [provider]: Missing value(s) in row numbers [0]";
     ColumnReference columnReference = ColumnReference.of("table", "column");
     Table invalidRows = Table.create("invalid", StringColumn.create("column1", ""));
 

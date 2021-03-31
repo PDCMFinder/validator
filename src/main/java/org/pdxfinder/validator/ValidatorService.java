@@ -8,6 +8,7 @@ import java.util.Map;
 import org.pdxfinder.validator.tablesetutilities.TableReader;
 import org.pdxfinder.validator.tablesetutilities.TableSetUtilities;
 import org.pdxfinder.validator.tablevalidation.ErrorReporter;
+import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.Validator;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.rules.PdxValidationRuleset;
@@ -20,19 +21,20 @@ import tech.tablesaw.api.Table;
 @Service
 public class ValidatorService {
 
-  private Validator validator;
+  private TableSetSpecification pdxValidationRuleset;
   private static final Logger log = LoggerFactory.getLogger(ValidatorService.class);
 
-  public ValidatorService(Validator validator) {
-    this.validator = validator;
+  public ValidatorService() {
+    this.pdxValidationRuleset = new PdxValidationRuleset().generate();
   }
 
   public String proccessRequest(MultipartFile multipartFile) {
     logRequest(multipartFile);
+    Validator validator = new Validator();
     Map<String, Table> tableSet = getTables(multipartFile);
     var cleanedTableSet = TableReader.cleanPdxTables(tableSet);
     List<ValidationError> validationErrors =
-        validator.validate(cleanedTableSet, new PdxValidationRuleset().generate());
+        validator.validate(cleanedTableSet, pdxValidationRuleset);
     return new ErrorReporter(validationErrors).getJson();
   }
 

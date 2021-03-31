@@ -83,15 +83,14 @@ public class IllegalValueErrorCreator extends ErrorCreator {
       HashSet<String> uniqueInvalidValues = new HashSet<String>(invalidValues);
       String errorDescriptions =
           IllegalValueError.buildDescription(
-              columnReference.column(),
               invalidValues.size(),
               valueRestrictions.getErrorDescription(),
               uniqueInvalidValues.toString());
       errors.add(
           create(
               columnReference.table(),
-              columnReference.column(),
               errorDescriptions,
+              columnReference.column(),
               workingTable.rows(indexOfInvalids),
               provider)
               .getValidationError());
