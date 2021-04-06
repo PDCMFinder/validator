@@ -6,10 +6,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.pdxfinder.validator.ValidatorXlsxReader;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.io.Source;
 import tech.tablesaw.io.xlsx.XlsxReadOptions;
-import tech.tablesaw.io.xlsx.XlsxReader;
 
 public class TableReader {
 
@@ -18,8 +18,8 @@ public class TableReader {
   public static List<Table> readXlsx(InputStream inputStream) throws IOException {
     Source source = new Source(inputStream);
     XlsxReadOptions options = XlsxReadOptions.builder(source).build();
-    XlsxReader reader = new XlsxReader();
-    return reader.readMultiple(options);
+    ValidatorXlsxReader reader = new ValidatorXlsxReader();
+    return reader.readMultiple(options, false);
   }
 
   public static Map<String, Table> listToMap(List<Table> tableList) {
