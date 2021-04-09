@@ -1,4 +1,4 @@
-package org.pdxfinder.validator;/*
+package org.pdxfinder.validator.tablesetutilities;/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,7 +41,7 @@ import tech.tablesaw.columns.Column;
 import tech.tablesaw.io.xlsx.XlsxReadOptions;
 
 @Immutable
-public class ValidatorXlsxReader {
+public class ValidationXlsxReader {
 
   public Table read(XlsxReadOptions options) throws IOException {
     List<Table> tables = readMultiple(options, true);

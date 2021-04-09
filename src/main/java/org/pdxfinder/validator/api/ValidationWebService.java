@@ -1,4 +1,4 @@
-package org.pdxfinder.validator;
+package org.pdxfinder.validator.api;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,12 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import tech.tablesaw.api.Table;
 
 @Service
-public class ValidatorService {
+public class ValidationWebService {
 
   private TableSetSpecification pdxValidationRuleset;
-  private static final Logger log = LoggerFactory.getLogger(ValidatorService.class);
+  private static final Logger log = LoggerFactory.getLogger(ValidationWebService.class);
 
-  public ValidatorService() {
+  public ValidationWebService() {
     this.pdxValidationRuleset = new PdxValidationRuleset().generate();
   }
 
