@@ -30,7 +30,9 @@ public class EmptyValueErrorCreator extends ErrorCreator {
   }
 
   public EmptyValueError create(
-      ColumnReference columnReference, Table invalidRows, String provider,
+      ColumnReference columnReference,
+      Table invalidRows,
+      String provider,
       String missingRowNumbers) {
     return new EmptyValueError(columnReference, invalidRows, provider, missingRowNumbers);
   }

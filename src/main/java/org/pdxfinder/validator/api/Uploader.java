@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
 @RestController
 @RequestMapping("/validation/")
 public class Uploader {
@@ -40,12 +39,12 @@ public class Uploader {
   }
 
   private boolean multipartFileIsMissing(Optional<MultipartFile> multipartFile) {
-    return multipartFile.isEmpty() || multipartFile.get().isEmpty()
+    return multipartFile.isEmpty()
+        || multipartFile.get().isEmpty()
         || multipartFile.get().getContentType() == null;
   }
 
   private boolean multipartFileIsUnsupportedType(Optional<MultipartFile> multipartFile) {
     return !multipartFile.get().getContentType().equals(EXCEL_CONTENT_TYPE);
   }
-
 }

@@ -112,8 +112,8 @@ public class PdxValidationRuleset extends ValidationRuleCreator {
     numericalColumns.addAll(matchingColumnFromMetadata("patient", "age_at_initial_diagnosis"));
     numericalColumns.addAll(matchingColumnFromMetadata("sample", "age_in_years_at_collection"));
     numericalColumns.addAll(matchingColumnFromMetadata("model", "passage_number"));
-    //Removed due to too tight of control
-    //numericalColumns.addAll(matchingColumnFromMetadata("model_validation", "passages_tested"));
+    // Removed due to too tight of control
+    // numericalColumns.addAll(matchingColumnFromMetadata("model_validation", "passages_tested"));
     return numericalColumns;
   }
 
