@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablesetutilities;
+package org.pdxfinder.validator.tableutilities;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.pdxfinder;
+package org.pdxfinder.validator.tableutilities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.pdxfinder.validator.tablesetutilities.ValidationXlsxReader;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.Column;
 import tech.tablesaw.io.xlsx.XlsxReadOptions;
