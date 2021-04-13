@@ -1,9 +1,9 @@
-package org.pdxfinder.validator.tablesetutilities;
+package org.pdxfinder.validator.tableutilities;
 
 import static org.junit.Assert.assertEquals;
-import static org.pdxfinder.validator.tablesetutilities.TableUtilities.cleanTableValues;
-import static org.pdxfinder.validator.tablesetutilities.TableUtilities.fromString;
-import static org.pdxfinder.validator.tablesetutilities.TableUtilities.removeHeaderRows;
+import static org.pdxfinder.validator.tableutilities.TableUtilities.cleanTableValues;
+import static org.pdxfinder.validator.tableutilities.TableUtilities.fromString;
+import static org.pdxfinder.validator.tableutilities.TableUtilities.removeHeaderRows;
 
 import java.util.Arrays;
 import java.util.Collections;
