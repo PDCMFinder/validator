@@ -1,17 +1,18 @@
-package org.pdxfinder.validator.tablesetutilities;
+package org.pdxfinder.validator.tableutilities;
 
 import static org.junit.Assert.assertEquals;
-import static org.pdxfinder.validator.tablesetutilities.TableSetUtilities.cleanValues;
-import static org.pdxfinder.validator.tablesetutilities.TableSetUtilities.removeDescriptionColumn;
-import static org.pdxfinder.validator.tablesetutilities.TableSetUtilities.removeHeaderRows;
-import static org.pdxfinder.validator.tablesetutilities.TableSetUtilities.removeHeaderRowsIfPresent;
-import static org.pdxfinder.validator.tablesetutilities.TableSetUtilities.removeProviderNameFromFilename;
+import static org.pdxfinder.validator.tableutilities.TableSetUtilities.cleanValues;
+import static org.pdxfinder.validator.tableutilities.TableSetUtilities.removeDescriptionColumn;
+import static org.pdxfinder.validator.tableutilities.TableSetUtilities.removeHeaderRows;
+import static org.pdxfinder.validator.tableutilities.TableSetUtilities.removeHeaderRowsIfPresent;
+import static org.pdxfinder.validator.tableutilities.TableSetUtilities.removeProviderNameFromFilename;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
@@ -166,5 +167,28 @@ public class TableSetUtilitiesTest {
 
     assertEquals(
         expectedTableSet.get(0).name(), TableSetUtilities.cleanTableNames(tableSet).get(0).name());
+  }
+
+  @Test
+  public void removeActualBlankRows_GivenTableWithBlankRowsInSecondColum_returnTableWithAllRows() {
+    final String TABLE_NAME = "table1";
+    final String ROW_VALUE = "row_value";
+    List<String> columnValues =
+        Arrays.asList("Header", "Header2", "Header3", "Header4", ROW_VALUE, ROW_VALUE, ROW_VALUE);
+    List<String> columnValuesWithMissing =
+        Arrays.asList("Header", "Header2", "Header3", "Header4", "", "", ROW_VALUE);
+    Table tableWithBlanks =
+        Table.create(TABLE_NAME)
+            .addColumns(
+                StringColumn.create("column_1", columnValues),
+                StringColumn.create("column_2", columnValuesWithMissing));
+    Table expectedTable =
+        Table.create(TABLE_NAME)
+            .addColumns(
+                StringColumn.create("column_1", ROW_VALUE, ROW_VALUE, ROW_VALUE),
+                StringColumn.create("column_2", "", "", ROW_VALUE));
+    Map<String, Table> actualTable =
+        TableSetUtilities.cleanPdxTables(Map.of(TABLE_NAME, tableWithBlanks));
+    Assert.assertEquals(expectedTable.toString(), actualTable.get(TABLE_NAME).toString());
   }
 }

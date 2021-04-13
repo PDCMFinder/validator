@@ -1,5 +1,6 @@
-package org.pdxfinder.validator.tablesetutilities;
+package org.pdxfinder.validator.tableutilities;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,26 @@ public class TableSetUtilities {
   private TableSetUtilities() {
     throw new IllegalStateException("Utility class");
   }
+
+  public static Map<String, Table> cleanPdxTables(Map<String, Table> pdxTableSet) {
+    List<String> columnsExemptFromLowercasing =
+        Arrays.asList(
+            "model_id",
+            "sample_id",
+            "patient_id",
+            "name",
+            "validation_host_strain_full",
+            "provider_name",
+            "provider_abbreviation",
+            "project",
+            "internal_url",
+            "internal_dosing_url");
+    TableSetUtilities.removeDescriptionColumn(pdxTableSet);
+    pdxTableSet = TableSetUtilities.removeHeaderRows(pdxTableSet);
+    pdxTableSet = TableSetUtilities.cleanValues(pdxTableSet, columnsExemptFromLowercasing);
+    return pdxTableSet;
+  }
+
 
   public static List<Table> cleanTableNames(List<Table> tables) {
     return tables.stream()
