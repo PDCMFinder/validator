@@ -3,6 +3,9 @@ package org.pdxfinder.validator.tableutilities;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,16 +13,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.io.Source;
+import tech.tablesaw.io.csv.CsvReadOptions;
 import tech.tablesaw.io.xlsx.XlsxReadOptions;
 
 public class FileReader {
 
   private static final Logger log = LoggerFactory.getLogger(FileReader.class);
-
 
   private FileReader() {
   }
@@ -66,8 +71,46 @@ public class FileReader {
       log.error("UPDOG directory is empty. What's UPDOG?");
       directoryList = new ArrayList<>();
     }
-    return directoryList;
+    return directoryList.stream()
+        .map(directory -> String.format("%s/%s", updogRootFolder, directory))
+        .collect(Collectors.toList());
   }
 
+  public static Map<String, Table> readAllTsvFilesIn(Path targetDirectory, PathMatcher filter) {
+    HashMap<String, Table> tables = new HashMap<>();
+    try (final Stream<Path> stream = Files.list(targetDirectory)) {
+      stream
+          .filter(filter::matches)
+          .forEach(
+              path ->
+                  tables.put(
+                      path.getFileName().toString(),
+                      readTsvOrReturnEmpty(path.toFile())));
+    } catch (IOException e) {
+      log.error("There was an error reading the files", e);
+    }
+    return tables;
+  }
+
+  public static Table readTsvOrReturnEmpty(File file) {
+    Table dataTable = Table.create();
+    log.trace("Reading tsv file {}", file);
+    System.out.print(String.format("Reading tsv file %s\r", file));
+    try {
+      dataTable = readTsv(file);
+    } catch (IOException e) {
+      log.error("There was an error reading the tsv file", e);
+    }
+    return dataTable;
+  }
+
+  public static Table readTsv(File file) throws IOException {
+    CsvReadOptions.Builder builder = CsvReadOptions
+        .builder(file)
+        .sample(false)
+        .separator('\t');
+    CsvReadOptions options = builder.build();
+    return Table.read().usingOptions(options);
+  }
 
 }
