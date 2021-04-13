@@ -1,7 +1,6 @@
 package org.pdxfinder.validator.api;
 
 import java.util.Optional;
-import org.pdxfinder.validator.ValidatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/validation/")
 public class Uploader {
 
-  private ValidatorService validatorService;
+  private ValidationWebService validatorService;
   private static final String EXCEL_CONTENT_TYPE =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
   @Autowired
-  Uploader(ValidatorService validatorService) {
+  Uploader(ValidationWebService validatorService) {
     this.validatorService = validatorService;
   }
 
@@ -40,12 +39,12 @@ public class Uploader {
   }
 
   private boolean multipartFileIsMissing(Optional<MultipartFile> multipartFile) {
-    return multipartFile.isEmpty() || multipartFile.get().isEmpty()
+    return multipartFile.isEmpty()
+        || multipartFile.get().isEmpty()
         || multipartFile.get().getContentType() == null;
   }
 
   private boolean multipartFileIsUnsupportedType(Optional<MultipartFile> multipartFile) {
     return !multipartFile.get().getContentType().equals(EXCEL_CONTENT_TYPE);
   }
-
 }

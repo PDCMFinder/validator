@@ -186,8 +186,9 @@ public class TableSetSpecification {
   public int hashCode() {
     int result = getRequiredTables() != null ? getRequiredTables().hashCode() : 0;
     result = 31 * result + (getRequiredColumns() != null ? getRequiredColumns().hashCode() : 0);
-    result = 31 * result + (getRequiredNonEmptyColumns() != null ? getRequiredNonEmptyColumns()
-        .hashCode() : 0);
+    result =
+        31 * result
+            + (getRequiredNonEmptyColumns() != null ? getRequiredNonEmptyColumns().hashCode() : 0);
     result = 31 * result + (getUniqueColumns() != null ? getUniqueColumns().hashCode() : 0);
     result = 31 * result + (getRelations() != null ? getRelations().hashCode() : 0);
     result = 31 * result + getProvider().hashCode();

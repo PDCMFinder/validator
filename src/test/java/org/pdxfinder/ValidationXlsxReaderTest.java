@@ -9,19 +9,19 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.pdxfinder.validator.ValidatorXlsxReader;
+import org.pdxfinder.validator.tablesetutilities.ValidationXlsxReader;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.Column;
 import tech.tablesaw.io.xlsx.XlsxReadOptions;
 
 
-public class ValidatorXlsxReaderTest {
+public class ValidationXlsxReaderTest {
 
   private List<Table> readN(String name, int expectedCount) {
     try {
       String fileName = name + ".xlsx";
       List<Table> tables =
-          new ValidatorXlsxReader()
+          new ValidationXlsxReader()
               .readMultiple(XlsxReadOptions.builder("./data/" + fileName).build(), true);
       assertNotNull(tables, "No tables read from " + fileName);
       assertEquals(expectedCount, tables.size(), "Wrong number of tables in " + fileName);
@@ -138,20 +138,20 @@ public class ValidatorXlsxReaderTest {
   @Test
   public void testSheetIndex() throws IOException {
     Table table =
-        new ValidatorXlsxReader()
+        new ValidationXlsxReader()
             .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").sheetIndex(1).build());
     assertNotNull(table, "No table read from multiplesheets.xlsx");
     assertColumnValues(table.stringColumn("stringcol"), "John", "Doe");
     assertEquals("multiplesheets.xlsx#Sheet2", table.name(), "table name is different");
 
     Table tableImplicit =
-        new ValidatorXlsxReader()
+        new ValidationXlsxReader()
             .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").build());
     // the table from the 2nd sheet should be picked up
     assertNotNull(tableImplicit, "No table read from multiplesheets.xlsx");
 
     try {
-      new ValidatorXlsxReader()
+      new ValidationXlsxReader()
           .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").sheetIndex(0).build());
       fail("First sheet is empty, no table should be found");
     } catch (IllegalArgumentException iae) {
@@ -159,7 +159,7 @@ public class ValidatorXlsxReaderTest {
     }
 
     try {
-      new ValidatorXlsxReader()
+      new ValidationXlsxReader()
           .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").sheetIndex(5).build());
       fail("Only 2 sheets exist, no sheet 5");
     } catch (IndexOutOfBoundsException iobe) {

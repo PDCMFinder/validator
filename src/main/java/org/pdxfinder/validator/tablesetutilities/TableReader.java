@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.pdxfinder.validator.ValidatorXlsxReader;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.io.Source;
 import tech.tablesaw.io.xlsx.XlsxReadOptions;
@@ -18,7 +17,7 @@ public class TableReader {
   public static List<Table> readXlsx(InputStream inputStream) throws IOException {
     Source source = new Source(inputStream);
     XlsxReadOptions options = XlsxReadOptions.builder(source).build();
-    ValidatorXlsxReader reader = new ValidatorXlsxReader();
+    ValidationXlsxReader reader = new ValidationXlsxReader();
     return reader.readMultiple(options, false);
   }
 
