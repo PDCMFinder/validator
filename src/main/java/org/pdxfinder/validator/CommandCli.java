@@ -17,9 +17,8 @@ public class CommandCli {
               "local",
               false,
               "Run validator in local mode. " + "Do not pass to run in microservice mode")
-          .addOption("d", "--data_dir", true, "pass single provider folder or complete UPDOG")
-          .addOption("a", "--all", false, "Run on full data directory")
-          .addOption("g", "--group", true, "Run on single providers folder");
+          .addOption("d", "dir", true,
+              "Will run on single provider folder. For full load pass the UPDOG directory. Requires --local");
 
   public static WebApplicationType ParseWebApplicationType(String[] args) {
     WebApplicationType webApplicationType = WebApplicationType.SERVLET;
@@ -39,5 +38,21 @@ public class CommandCli {
       System.err.println("Parsing failed.  Reason: " + exp.getMessage());
     }
     return isLocal;
+  }
+
+  public static String getTargetDirectory(String[] args) {
+    String directory = "";
+    try {
+      CommandLine line = parser.parse(options, args);
+      boolean hasDir = line.hasOption("dir");
+      if (hasDir) {
+        directory = (String) line.getParsedOptionValue("dir");
+      } else {
+        System.err.println("Provider data path required. Use --dir=/path/to/provider");
+      }
+    } catch (ParseException exp) {
+      System.err.println("Parsing failed.  Reason: " + exp.getMessage());
+    }
+    return directory;
   }
 }
