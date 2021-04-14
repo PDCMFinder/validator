@@ -1,9 +1,12 @@
 package org.pdxfinder.validator.tablevalidation;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
+import org.pdxfinder.validator.tablevalidation.dto.ErrorReport;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.error.BrokenRelationErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.DuplicateValueErrorCreator;
@@ -13,27 +16,21 @@ import org.pdxfinder.validator.tablevalidation.error.MissingColumnErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error.MissingTableErrorCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import tech.tablesaw.api.Table;
 
-@Component
-public class Validator {
+@Service
+public class ValidationService {
 
-  private static final Logger log = LoggerFactory.getLogger(Validator.class);
+  private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
   private List<ValidationError> validationErrors;
-  private MissingTableErrorCreator missingTableErrorCreator;
 
-  public Validator(MissingTableErrorCreator missingTableErrorCreator) {
-    this.missingTableErrorCreator = missingTableErrorCreator;
-    this.validationErrors = new ArrayList<>();
-  }
-
-  public Validator() {
-    resetErrors();
+  public ValidationService() {
   }
 
   public List<ValidationError> validate(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
+    validationErrors = new ArrayList<>();
     checkRequiredTablesPresent(tableSet, tableSetSpecification);
     if (thereAreNoErrors(validationErrors, tableSetSpecification)) {
       checkRequiredColumnsPresent(tableSet, tableSetSpecification);
@@ -56,7 +53,7 @@ public class Validator {
       List<ValidationError> validationErrors, TableSetSpecification tableSetSpecification) {
     if (CollectionUtils.isNotEmpty(validationErrors)) {
       log.error(
-          "Not all required tables where present for {}. Aborting further validation",
+          "Not all required tables and columns where present for {}. Aborting further validation",
           tableSetSpecification.getProvider());
     }
     return !CollectionUtils.isNotEmpty(validationErrors);
@@ -64,9 +61,10 @@ public class Validator {
 
   private void checkRequiredTablesPresent(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
-    if (tableSetSpecification.hasRequiredColumns())
+    if (tableSetSpecification.hasRequiredColumns()) {
       validationErrors.addAll(
-          missingTableErrorCreator.generateErrors(tableSet, tableSetSpecification));
+          new MissingTableErrorCreator().generateErrors(tableSet, tableSetSpecification));
+    }
   }
 
   private void checkRequiredColumnsPresent(
@@ -100,28 +98,21 @@ public class Validator {
         new IllegalValueErrorCreator().generateErrors(tableSet, tableSetSpecification));
   }
 
-  boolean passesValidation(
-      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
-    return validate(tableSet, tableSetSpecification).isEmpty();
-  }
-
   List<ValidationError> getValidationErrors() {
     return this.validationErrors;
   }
 
-  public static void reportAnyErrors(List<ValidationError> tableReports) {
-    if (CollectionUtils.isNotEmpty(tableReports)) {
-      for (ValidationError error : tableReports) {
-        String message = error.getTableReport().getColumnReport().getMessage();
-        log.error(message);
-      }
-    } else {
-      log.info("There were no validation errors raised, great!");
+  public String getJsonReport(String reportName) {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    ErrorReport errorReport = new ErrorReport();
+    if (!reportName.isBlank()) {
+      errorReport.setID(reportName);
     }
+    errorReport.setValidationErrors(validationErrors);
+    return gson.toJson(errorReport);
   }
 
-  public void resetErrors() {
-    this.missingTableErrorCreator = new MissingTableErrorCreator();
-    this.validationErrors = new ArrayList<>();
+  public String getJsonReport() {
+    return getJsonReport("");
   }
 }

@@ -7,16 +7,20 @@ import java.util.UUID;
 
 public class ErrorReport {
 
-  @SerializedName("UUID")
+  @SerializedName("ID")
   @Expose
-  private String uuid;
+  private String ID;
 
   @SerializedName("tableErrors")
   @Expose
   private List<ValidationError> validationErrors;
 
   public ErrorReport() {
-    this.uuid = UUID.randomUUID().toString();
+    this.ID = UUID.randomUUID().toString();
+  }
+
+  public void setID(String ID) {
+    this.ID = ID;
   }
 
   public List<ValidationError> getValidationErrors() {

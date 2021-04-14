@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tableutilities.FileReader;
 import org.pdxfinder.validator.tableutilities.TableSetUtilities;
-import org.pdxfinder.validator.tablevalidation.ErrorReporter;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
-import org.pdxfinder.validator.tablevalidation.Validator;
-import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.ValidationService;
 import org.pdxfinder.validator.tablevalidation.rules.PdxValidationRuleset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
@@ -22,6 +21,12 @@ import tech.tablesaw.api.Table;
 public class LocalValidationRunner implements CommandLineRunner {
 
   private static final Logger log = LoggerFactory.getLogger(LocalValidationRunner.class);
+  private ValidationService validationService;
+
+  @Autowired
+  LocalValidationRunner(ValidationService validationService) {
+    this.validationService = validationService;
+  }
 
   @Override
   public void run(String... arg) {
@@ -35,12 +40,11 @@ public class LocalValidationRunner implements CommandLineRunner {
   public void validateDirectories(List<String> directories) {
     TableSetSpecification pdxValidationRuleset = new PdxValidationRuleset().generate();
     for (String provider : directories) {
-      Map<String, Table> tableSet = readPdxTablesFromPath(Path.of(provider).toAbsolutePath());
-      Validator validator = new Validator();
+      Path providerPath = Path.of(provider);
+      Map<String, Table> tableSet = readPdxTablesFromPath(providerPath.toAbsolutePath());
       var cleanedTables = TableSetUtilities.cleanPdxTables(tableSet);
-      List<ValidationError> validationErrors = validator
-          .validate(cleanedTables, pdxValidationRuleset);
-      log.info(new ErrorReporter(validationErrors).getJson());
+      validationService.validate(cleanedTables, pdxValidationRuleset);
+      System.out.print(validationService.getJsonReport(providerPath.getFileName().toString()));
     }
   }
 
