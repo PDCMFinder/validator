@@ -1,6 +1,7 @@
 package org.pdxfinder.validator.tablevalidation;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.pdxfinder.validator.tablevalidation.dto.ErrorReport;
@@ -18,7 +19,7 @@ public class ErrorReporter {
   }
 
   public String getJson() {
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     ErrorReport errorReport = new ErrorReport();
     errorReport.setValidationErrors(errors);
     return gson.toJson(errorReport);
