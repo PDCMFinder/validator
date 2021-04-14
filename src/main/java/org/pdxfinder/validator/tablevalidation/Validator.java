@@ -35,9 +35,9 @@ public class Validator {
   public List<ValidationError> validate(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     checkRequiredTablesPresent(tableSet, tableSetSpecification);
-    if (!thereAreErrors(validationErrors, tableSetSpecification)) {
+    if (thereAreNoErrors(validationErrors, tableSetSpecification)) {
       checkRequiredColumnsPresent(tableSet, tableSetSpecification);
-      if (!thereAreErrors(validationErrors, tableSetSpecification)) {
+      if (thereAreNoErrors(validationErrors, tableSetSpecification)) {
         performColumnValidation(tableSet, tableSetSpecification);
       }
     }
@@ -52,14 +52,14 @@ public class Validator {
     checkRelationsValid(tableSet, tableSetSpecification);
   }
 
-  private boolean thereAreErrors(
+  private boolean thereAreNoErrors(
       List<ValidationError> validationErrors, TableSetSpecification tableSetSpecification) {
     if (CollectionUtils.isNotEmpty(validationErrors)) {
       log.error(
           "Not all required tables where present for {}. Aborting further validation",
           tableSetSpecification.getProvider());
     }
-    return CollectionUtils.isNotEmpty(validationErrors);
+    return !CollectionUtils.isNotEmpty(validationErrors);
   }
 
   private void checkRequiredTablesPresent(
