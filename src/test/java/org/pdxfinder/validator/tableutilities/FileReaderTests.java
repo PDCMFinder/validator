@@ -1,11 +1,18 @@
 package org.pdxfinder.validator.tableutilities;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,8 +86,48 @@ public class FileReaderTests {
         expectedList,
         FileReader.getDirectories(rootDir + "/UPDOG")
     );
-
   }
+
+  @Test
+  public void given_FileDoesNotExists_When_readTsvOrReturnEmptyIsCalled_ReturnBlank() {
+    File blankFile = new File("/a/fake/file");
+    Assert.assertEquals(
+        "\n",
+        FileReader.readTsvOrReturnEmpty(blankFile).toString()
+    );
+  }
+
+  @Test
+  public void given_DirectoryWithFile_WhenReadAllTsvIsCalled_ReturnAllFiles() throws IOException {
+    String wildCardFilter = "glob:**";
+    TemporaryFolder folder = new TemporaryFolder();
+    folder.create();
+    String tableName1 = "model";
+    String tableName2 = "sample";
+    String tableName3 = "patient";
+    File fileOne = folder.newFile(tableName1);
+    File fileTwo = folder.newFile(tableName2);
+    File fileThree = folder.newFile(tableName3);
+    writeTestHeaderToFile(fileOne);
+    writeTestHeaderToFile(fileTwo);
+    writeTestHeaderToFile(fileThree);
+    Path targetPath = Path.of(folder.getRoot().getAbsolutePath());
+    PathMatcher matcher = FileSystems.getDefault().getPathMatcher(wildCardFilter);
+    Map<String, Table> tableSet = FileReader.readAllTsvFilesIn(targetPath, matcher);
+    Set<String> tableNameSet = tableSet.keySet();
+    Assert.assertTrue(tableNameSet.contains(tableName1));
+    Assert.assertTrue(tableNameSet.contains(tableName2));
+    Assert.assertTrue(tableName3.contains(tableName3));
+    folder.delete();
+  }
+
+  private void writeTestHeaderToFile(File file) throws IOException {
+    Writer output;
+    output = new BufferedWriter(new FileWriter(file));  //clears file every time
+    output.append("test\theader");
+    output.close();
+  }
+
 }
 
 

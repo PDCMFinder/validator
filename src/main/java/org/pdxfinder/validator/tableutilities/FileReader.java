@@ -97,14 +97,16 @@ public class FileReader {
     log.trace("Reading tsv file {}", file);
     System.out.print(String.format("Reading tsv file %s\r", file));
     try {
-      dataTable = readTsv(file);
+      if (file.exists()) {
+        dataTable = readTsv(file);
+      }
     } catch (IOException e) {
       log.error("There was an error reading the tsv file", e);
     }
     return dataTable;
   }
 
-  public static Table readTsv(File file) throws IOException {
+  private static Table readTsv(File file) throws IOException {
     CsvReadOptions.Builder builder = CsvReadOptions
         .builder(file)
         .sample(false)
@@ -112,5 +114,4 @@ public class FileReader {
     CsvReadOptions options = builder.build();
     return Table.read().usingOptions(options);
   }
-
 }
