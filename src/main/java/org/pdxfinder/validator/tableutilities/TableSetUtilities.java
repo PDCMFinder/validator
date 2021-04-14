@@ -31,9 +31,15 @@ public class TableSetUtilities {
     TableSetUtilities.removeDescriptionColumn(pdxTableSet);
     pdxTableSet = TableSetUtilities.removeHeaderRows(pdxTableSet);
     pdxTableSet = TableSetUtilities.cleanValues(pdxTableSet, columnsExemptFromLowercasing);
+    pdxTableSet = TableSetUtilities.removeProviderNameFromFilename(pdxTableSet);
+    pdxTableSet = TableSetUtilities.removeFilenameArtifacts(pdxTableSet);
     return pdxTableSet;
   }
 
+  public static Map<String, Table> cleanFileNames(Map<String, Table> tableSet) {
+    var cleanedTableSet = TableSetUtilities.removeProviderNameFromFilename(tableSet);
+    return TableSetUtilities.removeFilenameArtifacts(cleanedTableSet);
+  }
 
   public static List<Table> cleanTableNames(List<Table> tables) {
     return tables.stream()
@@ -71,7 +77,6 @@ public class TableSetUtilities {
     if (table.columnNames().contains(columnToRemove)) table.removeColumns(columnToRemove);
   }
 
-  @Deprecated
   static Map<String, Table> removeProviderNameFromFilename(Map<String, Table> tableSet) {
     return tableSet.entrySet().stream()
         .collect(
@@ -93,6 +98,14 @@ public class TableSetUtilities {
 
   static String substringAfterIfContainsSeparator(String string, String separator) {
     return string.contains(separator) ? StringUtils.substringAfter(string, separator) : string;
+  }
+
+  static Map<String, Table> removeFilenameArtifacts(Map<String, Table> tableSet) {
+    return tableSet.entrySet().stream()
+        .collect(
+            Collectors.toMap(
+                e -> e.getKey().replaceAll("(metadata-|.tsv)", ""),
+                e -> e.getValue().setName(e.getKey().replaceAll("(metadata-|.tsv)", ""))));
   }
 
   public static <T> Set<T> concatenate(Set<T>... sets) {
