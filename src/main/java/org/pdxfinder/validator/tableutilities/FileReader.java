@@ -27,6 +27,7 @@ public class FileReader {
   private static final Logger log = LoggerFactory.getLogger(FileReader.class);
 
   private FileReader() {
+    throw new IllegalStateException("Utility classs");
   }
 
   public static List<Table> readXlsx(InputStream inputStream) throws IOException {

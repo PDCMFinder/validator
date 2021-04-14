@@ -72,13 +72,17 @@ public class FileReaderTests {
   @Test
   public void given_UpdogIsPassed_WhenGetDirectoriesIsCalled_ReturnAllFoldersWithinUpdog()
       throws IOException {
-    List<String> expectedList = List.of("Provider1", "Provider2", "Provider3");
     TemporaryFolder tempFolder = new TemporaryFolder();
     tempFolder.create();
     File updogFolder = tempFolder.newFolder("UPDOG");
-    tempFolder.newFile("UPDOG/" + expectedList.get(0));
-    tempFolder.newFile("UPDOG/" + expectedList.get(1));
-    tempFolder.newFile("UPDOG/" + expectedList.get(2));
+    List<String> expectedList = List.of(
+        String.format("%s/%s", updogFolder, "Provider1"),
+        String.format("%s/%s", updogFolder, "Provider2"),
+        String.format("%s/%s", updogFolder, "Provider3")
+    );
+    new File(expectedList.get(0)).createNewFile();
+    new File(expectedList.get(1)).createNewFile();
+    new File(expectedList.get(2)).createNewFile();
     String rootDir = tempFolder
         .getRoot()
         .toString();
@@ -86,6 +90,7 @@ public class FileReaderTests {
         expectedList,
         FileReader.getDirectories(rootDir + "/UPDOG")
     );
+    tempFolder.delete();
   }
 
   @Test
