@@ -191,4 +191,28 @@ public class TableSetUtilitiesTest {
         TableSetUtilities.cleanPdxTables(Map.of(TABLE_NAME, tableWithBlanks));
     Assert.assertEquals(expectedTable.toString(), actualTable.get(TABLE_NAME).toString());
   }
+
+  @Test
+  public void given_UpdogeFilename_WhenCleanFilenamesIsCalled_TransformFilename() {
+    String updogFile = "PROVIDER_metadata-sample.tsv";
+    String expected = "sample";
+    Map<String, Table> pdxFiles = Map.of(updogFile, Table.create());
+    Assert.assertTrue(
+        TableSetUtilities.cleanFileNames(pdxFiles)
+            .keySet()
+            .contains(expected)
+    );
+  }
+
+  @Test
+  public void given_xlsxGeneratedFilename_WhenCleanFilenamesIsCalled_TransformFilename() {
+    String expected = "sample";
+    Map<String, Table> pdxFiles = Map.of(expected, Table.create());
+    Assert.assertTrue(
+        TableSetUtilities.cleanFileNames(pdxFiles)
+            .keySet()
+            .contains(expected)
+    );
+  }
 }
+
