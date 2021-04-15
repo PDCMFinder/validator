@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tableutilities.FileReader;
-import org.pdxfinder.validator.tableutilities.TableSetUtilities;
+import org.pdxfinder.validator.tableutilities.TableSetCleaner;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValidationService;
 import org.pdxfinder.validator.tablevalidation.rules.PdxValidationRuleset;
@@ -33,7 +33,7 @@ public class ValidationWebService {
   public String proccessRequest(MultipartFile multipartFile) {
     logRequest(multipartFile);
     Map<String, Table> tableSet = getTables(multipartFile);
-    var cleanedTableSet = TableSetUtilities.cleanPdxTables(tableSet);
+    var cleanedTableSet = TableSetCleaner.cleanPdxTables(tableSet);
     validationService.validate(cleanedTableSet, pdxValidationRuleset);
     return validationService.getJsonReport();
   }
@@ -43,7 +43,7 @@ public class ValidationWebService {
     List<Table> cleanedTables = new ArrayList<>();
     try {
       tables = FileReader.readXlsx(multipartFile.getInputStream());
-      cleanedTables = TableSetUtilities.cleanTableNames(tables);
+      cleanedTables = TableSetCleaner.cleanTableNames(tables);
     } catch (IOException e) {
       log.error("Error reading multipartfile into table ", e);
     }
