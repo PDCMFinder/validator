@@ -107,7 +107,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
         .filter(x -> column.countOccurrences(x) > 1)
         .map(x -> indicesOf(column, x))
         .flatMapToInt(Arrays::stream)
-        .mapToObj(Integer::valueOf)
+        .boxed()
         .collect(Collectors.toSet());
   }
 
@@ -128,6 +128,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     StringColumn manyRestrictedColumn =
         tableSet.get(leftColumn.table()).stringColumn(rightColumn.column());
     Table workingTable = tableSet.get(leftColumn.table());
+
     MultiValuedMap<String, Pair<String, String>> columnPairs = new HashSetValuedHashMap<>();
     for (int i = 0; i < manyRestrictedColumn.size(); i++) {
       columnPairs.put(
@@ -140,6 +141,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
             .map(columnPairs::get)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
+
     if (!listOfBrokenPairs.isEmpty()) {
       int[] invalidRows = unboxSet(getIndexOfDuplicatedColumnValues(oneRestrictedColumn));
       String description =

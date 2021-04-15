@@ -6,7 +6,7 @@ import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tableutilities.FileReader;
-import org.pdxfinder.validator.tableutilities.TableSetUtilities;
+import org.pdxfinder.validator.tableutilities.TableSetCleaner;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValidationService;
 import org.pdxfinder.validator.tablevalidation.rules.PdxValidationRuleset;
@@ -42,7 +42,7 @@ public class LocalValidationRunner implements CommandLineRunner {
     for (String provider : directories) {
       Path providerPath = Path.of(provider);
       Map<String, Table> tableSet = readPdxTablesFromPath(providerPath.toAbsolutePath());
-      var cleanedTables = TableSetUtilities.cleanPdxTables(tableSet);
+      var cleanedTables = TableSetCleaner.cleanPdxTables(tableSet);
       validationService.validate(cleanedTables, pdxValidationRuleset);
       System.out.print(validationService.getJsonReport(providerPath.getFileName().toString()));
     }

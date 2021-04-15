@@ -1,11 +1,11 @@
 package org.pdxfinder.validator.tableutilities;
 
 import static org.junit.Assert.assertEquals;
-import static org.pdxfinder.validator.tableutilities.TableSetUtilities.cleanValues;
-import static org.pdxfinder.validator.tableutilities.TableSetUtilities.removeDescriptionColumn;
-import static org.pdxfinder.validator.tableutilities.TableSetUtilities.removeHeaderRows;
-import static org.pdxfinder.validator.tableutilities.TableSetUtilities.removeHeaderRowsIfPresent;
-import static org.pdxfinder.validator.tableutilities.TableSetUtilities.removeProviderNameFromFilename;
+import static org.pdxfinder.validator.tableutilities.TableSetCleaner.cleanValues;
+import static org.pdxfinder.validator.tableutilities.TableSetCleaner.removeDescriptionColumn;
+import static org.pdxfinder.validator.tableutilities.TableSetCleaner.removeHeaderRows;
+import static org.pdxfinder.validator.tableutilities.TableSetCleaner.removeHeaderRowsIfPresent;
+import static org.pdxfinder.validator.tableutilities.TableSetCleaner.removeProviderNameFromFilename;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,7 +71,7 @@ public class TableSetUtilitiesTest {
             .addColumns(
                 StringColumn.create("Field", Collections.emptyList()),
                 StringColumn.create("required_column", Collections.emptyList()));
-    assertEquals(expected.toString(), removeHeaderRowsIfPresent(table).toString());
+    assertEquals(expected.toString(), TableCleaner.removeHeaderRowsIfPresent(table).toString());
   }
 
   @Test
@@ -81,7 +81,7 @@ public class TableSetUtilitiesTest {
             .addColumns(
                 StringColumn.create("required_column", Arrays.asList("1", "2", "3", "4", "5")));
     Table expected = table;
-    assertEquals(expected, removeHeaderRowsIfPresent(table));
+    assertEquals(expected, TableCleaner.removeHeaderRowsIfPresent(table));
   }
 
   @Test
@@ -166,17 +166,18 @@ public class TableSetUtilitiesTest {
     List<Table> expectedTableSet = List.of(Table.create("tableName", expectedColumns));
 
     assertEquals(
-        expectedTableSet.get(0).name(), TableSetUtilities.cleanTableNames(tableSet).get(0).name());
+        expectedTableSet.get(0).name(), TableSetCleaner.cleanTableNames(tableSet).get(0).name());
   }
 
   @Test
   public void removeActualBlankRows_GivenTableWithBlankRowsInSecondColum_returnTableWithAllRows() {
     final String TABLE_NAME = "table1";
     final String ROW_VALUE = "row_value";
+    final String ROW_VALUE2 = "row_value2";
     List<String> columnValues =
-        Arrays.asList("Header", "Header2", "Header3", "Header4", ROW_VALUE, ROW_VALUE, ROW_VALUE);
+        Arrays.asList("Header", "Header2", "Header3", "Header4", ROW_VALUE, ROW_VALUE, ROW_VALUE2);
     List<String> columnValuesWithMissing =
-        Arrays.asList("Header", "Header2", "Header3", "Header4", "", "", ROW_VALUE);
+        Arrays.asList("Header", "Header2", "Header3", "Header4", "", ROW_VALUE, "");
     Table tableWithBlanks =
         Table.create(TABLE_NAME)
             .addColumns(
@@ -185,10 +186,10 @@ public class TableSetUtilitiesTest {
     Table expectedTable =
         Table.create(TABLE_NAME)
             .addColumns(
-                StringColumn.create("column_1", ROW_VALUE, ROW_VALUE, ROW_VALUE),
-                StringColumn.create("column_2", "", "", ROW_VALUE));
+                StringColumn.create("column_1", ROW_VALUE, ROW_VALUE, ROW_VALUE2),
+                StringColumn.create("column_2", "", ROW_VALUE, ""));
     Map<String, Table> actualTable =
-        TableSetUtilities.cleanPdxTables(Map.of(TABLE_NAME, tableWithBlanks));
+        TableSetCleaner.cleanPdxTables(Map.of(TABLE_NAME, tableWithBlanks));
     Assert.assertEquals(expectedTable.toString(), actualTable.get(TABLE_NAME).toString());
   }
 
@@ -198,7 +199,7 @@ public class TableSetUtilitiesTest {
     String expected = "sample";
     Map<String, Table> pdxFiles = Map.of(updogFile, Table.create());
     Assert.assertTrue(
-        TableSetUtilities.cleanFileNames(pdxFiles)
+        TableSetCleaner.cleanFileNames(pdxFiles)
             .keySet()
             .contains(expected)
     );
@@ -209,7 +210,7 @@ public class TableSetUtilitiesTest {
     String expected = "sample";
     Map<String, Table> pdxFiles = Map.of(expected, Table.create());
     Assert.assertTrue(
-        TableSetUtilities.cleanFileNames(pdxFiles)
+        TableSetCleaner.cleanFileNames(pdxFiles)
             .keySet()
             .contains(expected)
     );
