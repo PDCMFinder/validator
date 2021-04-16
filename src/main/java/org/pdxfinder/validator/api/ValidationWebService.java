@@ -3,6 +3,7 @@ package org.pdxfinder.validator.api;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tableutilities.FileReader;
@@ -40,14 +41,14 @@ public class ValidationWebService {
 
   private Map<String, Table> getTables(MultipartFile multipartFile) {
     List<Table> tables = new ArrayList<>();
-    List<Table> cleanedTables = new ArrayList<>();
+    Map<String, Table> cleanedTables = new HashMap<>();
     try {
       tables = FileReader.readXlsx(multipartFile.getInputStream());
-      cleanedTables = TableSetCleaner.cleanTableNames(tables);
+      cleanedTables = TableSetCleaner.cleanPdxTables(FileReader.listToMap(tables));
     } catch (IOException e) {
       log.error("Error reading multipartfile into table ", e);
     }
-    return FileReader.listToMap(cleanedTables);
+    return cleanedTables;
   }
 
   private void logRequest(MultipartFile multipartFile) {

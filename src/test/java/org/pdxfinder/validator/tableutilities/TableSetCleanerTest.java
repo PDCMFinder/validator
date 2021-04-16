@@ -2,10 +2,7 @@ package org.pdxfinder.validator.tableutilities;
 
 import static org.junit.Assert.assertEquals;
 import static org.pdxfinder.validator.tableutilities.TableSetCleaner.cleanValues;
-import static org.pdxfinder.validator.tableutilities.TableSetCleaner.removeDescriptionColumn;
 import static org.pdxfinder.validator.tableutilities.TableSetCleaner.removeHeaderRows;
-import static org.pdxfinder.validator.tableutilities.TableSetCleaner.removeHeaderRowsIfPresent;
-import static org.pdxfinder.validator.tableutilities.TableSetCleaner.removeProviderNameFromFilename;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,7 +15,7 @@ import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.Column;
 
-public class TableSetUtilitiesTest {
+public class TableSetCleanerTest {
 
   @Test
   public void removeHeaderRows_givenHeader_headerRemoved() {
@@ -45,14 +42,6 @@ public class TableSetUtilitiesTest {
     assertEquals(expected.toString(), removeHeaderRows(tableSet).toString());
   }
 
-  @Test
-  public void removeHeaderRowsIfPresent_givenTableSet_runsOnEachTable() {
-    Map<String, Table> tableSet = new HashMap<>();
-    Arrays.asList("table_1.tsv", "table_2.tsv")
-        .forEach(s -> tableSet.put(s, Table.create(s, Collections.emptyList())));
-    Map<String, Table> expected = tableSet;
-    assertEquals(expected, removeHeaderRowsIfPresent(tableSet));
-  }
 
   @Test
   public void removeHeaderRowsIfPresent_givenHeadersPresent_removeHeaders() {
@@ -92,42 +81,13 @@ public class TableSetUtilitiesTest {
             s ->
                 tableSet.put(
                     s,
-                    Table.create()
-                        .addColumns(StringColumn.create("Field", Collections.emptyList()))));
+                    createTestTable()));
     Map<String, Table> expected = new HashMap<>();
-    Arrays.asList("table_1.tsv").forEach(s -> expected.put(s, Table.create()));
-    removeDescriptionColumn(tableSet);
+    Arrays.asList("table_1.tsv").forEach(s -> expected.put(s, createTestTable()));
+    TableSetCleaner.cleanPdxTables(tableSet);
     assertEquals(expected.toString(), tableSet.toString());
   }
 
-  @Test
-  public void removeProviderNameFromFilename_givenProviderInFilename_stripProvider() {
-    final String TABLE_NAME = "PROVIDER-BC_table_1.tsv";
-    final String NEW_TABLE_NAME = "table_1.tsv";
-    Map<String, Table> tableSet = new HashMap<>();
-    Arrays.asList(TABLE_NAME).forEach(s -> tableSet.put(s, Table.create(TABLE_NAME)));
-    Map<String, Table> expected = new HashMap<>();
-    Arrays.asList(NEW_TABLE_NAME).forEach(s -> expected.put(s, Table.create(NEW_TABLE_NAME)));
-    assertEquals(expected.toString(), removeProviderNameFromFilename(tableSet).toString());
-  }
-
-  @Test
-  public void removeProviderNameFromFilename_givenMultipleSep_stripProvider() {
-    final String TABLE_NAME = "PROVIDER_123_table_1.tsv";
-    final String NEW_TABLE_NAME = "123_table_1.tsv";
-    Map<String, Table> tableSet = new HashMap<>();
-    Arrays.asList(TABLE_NAME).forEach(s -> tableSet.put(s, Table.create(TABLE_NAME)));
-    Map<String, Table> expected = new HashMap<>();
-    Arrays.asList(NEW_TABLE_NAME).forEach(s -> expected.put(s, Table.create(NEW_TABLE_NAME)));
-    assertEquals(expected.toString(), removeProviderNameFromFilename(tableSet).toString());
-  }
-
-  @Test
-  public void removeProviderNameFromFilename_givenNoSeparators_doNotStrip() {
-    Map<String, Table> expected = new HashMap<>();
-    Arrays.asList("table.tsv").forEach(s -> expected.put(s, Table.create("table.tsv")));
-    assertEquals(expected.toString(), removeProviderNameFromFilename(expected).toString());
-  }
 
   @Test
   public void cleanSpacesAndLowerCase_givenTable_clean() {
@@ -162,15 +122,42 @@ public class TableSetUtilitiesTest {
         Collections.singletonList(
             StringColumn.create("column_1", Collections.singletonList("test")));
 
-    List<Table> tableSet = List.of(Table.create("#tableName\n\n", tableColumns));
-    List<Table> expectedTableSet = List.of(Table.create("tableName", expectedColumns));
+    Map<String, Table> tableSet = Map
+        .of("#tableName\n\n", Table.create("#tableName\n\n", tableColumns));
+    Map<String, Table> expectedTableSet = Map
+        .of("tableName", Table.create("tableName", expectedColumns));
 
     assertEquals(
-        expectedTableSet.get(0).name(), TableSetCleaner.cleanTableNames(tableSet).get(0).name());
+        expectedTableSet.keySet().toArray(),
+        TableSetCleaner.cleanTableNames(tableSet).keySet().toArray());
   }
 
   @Test
   public void removeActualBlankRows_GivenTableWithBlankRowsInSecondColum_returnTableWithAllRows() {
+    final String TABLE_NAME = "table1";
+    final String ROW_VALUE = "row_value";
+    final String ROW_VALUE2 = "row_value2";
+    List<String> columnValues =
+        Arrays.asList("Header", "Header2", "Header3", "Header4", ROW_VALUE2, ROW_VALUE, ROW_VALUE);
+    List<String> columnValuesWithMissing =
+        Arrays.asList("Header", "Header2", "Header3", "Header4", "", "", ROW_VALUE);
+    Table tableWithBlanks =
+        Table.create(TABLE_NAME)
+            .addColumns(
+                StringColumn.create("column_1", columnValues),
+                StringColumn.create("column_2", columnValuesWithMissing));
+    Table expectedTable =
+        Table.create(TABLE_NAME)
+            .addColumns(
+                StringColumn.create("column_1", ROW_VALUE2, ROW_VALUE, ROW_VALUE),
+                StringColumn.create("column_2", "", "", ROW_VALUE));
+    Map<String, Table> actualTable =
+        TableSetCleaner.cleanPdxTables(Map.of(TABLE_NAME, tableWithBlanks));
+    Assert.assertEquals(expectedTable.toString(), actualTable.get(TABLE_NAME).toString());
+  }
+
+  @Test
+  public void _GivenTable_returnTableWithAllRows() {
     final String TABLE_NAME = "table1";
     final String ROW_VALUE = "row_value";
     final String ROW_VALUE2 = "row_value2";
@@ -197,9 +184,34 @@ public class TableSetUtilitiesTest {
   public void given_UpdogeFilename_WhenCleanFilenamesIsCalled_TransformFilename() {
     String updogFile = "PROVIDER_metadata-sample.tsv";
     String expected = "sample";
-    Map<String, Table> pdxFiles = Map.of(updogFile, Table.create());
+    Map<String, Table> pdxFiles = Map.of(updogFile, createTestTable());
     Assert.assertTrue(
-        TableSetCleaner.cleanFileNames(pdxFiles)
+        TableSetCleaner.cleanPdxTables(pdxFiles)
+            .keySet()
+            .contains(expected)
+    );
+  }
+
+
+  @Test
+  public void given_UpdogeFilenameWithMultipleSteps_WhenCleanFilenamesIsCalled_TransformFilename() {
+    String updogFile = "PROVIDER_123_metadata-sample.tsv";
+    String expected = "123_sample";
+    Map<String, Table> pdxFiles = Map.of(updogFile, createTestTable());
+    Assert.assertTrue(
+        TableSetCleaner.cleanPdxTables(pdxFiles)
+            .keySet()
+            .contains(expected)
+    );
+  }
+
+  @Test
+  public void given_correctName_WhenCleanFilenamesIsCalled_doNotStrip() {
+    String updogFile = "sample";
+    String expected = "sample";
+    Map<String, Table> pdxFiles = Map.of(updogFile, createTestTable());
+    Assert.assertTrue(
+        TableSetCleaner.cleanPdxTables(pdxFiles)
             .keySet()
             .contains(expected)
     );
@@ -208,12 +220,19 @@ public class TableSetUtilitiesTest {
   @Test
   public void given_xlsxGeneratedFilename_WhenCleanFilenamesIsCalled_TransformFilename() {
     String expected = "sample";
-    Map<String, Table> pdxFiles = Map.of(expected, Table.create());
+    Map<String, Table> pdxFiles = Map.of(expected, createTestTable());
     Assert.assertTrue(
-        TableSetCleaner.cleanFileNames(pdxFiles)
+        TableSetCleaner.cleanPdxTables(pdxFiles)
             .keySet()
             .contains(expected)
     );
+  }
+
+  private Table createTestTable() {
+    return TableUtilities
+        .fromString("table_name",
+            "column_1, column_2",
+            "value_1, value_2");
   }
 }
 
