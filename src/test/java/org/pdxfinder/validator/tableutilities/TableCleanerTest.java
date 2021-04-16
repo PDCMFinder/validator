@@ -12,7 +12,7 @@ import org.junit.Test;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class TableValueCleanerTest {
+public class TableCleanerTest {
 
   @Test
   public void removeHeaderRows_givenEmptyTable_returnsEmptyTable() {
@@ -123,7 +123,7 @@ public class TableValueCleanerTest {
             "value5, \"\"",
             "\"\", value6"
         );
-    Table resultingTable = TableCleaner.cleanTableValues(testTable, "new_name", List.of(""));
+    Table resultingTable = TableCleaner.cleanTableValues(testTable, "table_name", List.of(""));
     Assert.assertEquals(4, resultingTable.rowCount());
   }
 

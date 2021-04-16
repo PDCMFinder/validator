@@ -2,6 +2,7 @@ package org.pdxfinder.validator.tableutilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +26,7 @@ public final class TableCleaner {
       Table table, String tableName, List<String> columnExceptions) {
     Table lowerCasedTable = lowerCaseSelectColumnValues(table, columnExceptions);
     Table cleanedTable = trimColumnValues(lowerCasedTable);
-    Table uniqTable = cleanedTable.dropDuplicateRows();
-    Table removedBlanks = removeEmptyRows(uniqTable);
+    Table removedBlanks = removeEmptyRows(cleanedTable);
     removedBlanks.setName(tableName);
     return removedBlanks;
   }
@@ -97,10 +97,6 @@ public final class TableCleaner {
     return table.rowCount() <= numberOfRows;
   }
 
-  public static String removeHashmarksAndNewlines(Table table) {
-    return (table.name() != null) ? table.name().replaceAll("[#\\n]", "") : "";
-  }
-
   public static Table removeHeaderRowsIfPresent(Table table) {
     return table.columnNames().contains("Field")
         ? TableCleaner.removeHeaderRows(table, 4)
@@ -113,7 +109,12 @@ public final class TableCleaner {
     }
   }
 
-  public static String substringAfterIfContainsSeparator(String string, String separator) {
-    return string.contains(separator) ? StringUtils.substringAfter(string, separator) : string;
+  public static Function<String, String> removeHashmarksAndNewlines() {
+    return (tableName -> (tableName != null) ? tableName.replaceAll("[#\\n]", "") : "");
+  }
+
+  public static Function<String, String> substringAfterIfContainsSeparator(String separator) {
+    return string -> string.contains(separator) ? StringUtils.substringAfter(string, separator)
+        : string;
   }
 }
