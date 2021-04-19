@@ -44,7 +44,7 @@ public class LocalValidationRunner implements CommandLineRunner {
       Map<String, Table> tableSet = readPdxTablesFromPath(providerPath.toAbsolutePath());
       var cleanedTables = TableSetCleaner.cleanPdxTables(tableSet);
       validationService.validate(cleanedTables, pdxValidationRuleset);
-      System.out.print(validationService.getJsonReport(providerPath.getFileName().toString()));
+      log.info(validationService.getJsonReport(providerPath.getFileName().toString()));
     }
   }
 

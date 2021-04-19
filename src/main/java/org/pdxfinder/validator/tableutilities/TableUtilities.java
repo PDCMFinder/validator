@@ -12,6 +12,9 @@ public class TableUtilities {
 
   private static final Logger log = LoggerFactory.getLogger(TableUtilities.class);
 
+  private TableUtilities() {
+  }
+
   public static Table fromString(String tableName, String... lines) {
     Table table = Table.create();
     String string = String.join("\n", lines);
