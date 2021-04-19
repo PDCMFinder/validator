@@ -44,7 +44,6 @@ public class TableSetCleanerTest {
     assertEquals(expected.toString(), removeHeaderRows(tableSet).toString());
   }
 
-
   @Test
   public void removeHeaderRowsIfPresent_givenHeadersPresent_removeHeaders() {
     Table table =
@@ -78,18 +77,12 @@ public class TableSetCleanerTest {
   @Test
   public void removeDescriptionColumn_givenDescriptionColumn_removeDescriptionColumn() {
     Map<String, Table> tableSet = new HashMap<>();
-    Arrays.asList("table_1.tsv")
-        .forEach(
-            s ->
-                tableSet.put(
-                    s,
-                    createTestTable()));
+    Arrays.asList("table_1.tsv").forEach(s -> tableSet.put(s, createTestTable()));
     Map<String, Table> expected = new HashMap<>();
     Arrays.asList("table_1.tsv").forEach(s -> expected.put(s, createTestTable()));
     TableSetCleaner.cleanPdxTables(tableSet);
     assertEquals(expected.toString(), tableSet.toString());
   }
-
 
   @Test
   public void cleanSpacesAndLowerCase_givenTable_clean() {
@@ -124,10 +117,10 @@ public class TableSetCleanerTest {
         Collections.singletonList(
             StringColumn.create("column_1", Collections.singletonList("test")));
 
-    Map<String, Table> tableSet = Map
-        .of("#tableName\n\n", Table.create("#tableName\n\n", tableColumns));
-    Map<String, Table> expectedTableSet = Map
-        .of("tableName", Table.create("tableName", expectedColumns));
+    Map<String, Table> tableSet =
+        Map.of("#tableName\n\n", Table.create("#tableName\n\n", tableColumns));
+    Map<String, Table> expectedTableSet =
+        Map.of("tableName", Table.create("tableName", expectedColumns));
 
     assertEquals(
         expectedTableSet.keySet().toArray(),
@@ -191,17 +184,10 @@ public class TableSetCleanerTest {
   public void given_variousFilenames_WhenCleanFilenamesIsCalled_TransformFilenameAppropriately(
       String testFilename, String expected) {
     Map<String, Table> pdxFiles = Map.of(testFilename, createTestTable());
-    Assert.assertTrue(
-        TableSetCleaner.cleanPdxTables(pdxFiles)
-            .containsKey(expected)
-    );
+    Assert.assertTrue(TableSetCleaner.cleanPdxTables(pdxFiles).containsKey(expected));
   }
 
   private Table createTestTable() {
-    return TableUtilities
-        .fromString("table_name",
-            "column_1, column_2",
-            "value_1, value_2");
+    return TableUtilities.fromString("table_name", "column_1, column_2", "value_1, value_2");
   }
 }
-

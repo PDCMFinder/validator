@@ -49,8 +49,8 @@ public class LocalValidationRunner implements CommandLineRunner {
   }
 
   private Map<String, Table> readPdxTablesFromPath(Path updogProviderDirectory) {
-    PathMatcher metadataFiles = FileSystems.getDefault()
-        .getPathMatcher("glob:**{metadata-,sampleplatform}*.tsv");
+    PathMatcher metadataFiles =
+        FileSystems.getDefault().getPathMatcher("glob:**{metadata-,sampleplatform}*.tsv");
     return FileReader.readAllTsvFilesIn(updogProviderDirectory, metadataFiles);
   }
 }

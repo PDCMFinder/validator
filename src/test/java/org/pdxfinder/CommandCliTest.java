@@ -10,32 +10,19 @@ public class CommandCliTest {
   @Test
   public void Given_NoArguments_ThenDefaultToServlet() {
     String[] args = new String[0];
-    Assert.assertEquals(
-        WebApplicationType.SERVLET,
-        CommandCli.ParseWebApplicationType(args)
-    );
+    Assert.assertEquals(WebApplicationType.SERVLET, CommandCli.ParseWebApplicationType(args));
   }
 
   @Test
   public void Given_LocalIsPassed_WhenApplicationIsRun_ThenTurnOffWebApplication() {
     String[] args = {"--local"};
-    Assert.assertEquals(
-        WebApplicationType.NONE,
-        CommandCli.ParseWebApplicationType(args)
-    );
+    Assert.assertEquals(WebApplicationType.NONE, CommandCli.ParseWebApplicationType(args));
   }
 
   @Test
   public void Given_dirIsPassed_ThenReturnDirString() {
     String expectedDir = "/path/to/data";
-    String[] args = {
-        String.format("--dir=%s", expectedDir)
-    };
-    Assert.assertEquals(
-        expectedDir,
-        CommandCli.getTargetDirectory(args)
-    );
-
-
+    String[] args = {String.format("--dir=%s", expectedDir)};
+    Assert.assertEquals(expectedDir, CommandCli.getTargetDirectory(args));
   }
 }

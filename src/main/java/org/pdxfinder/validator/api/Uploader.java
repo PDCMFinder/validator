@@ -39,12 +39,11 @@ public class Uploader {
   }
 
   private boolean multipartFileIsMissing(Optional<MultipartFile> multipartFile) {
-    return (multipartFile.isEmpty()
-        || multipartFile.get().isEmpty());
+    return (multipartFile.isEmpty() || multipartFile.get().isEmpty());
   }
 
   private boolean multipartFileIsUnsupportedType(MultipartFile multipartFile) {
-    return multipartFile.getContentType() == null || !multipartFile.getContentType()
-        .equals(EXCEL_CONTENT_TYPE);
+    return multipartFile.getContentType() == null
+        || !multipartFile.getContentType().equals(EXCEL_CONTENT_TYPE);
   }
 }

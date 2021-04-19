@@ -106,8 +106,7 @@ public class EmptyValueErrorReportCreatorTest {
                     tableWithMissingValue.where(
                         tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
                     PROVIDER,
-                    "[7]"
-                )
+                    "[7]")
                 .getValidationError());
     assertEquals(
         expected.toString(),
