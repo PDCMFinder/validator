@@ -62,7 +62,7 @@ public class ValidationXlsxReaderTest {
   }
 
   @Test
-  public void testColumns() {
+  void testColumns() {
     Table table =
         read1(
             "columns",
@@ -89,7 +89,7 @@ public class ValidationXlsxReaderTest {
   }
 
   @Test
-  public void testNumericToStringCoercion() {
+  void testNumericToStringCoercion() {
     Table table =
         read1(
             "columnsmixed",
@@ -104,7 +104,7 @@ public class ValidationXlsxReaderTest {
   }
 
   @Test
-  public void testColumnsWithMissingValues() {
+  void testColumnsWithMissingValues() {
     Table table =
         read1(
             "columns-with-missing-values",
@@ -135,7 +135,7 @@ public class ValidationXlsxReaderTest {
   }
 
   @Test
-  public void testSheetIndex() throws IOException {
+  void testSheetIndex() throws IOException {
     Table table =
         new ValidationXlsxReader()
             .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").sheetIndex(1).build());

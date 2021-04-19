@@ -3,7 +3,7 @@ package org.pdxfinder.validator.tableutilities;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import tech.tablesaw.api.Table;
 
@@ -44,7 +44,7 @@ public class TableSetCleaner {
 
 
   private static Map<String, Table> applyFunctionToTableNames(Map<String, Table> tableSet,
-      Function<String, String> tableNameFunction) {
+      UnaryOperator<String> tableNameFunction) {
     return tableSet.entrySet().stream()
         .collect(
             Collectors.toMap(
@@ -71,7 +71,7 @@ public class TableSetCleaner {
                         e.getValue(), e.getValue().name(), exceptionColumns)));
   }
 
-  private static Function<String, String> replaceAll(String regex, String replacement) {
+  private static UnaryOperator<String> replaceAll(String regex, String replacement) {
     return string -> string.replaceAll(regex, replacement);
   }
 

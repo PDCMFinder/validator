@@ -96,7 +96,6 @@ public class FileReader {
   public static Table readTsvOrReturnEmpty(File file) {
     Table dataTable = Table.create();
     log.trace("Reading tsv file {}", file);
-    System.out.print(String.format("Reading tsv file %s\r", file));
     try {
       if (file.exists()) {
         dataTable = readTsv(file);

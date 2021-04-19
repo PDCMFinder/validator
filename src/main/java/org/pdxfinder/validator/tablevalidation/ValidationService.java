@@ -25,9 +25,6 @@ public class ValidationService {
   private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
   private List<ValidationError> validationErrors;
 
-  public ValidationService() {
-  }
-
   public List<ValidationError> validate(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     validationErrors = new ArrayList<>();
