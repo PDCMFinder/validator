@@ -26,7 +26,6 @@ public class TableSetCleaner {
           "internal_url",
           "internal_dosing_url");
 
-
   public static Map<String, Table> cleanPdxTables(Map<String, Table> pdxTableSet) {
     removeDescriptionColumn(pdxTableSet);
     pdxTableSet = removeHeaderRows(pdxTableSet);
@@ -36,21 +35,19 @@ public class TableSetCleaner {
   }
 
   static Map<String, Table> cleanTableNames(Map<String, Table> tableSet) {
-    tableSet = applyFunctionToTableNames(tableSet,
-        TableCleaner.substringAfterIfContainsSeparator("_"));
+    tableSet =
+        applyFunctionToTableNames(tableSet, TableCleaner.substringAfterIfContainsSeparator("_"));
     tableSet = applyFunctionToTableNames(tableSet, replaceAll("(metadata-|.tsv)", ""));
     return applyFunctionToTableNames(tableSet, TableCleaner.removeHashmarksAndNewlines());
   }
 
-
-  private static Map<String, Table> applyFunctionToTableNames(Map<String, Table> tableSet,
-      UnaryOperator<String> tableNameFunction) {
+  private static Map<String, Table> applyFunctionToTableNames(
+      Map<String, Table> tableSet, UnaryOperator<String> tableNameFunction) {
     return tableSet.entrySet().stream()
         .collect(
             Collectors.toMap(
                 e -> tableNameFunction.apply(e.getKey()),
                 e -> e.getValue().setName(tableNameFunction.apply(e.getKey()))));
-
   }
 
   public static Map<String, Table> removeHeaderRows(Map<String, Table> tableSet) {

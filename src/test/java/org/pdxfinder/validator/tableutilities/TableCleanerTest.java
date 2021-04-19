@@ -114,17 +114,16 @@ public class TableCleanerTest {
 
   @Test
   public void CleanTableValues_withTableWithEmptyRows_removeEmptyRows() {
-    Table testTable = TableUtilities
-        .fromString("table_name",
+    Table testTable =
+        TableUtilities.fromString(
+            "table_name",
             "column_1, column_2",
             "value_1, value_2",
             "\"\",\"\"",
             "value3, value4",
             "value5, \"\"",
-            "\"\", value6"
-        );
+            "\"\", value6");
     Table resultingTable = TableCleaner.cleanTableValues(testTable, "table_name", List.of(""));
     Assert.assertEquals(4, resultingTable.rowCount());
   }
-
 }

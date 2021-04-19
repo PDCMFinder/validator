@@ -22,8 +22,8 @@ public class EmptyValueErrorReportTest {
             + "          |";
     ColumnReference columnReference = ColumnReference.of("table", "column");
     Table invalidRows = Table.create("invalid", StringColumn.create("column1", ""));
-    EmptyValueError error = emptyValueErrorCreator
-        .create(columnReference, invalidRows, PROVIDER, "0");
+    EmptyValueError error =
+        emptyValueErrorCreator.create(columnReference, invalidRows, PROVIDER, "0");
 
     assertEquals(expected, error.verboseMessage());
   }
@@ -35,8 +35,8 @@ public class EmptyValueErrorReportTest {
     ColumnReference columnReference = ColumnReference.of("table", "column");
     Table invalidRows = Table.create("invalid", StringColumn.create("column1", ""));
 
-    EmptyValueError error = emptyValueErrorCreator
-        .create(columnReference, invalidRows, PROVIDER, "0");
+    EmptyValueError error =
+        emptyValueErrorCreator.create(columnReference, invalidRows, PROVIDER, "0");
 
     assertEquals(expected, error.message());
   }

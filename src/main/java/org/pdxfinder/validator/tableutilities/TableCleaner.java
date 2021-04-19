@@ -38,10 +38,8 @@ public final class TableCleaner {
   }
 
   private static Selection getEmptyRows(Table table) {
-    int[] rowsToDrop = table.stream()
-        .filter(TableCleaner::isRowBlank)
-        .mapToInt(Row::getRowNumber)
-        .toArray();
+    int[] rowsToDrop =
+        table.stream().filter(TableCleaner::isRowBlank).mapToInt(Row::getRowNumber).toArray();
     return new BitmapBackedSelection(rowsToDrop);
   }
 
@@ -94,9 +92,7 @@ public final class TableCleaner {
   }
 
   public static Table removeHeaderRowsIfPresent(Table table) {
-    return table.columnNames().contains("Field")
-        ? TableCleaner.removeHeaderRows(table, 4)
-        : table;
+    return table.columnNames().contains("Field") ? TableCleaner.removeHeaderRows(table, 4) : table;
   }
 
   public static void removeColumnIfExists(Table table, String columnToRemove) {
@@ -110,7 +106,7 @@ public final class TableCleaner {
   }
 
   public static UnaryOperator<String> substringAfterIfContainsSeparator(String separator) {
-    return string -> string.contains(separator) ? StringUtils.substringAfter(string, separator)
-        : string;
+    return string ->
+        string.contains(separator) ? StringUtils.substringAfter(string, separator) : string;
   }
 }

@@ -20,7 +20,10 @@ public class CommandCli {
               "local",
               false,
               "Run validator in local mode. " + "Do not pass to run in microservice mode")
-          .addOption("d", "dir", true,
+          .addOption(
+              "d",
+              "dir",
+              true,
               "Will run on single provider folder. For full load pass the UPDOG directory. Requires --local");
 
   private CommandCli() {
