@@ -1,17 +1,18 @@
-package org.pdxfinder.validator.tablesetutilities;
+package org.pdxfinder.validator.tableutilities;
 
 import static org.junit.Assert.assertEquals;
-import static org.pdxfinder.validator.tablesetutilities.TableUtilities.cleanTableValues;
-import static org.pdxfinder.validator.tablesetutilities.TableUtilities.fromString;
-import static org.pdxfinder.validator.tablesetutilities.TableUtilities.removeHeaderRows;
+import static org.pdxfinder.validator.tableutilities.TableCleaner.cleanTableValues;
+import static org.pdxfinder.validator.tableutilities.TableCleaner.removeHeaderRows;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class TableUtilitiesTest {
+public class TableCleanerTest {
 
   @Test
   public void removeHeaderRows_givenEmptyTable_returnsEmptyTable() {
@@ -47,7 +48,7 @@ public class TableUtilitiesTest {
 
   @Test
   public void
-      removeSpacesAndLowerCase_GivenAColumnWithPaddingSpacesAndUppercase_returnsCleanedStrings() {
+  removeSpacesAndLowerCase_GivenAColumnWithPaddingSpacesAndUppercase_returnsCleanedStrings() {
     Table table =
         Table.create()
             .addColumns(
@@ -112,20 +113,18 @@ public class TableUtilitiesTest {
   }
 
   @Test
-  public void fromString_createTableWithOneColumn_matchesTableSawConstruction() {
-    Table table = fromString("table_name", "column_1", "value_1");
-    Table table2 = Table.create("table_name", StringColumn.create("column_1", "value_1"));
-    assertEquals(table.toString(), table2.toString());
+  public void CleanTableValues_withTableWithEmptyRows_removeEmptyRows() {
+    Table testTable = TableUtilities
+        .fromString("table_name",
+            "column_1, column_2",
+            "value_1, value_2",
+            "\"\",\"\"",
+            "value3, value4",
+            "value5, \"\"",
+            "\"\", value6"
+        );
+    Table resultingTable = TableCleaner.cleanTableValues(testTable, "table_name", List.of(""));
+    Assert.assertEquals(4, resultingTable.rowCount());
   }
 
-  @Test
-  public void fromString_createTableWithTwoColumns_matchesTableSawConstruction() {
-    Table table = fromString("table_name", "column_1, column_2", "value_1, value_2");
-    Table table2 =
-        Table.create(
-            "table_name",
-            StringColumn.create("column_1", "value_1"),
-            StringColumn.create("column_2", "value_2"));
-    assertEquals(table.toString(), table2.toString());
-  }
 }

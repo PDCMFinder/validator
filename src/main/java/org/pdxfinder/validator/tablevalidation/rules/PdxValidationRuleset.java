@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.pdxfinder.validator.tablesetutilities.TableSetUtilities;
+import org.pdxfinder.validator.tableutilities.TableUtilities;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.Relation.ValidityType;
@@ -173,7 +173,7 @@ public class PdxValidationRuleset extends ValidationRuleCreator {
     Set<ColumnReference> sharingFreeTextColumns =
         matchingColumnsFromMetadata("model_validation", "provider_abbreviation", "project");
 
-    return TableSetUtilities.concatenate(
+    return TableUtilities.concatenate(
         patientFreeTextColumns,
         sampleFreeTextColumns,
         modelFreeTextColumns,
@@ -218,7 +218,7 @@ public class PdxValidationRuleset extends ValidationRuleCreator {
     Set<ColumnReference> essentialLoaderColumns =
         matchingColumnsFromMetadata("loader", "name", "abbreviation", "internal_url");
 
-    return TableSetUtilities.concatenate(
+    return TableUtilities.concatenate(
         idColumns,
         essentialSampleColumns,
         essentialModelColumns,

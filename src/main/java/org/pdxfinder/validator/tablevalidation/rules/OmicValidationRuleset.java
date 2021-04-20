@@ -3,7 +3,7 @@ package org.pdxfinder.validator.tablevalidation.rules;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.pdxfinder.validator.tablesetutilities.TableSetUtilities;
+import org.pdxfinder.validator.tableutilities.TableUtilities;
 import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
@@ -136,7 +136,7 @@ public class OmicValidationRuleset extends ValidationRuleCreator {
             new String[] {"marker_", "essential_or_additional_marker", "platform"});
 
     Set<ColumnReference> essentialColumns =
-        TableSetUtilities.concatenate(
+        TableUtilities.concatenate(
             modelColumns,
             sampleColumns,
             hostStrainColumns,
