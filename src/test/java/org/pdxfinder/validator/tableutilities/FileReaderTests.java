@@ -69,9 +69,9 @@ public class FileReaderTests {
     File updogFolder = tempFolder.newFolder("UPDOG");
     List<String> expectedList =
         List.of(
-            String.format("%s/%s", updogFolder, "Provider1"),
+            String.format("%s/%s", updogFolder, "Provider3"),
             String.format("%s/%s", updogFolder, "Provider2"),
-            String.format("%s/%s", updogFolder, "Provider3"));
+            String.format("%s/%s", updogFolder, "Provider1"));
     new File(expectedList.get(0)).createNewFile();
     new File(expectedList.get(1)).createNewFile();
     new File(expectedList.get(2)).createNewFile();
