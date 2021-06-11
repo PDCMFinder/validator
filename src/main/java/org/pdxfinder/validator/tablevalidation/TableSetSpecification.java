@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import tech.tablesaw.api.Table;
 
 public class TableSetSpecification {

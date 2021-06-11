@@ -1,7 +1,9 @@
 package org.pdxfinder.validator.tablevalidation;
 
+import java.util.Arrays;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
 public class Relation {
 
@@ -15,6 +17,14 @@ public class Relation {
     TABLE_KEY,
     ONE_TO_ONE,
     ONE_TO_MANY,
+    MISSING;
+
+    public static ValidityType parseValidityType(String type) {
+      return Arrays.stream(ValidityType.values())
+          .filter(e -> e.name().equalsIgnoreCase(type))
+          .findFirst()
+          .orElseThrow(IllegalArgumentException::new);
+    }
   }
 
   private Relation(
@@ -41,23 +51,30 @@ public class Relation {
 
   public static Relation betweenTableColumns(
       ValidityType plurality, ColumnReference left, ColumnReference right) {
-    if (left.equals(right))
+    if (left.equals(right)) {
       throw new IllegalArgumentException(
           String.format("Unable to define a relation from a column to itself (%s)", left));
+    }
 
     return new Relation(plurality, left.table(), left.column(), right.table(), right.column());
   }
 
+  public static Relation createEmpty() {
+    return new Relation(ValidityType.MISSING, "", "", "", "");
+  }
+
   public ColumnReference getOtherColumn(ColumnReference queriedColumn) {
     ColumnReference otherColumn;
-    if (queriedColumn.equals(this.leftColumnReference())) otherColumn = this.rightColumnReference();
-    else if (queriedColumn.equals(this.rightColumnReference()))
+    if (queriedColumn.equals(this.leftColumnReference())) {
+      otherColumn = this.rightColumnReference();
+    } else if (queriedColumn.equals(this.rightColumnReference())) {
       otherColumn = this.leftColumnReference();
-    else
+    } else {
       otherColumn =
           ColumnReference.of(
               String.format("table linked to %s not found", queriedColumn.table()),
               String.format("column linked to %s not found", queriedColumn.column()));
+    }
     return otherColumn;
   }
 

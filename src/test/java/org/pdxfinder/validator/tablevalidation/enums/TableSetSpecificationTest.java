@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.rules;
+package org.pdxfinder.validator.tablevalidation.enums;
 
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertEquals;
@@ -9,9 +9,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
 public class TableSetSpecificationTest {
 

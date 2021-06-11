@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +65,7 @@ public class IllegalValueErrorCreator extends ErrorCreator {
       String provider) {
     Table workingTable = tableSet.get(columnReference.table());
     StringColumn column = workingTable.column(columnReference.column()).asStringColumn();
-    Predicate<String> testValues = valueRestrictions.getInvalidValuePredicate();
+    Predicate<String> testValues = valueRestrictions.getPredicate();
     Predicate<String> testEmptiness = valueRestrictions.getEmptyFilter();
     List<String> invalidValues =
         column.asList().stream()

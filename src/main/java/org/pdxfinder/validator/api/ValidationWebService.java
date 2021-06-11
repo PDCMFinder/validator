@@ -9,8 +9,8 @@ import java.util.Map;
 import org.pdxfinder.validator.tableutilities.FileReader;
 import org.pdxfinder.validator.tableutilities.TableSetCleaner;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.TableSetSpecificationBuilder;
 import org.pdxfinder.validator.tablevalidation.ValidationService;
-import org.pdxfinder.validator.tablevalidation.rules.PdxValidationRuleset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ValidationWebService {
   @Autowired
   public ValidationWebService(ValidationService validationService) {
     this.validationService = validationService;
-    this.pdxValidationRuleset = new PdxValidationRuleset().generate();
+    this.pdxValidationRuleset = new TableSetSpecificationBuilder().generate();
   }
 
   public String proccessRequest(MultipartFile multipartFile) {

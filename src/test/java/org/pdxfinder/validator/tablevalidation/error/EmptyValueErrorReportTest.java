@@ -3,7 +3,7 @@ package org.pdxfinder.validator.tablevalidation.error;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 

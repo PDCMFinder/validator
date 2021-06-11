@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
 public class RelationTest {
 
