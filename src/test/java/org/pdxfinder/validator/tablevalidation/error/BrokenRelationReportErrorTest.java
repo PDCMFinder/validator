@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 

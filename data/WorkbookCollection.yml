@@ -1,0 +1,12 @@
+workbooks:
+  - workbook_title: metadata
+    workbook:
+      - table: patient
+        column_references:
+          - name: patient_id
+            charset: url_safe
+            attributes:
+              - essential
+              - unique
+            relation: [ ]
+

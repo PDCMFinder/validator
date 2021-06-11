@@ -1,6 +1,6 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
 public class MissingColumnError extends ValidationErrorBuilder {
 

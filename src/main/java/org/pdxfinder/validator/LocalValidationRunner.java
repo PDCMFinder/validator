@@ -8,8 +8,8 @@ import java.util.Map;
 import org.pdxfinder.validator.tableutilities.FileReader;
 import org.pdxfinder.validator.tableutilities.TableSetCleaner;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.TableSetSpecificationBuilder;
 import org.pdxfinder.validator.tablevalidation.ValidationService;
-import org.pdxfinder.validator.tablevalidation.rules.PdxValidationRuleset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class LocalValidationRunner implements CommandLineRunner {
   }
 
   public void validateDirectories(List<String> directories) {
-    TableSetSpecification pdxValidationRuleset = new PdxValidationRuleset().generate();
+    TableSetSpecification pdxValidationRuleset = new TableSetSpecificationBuilder().generate();
     for (String provider : directories) {
       Path providerPath = Path.of(provider);
       Map<String, Table> tableSet = readPdxTablesFromPath(providerPath.toAbsolutePath());
