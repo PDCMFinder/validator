@@ -148,7 +148,9 @@ public class TableSetSpecification {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
+    if (this == o) {
+      return true;
+    }
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
@@ -203,28 +205,28 @@ public class TableSetSpecification {
         .add(
             "requiredColumns=\n\t"
                 + String.join(
-                    "\n\t",
-                    requiredColumns.stream()
-                        .map(ColumnReference::toString)
-                        .collect(Collectors.toSet())))
+                "\n\t",
+                requiredColumns.stream()
+                    .map(ColumnReference::toString)
+                    .collect(Collectors.toSet())))
         .add(
             "nonEmptyColumns=\n\t"
                 + String.join(
-                    "\n\t",
-                    nonEmptyColumns.stream()
-                        .map(ColumnReference::toString)
-                        .collect(Collectors.toSet())))
+                "\n\t",
+                nonEmptyColumns.stream()
+                    .map(ColumnReference::toString)
+                    .collect(Collectors.toSet())))
         .add(
             "uniqueColumns=\n\t"
                 + String.join(
-                    "\n\t",
-                    uniqueColumns.stream()
-                        .map(ColumnReference::toString)
-                        .collect(Collectors.toSet())))
+                "\n\t",
+                uniqueColumns.stream()
+                    .map(ColumnReference::toString)
+                    .collect(Collectors.toSet())))
         .add(
             "relations=\n\t"
                 + String.join(
-                    "\n\t", relations.stream().map(Relation::toString).collect(Collectors.toSet())))
+                "\n\t", relations.stream().map(Relation::toString).collect(Collectors.toSet())))
         .add("provider=\n\t'" + provider + "'")
         .toString();
   }
