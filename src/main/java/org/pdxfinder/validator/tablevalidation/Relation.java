@@ -1,7 +1,9 @@
 package org.pdxfinder.validator.tablevalidation;
 
+import java.util.Arrays;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
 public class Relation {
 
@@ -15,6 +17,14 @@ public class Relation {
     TABLE_KEY,
     ONE_TO_ONE,
     ONE_TO_MANY,
+    MISSING;
+
+    public static ValidityType parseValidityType(String type) {
+      return Arrays.stream(ValidityType.values())
+          .filter(e -> e.name().equalsIgnoreCase(type))
+          .findFirst()
+          .orElseThrow(IllegalArgumentException::new);
+    }
   }
 
   private Relation(
@@ -48,6 +58,10 @@ public class Relation {
     }
 
     return new Relation(plurality, left.table(), left.column(), right.table(), right.column());
+  }
+
+  public static Relation createEmpty() {
+    return new Relation(ValidityType.MISSING, "", "", "", "");
   }
 
   public ColumnReference getOtherColumn(ColumnReference queriedColumn) {

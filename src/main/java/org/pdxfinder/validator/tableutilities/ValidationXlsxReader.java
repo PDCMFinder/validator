@@ -161,7 +161,7 @@ public class ValidationXlsxReader {
         } else {
           row1 = -1;
         }
-      } else if (lastRowArea == null && rowArea == null) {
+      } else if (lastRowArea == null) {
         row1 = -1;
       } else if (rowArea.startColumn < lastRowArea.startColumn
           || rowArea.endColumn > lastRowArea.endColumn) {
@@ -321,6 +321,7 @@ public class ValidationXlsxReader {
           booleanColumn.append(cell.getBooleanCellValue());
           return null;
         }
+        break;
       default:
         break;
     }

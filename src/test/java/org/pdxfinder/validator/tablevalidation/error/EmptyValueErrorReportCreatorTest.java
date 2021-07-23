@@ -15,9 +15,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tableutilities.TableUtilities;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
@@ -106,8 +106,7 @@ public class EmptyValueErrorReportCreatorTest {
                     tableWithMissingValue.where(
                         tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
                     PROVIDER,
-                    "[7]"
-                )
+                    "[7]")
                 .getValidationError());
     assertEquals(
         expected.toString(),

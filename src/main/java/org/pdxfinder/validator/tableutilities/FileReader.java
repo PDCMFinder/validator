@@ -84,9 +84,7 @@ public class FileReader {
           .filter(filter::matches)
           .forEach(
               path ->
-                  tables.put(
-                      path.getFileName().toString(),
-                      readTsvOrReturnEmpty(path.toFile())));
+                  tables.put(path.getFileName().toString(), readTsvOrReturnEmpty(path.toFile())));
     } catch (IOException e) {
       log.error("There was an error reading the files", e);
     }
@@ -96,7 +94,6 @@ public class FileReader {
   public static Table readTsvOrReturnEmpty(File file) {
     Table dataTable = Table.create();
     log.trace("Reading tsv file {}", file);
-    System.out.print(String.format("Reading tsv file %s\r", file));
     try {
       if (file.exists()) {
         dataTable = readTsv(file);
@@ -108,10 +105,7 @@ public class FileReader {
   }
 
   private static Table readTsv(File file) throws IOException {
-    CsvReadOptions.Builder builder = CsvReadOptions
-        .builder(file)
-        .sample(false)
-        .separator('\t');
+    CsvReadOptions.Builder builder = CsvReadOptions.builder(file).sample(false).separator('\t');
     CsvReadOptions options = builder.build();
     return Table.read().usingOptions(options);
   }

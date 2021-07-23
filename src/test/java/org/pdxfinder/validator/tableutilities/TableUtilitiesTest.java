@@ -25,6 +25,4 @@ public class TableUtilitiesTest {
             StringColumn.create("column_2", "value_2"));
     assertEquals(table.toString(), table2.toString());
   }
-
-
 }

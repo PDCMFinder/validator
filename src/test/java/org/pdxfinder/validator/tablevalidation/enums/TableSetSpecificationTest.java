@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.rules;
+package org.pdxfinder.validator.tablevalidation.enums;
 
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertEquals;
@@ -9,17 +9,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
 public class TableSetSpecificationTest {
 
   private final Set<String> REQUIRED_TABLES =
       new HashSet<>(Arrays.asList("file_1.tsv", "file_2.tsv"));
 
-  private final ColumnReference REQUIRED_COLUMN_1 = ColumnReference.of("table.tsv", "column_1");
-  private final ColumnReference REQUIRED_COLUMN_2 = ColumnReference.of("table.tsv", "column_2");
+  private final ColumnReference REQUIRED_COLUMN_1 = ColumnReference
+      .of("table.tsv", "column_1");
+  private final ColumnReference REQUIRED_COLUMN_2 = ColumnReference
+      .of("table.tsv", "column_2");
 
   @Test
   public void builderMethods_givenInstantiation_allReturnInstanceOfThisClass() {

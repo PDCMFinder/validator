@@ -50,23 +50,15 @@ public class FileReaderTests {
       throws IOException {
     TemporaryFolder tempFolder = new TemporaryFolder();
     tempFolder.create();
-    String rootDir = tempFolder
-        .getRoot()
-        .toString();
-    Assert.assertEquals(
-        rootDir,
-        FileReader.getDirectories(rootDir).get(0)
-    );
+    String rootDir = tempFolder.getRoot().toString();
+    Assert.assertEquals(rootDir, FileReader.getDirectories(rootDir).get(0));
     tempFolder.delete();
   }
 
   @Test
   public void given_SingleDirectoryArgument_WhenDirectoryDoesNotExist_returnBlankList() {
     String aNonExistentLocation = "/a/fake/directory";
-    Assert.assertEquals(
-        new ArrayList<String>(),
-        FileReader.getDirectories(aNonExistentLocation)
-    );
+    Assert.assertEquals(new ArrayList<String>(), FileReader.getDirectories(aNonExistentLocation));
   }
 
   @Test
@@ -75,31 +67,23 @@ public class FileReaderTests {
     TemporaryFolder tempFolder = new TemporaryFolder();
     tempFolder.create();
     File updogFolder = tempFolder.newFolder("UPDOG");
-    List<String> expectedList = List.of(
-        String.format("%s/%s", updogFolder, "Provider1"),
-        String.format("%s/%s", updogFolder, "Provider2"),
-        String.format("%s/%s", updogFolder, "Provider3")
-    );
+    List<String> expectedList =
+        List.of(
+            String.format("%s/%s", updogFolder, "Provider3"),
+            String.format("%s/%s", updogFolder, "Provider2"),
+            String.format("%s/%s", updogFolder, "Provider1"));
     new File(expectedList.get(0)).createNewFile();
     new File(expectedList.get(1)).createNewFile();
     new File(expectedList.get(2)).createNewFile();
-    String rootDir = tempFolder
-        .getRoot()
-        .toString();
-    Assert.assertEquals(
-        expectedList,
-        FileReader.getDirectories(rootDir + "/UPDOG")
-    );
+    String rootDir = tempFolder.getRoot().toString();
+    Assert.assertEquals(expectedList, FileReader.getDirectories(rootDir + "/UPDOG"));
     tempFolder.delete();
   }
 
   @Test
   public void given_FileDoesNotExists_When_readTsvOrReturnEmptyIsCalled_ReturnBlank() {
     File blankFile = new File("/a/fake/file");
-    Assert.assertEquals(
-        "\n",
-        FileReader.readTsvOrReturnEmpty(blankFile).toString()
-    );
+    Assert.assertEquals("\n", FileReader.readTsvOrReturnEmpty(blankFile).toString());
   }
 
   @Test
@@ -128,11 +112,8 @@ public class FileReaderTests {
 
   private void writeTestHeaderToFile(File file) throws IOException {
     Writer output;
-    output = new BufferedWriter(new FileWriter(file));  //clears file every time
+    output = new BufferedWriter(new FileWriter(file)); // clears file every time
     output.append("test\theader");
     output.close();
   }
-
 }
-
-

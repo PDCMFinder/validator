@@ -3,7 +3,7 @@ package org.pdxfinder.validator.tableutilities;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import tech.tablesaw.api.Table;
 
@@ -26,7 +26,6 @@ public class TableSetCleaner {
           "internal_url",
           "internal_dosing_url");
 
-
   public static Map<String, Table> cleanPdxTables(Map<String, Table> pdxTableSet) {
     removeDescriptionColumn(pdxTableSet);
     pdxTableSet = removeHeaderRows(pdxTableSet);
@@ -36,21 +35,17 @@ public class TableSetCleaner {
   }
 
   static Map<String, Table> cleanTableNames(Map<String, Table> tableSet) {
-    tableSet = applyFunctionToTableNames(tableSet,
-        TableCleaner.substringAfterIfContainsSeparator("_"));
-    tableSet = applyFunctionToTableNames(tableSet, replaceAll("(metadata-|.tsv)", ""));
+    tableSet = applyFunctionToTableNames(tableSet, replaceAll("(([A-Z]+_)?metadata-|.tsv)", ""));
     return applyFunctionToTableNames(tableSet, TableCleaner.removeHashmarksAndNewlines());
   }
 
-
-  private static Map<String, Table> applyFunctionToTableNames(Map<String, Table> tableSet,
-      Function<String, String> tableNameFunction) {
+  private static Map<String, Table> applyFunctionToTableNames(
+      Map<String, Table> tableSet, UnaryOperator<String> tableNameFunction) {
     return tableSet.entrySet().stream()
         .collect(
             Collectors.toMap(
                 e -> tableNameFunction.apply(e.getKey()),
                 e -> e.getValue().setName(tableNameFunction.apply(e.getKey()))));
-
   }
 
   public static Map<String, Table> removeHeaderRows(Map<String, Table> tableSet) {
@@ -71,7 +66,7 @@ public class TableSetCleaner {
                         e.getValue(), e.getValue().name(), exceptionColumns)));
   }
 
-  private static Function<String, String> replaceAll(String regex, String replacement) {
+  private static UnaryOperator<String> replaceAll(String regex, String replacement) {
     return string -> string.replaceAll(regex, replacement);
   }
 

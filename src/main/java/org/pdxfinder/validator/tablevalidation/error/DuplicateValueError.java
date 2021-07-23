@@ -1,7 +1,7 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
 import java.util.Set;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
 public class DuplicateValueError extends ValidationErrorBuilder {
 
