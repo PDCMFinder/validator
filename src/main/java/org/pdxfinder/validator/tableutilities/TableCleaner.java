@@ -2,12 +2,10 @@ package org.pdxfinder.validator.tableutilities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tech.tablesaw.api.Row;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.Column;
@@ -15,8 +13,6 @@ import tech.tablesaw.selection.BitmapBackedSelection;
 import tech.tablesaw.selection.Selection;
 
 public final class TableCleaner {
-
-  private static final Logger log = LoggerFactory.getLogger(TableCleaner.class);
 
   private TableCleaner() {
     throw new IllegalStateException("Utility class");
@@ -42,10 +38,8 @@ public final class TableCleaner {
   }
 
   private static Selection getEmptyRows(Table table) {
-    int[] rowsToDrop = table.stream()
-        .filter(TableCleaner::isRowBlank)
-        .mapToInt(Row::getRowNumber)
-        .toArray();
+    int[] rowsToDrop =
+        table.stream().filter(TableCleaner::isRowBlank).mapToInt(Row::getRowNumber).toArray();
     return new BitmapBackedSelection(rowsToDrop);
   }
 
@@ -98,9 +92,7 @@ public final class TableCleaner {
   }
 
   public static Table removeHeaderRowsIfPresent(Table table) {
-    return table.columnNames().contains("Field")
-        ? TableCleaner.removeHeaderRows(table, 4)
-        : table;
+    return table.columnNames().contains("Field") ? TableCleaner.removeHeaderRows(table, 4) : table;
   }
 
   public static void removeColumnIfExists(Table table, String columnToRemove) {
@@ -109,12 +101,12 @@ public final class TableCleaner {
     }
   }
 
-  public static Function<String, String> removeHashmarksAndNewlines() {
+  public static UnaryOperator<String> removeHashmarksAndNewlines() {
     return (tableName -> (tableName != null) ? tableName.replaceAll("[#\\n]", "") : "");
   }
 
-  public static Function<String, String> substringAfterIfContainsSeparator(String separator) {
-    return string -> string.contains(separator) ? StringUtils.substringAfter(string, separator)
-        : string;
+  public static UnaryOperator<String> substringAfterIfContainsSeparator(String separator) {
+    return string ->
+        string.contains(separator) ? StringUtils.substringAfter(string, separator) : string;
   }
 }

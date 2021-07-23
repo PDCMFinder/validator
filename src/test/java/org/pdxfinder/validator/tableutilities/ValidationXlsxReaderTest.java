@@ -13,7 +13,6 @@ import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.Column;
 import tech.tablesaw.io.xlsx.XlsxReadOptions;
 
-
 public class ValidationXlsxReaderTest {
 
   private List<Table> readN(String name, int expectedCount) {
@@ -21,7 +20,7 @@ public class ValidationXlsxReaderTest {
       String fileName = name + ".xlsx";
       List<Table> tables =
           new ValidationXlsxReader()
-              .readMultiple(XlsxReadOptions.builder("./data/" + fileName).build(), true);
+              .readMultiple(XlsxReadOptions.builder("./data/test/" + fileName).build(), true);
       assertNotNull(tables, "No tables read from " + fileName);
       assertEquals(expectedCount, tables.size(), "Wrong number of tables in " + fileName);
       return tables;
@@ -62,7 +61,7 @@ public class ValidationXlsxReaderTest {
   }
 
   @Test
-  public void testColumns() {
+  void testColumns() {
     Table table =
         read1(
             "columns",
@@ -75,7 +74,8 @@ public class ValidationXlsxReaderTest {
             "booleancol",
             "datecol",
             "formulacol");
-    //        stringcol   shortcol    intcol  longcol doublecol   booleancol  datecol       formulacol
+    //        stringcol   shortcol    intcol  longcol doublecol   booleancol  datecol
+    // formulacol
     //        Hallvard    123 12345678    12345678900 12,34   TRUE    22/02/2019 20:54:09   135.34
     //        Marit       124 12345679    12345678901 13,35   FALSE   23/03/2020 21:55:10   137.35
     assertColumnValues(table.stringColumn("stringcol"), "Hallvard", "Marit");
@@ -83,19 +83,16 @@ public class ValidationXlsxReaderTest {
     assertColumnValues(table.intColumn("intcol"), 12345678, 12345679);
     assertColumnValues(table.longColumn("longcol"), 12345678900L, 12345678901L);
     assertColumnValues(table.doubleColumn("doublecol"), 12.34, 13.35);
-    assertColumnValues(table.dateTimeColumn("datecol"), LocalDateTime.of(2019, 2, 22, 20, 54, 9),
+    assertColumnValues(
+        table.dateTimeColumn("datecol"),
+        LocalDateTime.of(2019, 2, 22, 20, 54, 9),
         LocalDateTime.of(2020, 3, 23, 21, 55, 10));
     assertColumnValues(table.doubleColumn("formulacol"), 135.34, 137.35);
   }
 
   @Test
-  public void testNumericToStringCoercion() {
-    Table table =
-        read1(
-            "columnsmixed",
-            4,
-            "mixcol",
-            "othercol");
+  void testNumericToStringCoercion() {
+    Table table = read1("columnsmixed", 4, "mixcol", "othercol");
     //        stringcol
     //        Hallvard
     //        0.0
@@ -104,7 +101,7 @@ public class ValidationXlsxReaderTest {
   }
 
   @Test
-  public void testColumnsWithMissingValues() {
+  void testColumnsWithMissingValues() {
     Table table =
         read1(
             "columns-with-missing-values",
@@ -128,30 +125,29 @@ public class ValidationXlsxReaderTest {
     assertColumnValues(table.longColumn("longcol"), 12345678900L, null);
     assertColumnValues(table.doubleColumn("doublecol"), null, 13.35);
     assertColumnValues(table.booleanColumn("booleancol"), true, null);
-    assertColumnValues(table.dateTimeColumn("datecol"), LocalDateTime.of(2019, 2, 22, 20, 54, 9),
-        null);
+    assertColumnValues(
+        table.dateTimeColumn("datecol"), LocalDateTime.of(2019, 2, 22, 20, 54, 9), null);
     assertColumnValues(table.doubleColumn("formulacol"), null, 137.35);
-
   }
 
   @Test
-  public void testSheetIndex() throws IOException {
+  void testSheetIndex() throws IOException {
     Table table =
         new ValidationXlsxReader()
-            .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").sheetIndex(1).build());
+            .read(XlsxReadOptions.builder("./data/test/multiplesheets.xlsx").sheetIndex(1).build());
     assertNotNull(table, "No table read from multiplesheets.xlsx");
     assertColumnValues(table.stringColumn("stringcol"), "John", "Doe");
     assertEquals("multiplesheets.xlsx#Sheet2", table.name(), "table name is different");
 
     Table tableImplicit =
         new ValidationXlsxReader()
-            .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").build());
+            .read(XlsxReadOptions.builder("./data/test/multiplesheets.xlsx").build());
     // the table from the 2nd sheet should be picked up
     assertNotNull(tableImplicit, "No table read from multiplesheets.xlsx");
 
     try {
       new ValidationXlsxReader()
-          .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").sheetIndex(0).build());
+          .read(XlsxReadOptions.builder("./data/test/multiplesheets.xlsx").sheetIndex(0).build());
       fail("First sheet is empty, no table should be found");
     } catch (IllegalArgumentException iae) {
       // expected
@@ -159,11 +155,10 @@ public class ValidationXlsxReaderTest {
 
     try {
       new ValidationXlsxReader()
-          .read(XlsxReadOptions.builder("./data/multiplesheets.xlsx").sheetIndex(5).build());
+          .read(XlsxReadOptions.builder("./data/test/multiplesheets.xlsx").sheetIndex(5).build());
       fail("Only 2 sheets exist, no sheet 5");
     } catch (IndexOutOfBoundsException iobe) {
       // expected
     }
   }
 }
-

@@ -1,0 +1,221 @@
+workbooks:
+  - workbook_title: metadata
+    workbook:
+      - table: patient
+        column_references:
+          - name: patient_id
+            charset: url_safe
+            attributes:
+              - essential
+              - unique
+            relation:
+              - [ "TABLE_KEY", "patient", "sample", "patient_id" ]
+          - name: sex
+            attributes:
+              - essential
+            categories:
+              - male
+              - female
+              - not collected
+              - not provided
+          - name: history
+            charset: free_text
+          - name: ethnicity
+          - name: ethnicity_assessment_method
+            categories:
+              - self-assessed
+              - genetic
+          - name: initial_diagnosis
+            charset: free_text
+      - table: sample
+        column_references:
+          - name: patient_id
+            charset: url_safe
+            attributes:
+              - essential
+            relation:
+              - [ "TABLE_KEY", "sample", "patient", "patient_id" ]
+              - [ "ONE_TO_MANY", "sample", "sample", "sample_id" ]
+          - name: sample_id
+            charset: url_safe
+            attributes:
+              - essential
+              - unique
+            relation:
+              - [ "ONE_TO_ONE", "sample", "sample", "model_id" ]
+          - name: collection_date
+            charset: COLLECTION_DATE
+          - name: collection_event
+            charset: COLLECTION_EVENT
+          - name: months_since_collection_1
+            charset: NUMERIC
+          - name: age_in_years_at_collection
+            charset: NUMERIC
+          - name: diagnosis
+            attributes:
+              - essential
+          - name: tumour_type
+            attributes:
+              - essential
+            categories:
+              - primary
+              - metastatic
+              - recurrent
+              - refractory
+          - name: primary_site
+            attributes:
+              - essential
+            charset: free_text
+          - name: collection_site
+            attributes:
+              - essential
+            charset: free_text
+          - name: stage
+            charset: free_text
+          - name: staging_system
+            charset: free_text
+          - name: grade
+            charset: free_text
+          - name: grading_system
+            charset: free_text
+          - name: virology_status
+            charset: free_text
+          - name: sharable
+            attributes:
+              - essential
+            categories:
+              - yes
+              - no
+              - not provided
+          - name: treatment_naive_at_collection
+            attributes:
+              - essential
+            categories:
+              - treatment naive
+              - not treatment naive
+              - not collected
+              - not provided
+          - name: treated
+            categories:
+              - yes
+              - no
+              - not provided
+              - not collected
+          - name: prior_treatment
+            categories:
+              - yes
+              - no
+              - not collected
+              - not provided
+          - name: model_id
+            charset: url_safe
+            attributes:
+              - essential
+              - unique
+            relation:
+              - [ "TABLE_KEY", "sample", "model", "model_id" ]
+              - [ "TABLE_KEY", "sample", "model_validation", "model_id" ]
+              - [ "TABLE_KEY", "sample","sharing", "model_id" ]
+      - table: model
+        column_references:
+          - name: model_id
+            attributes:
+              - essential
+              - unique
+            relation:
+              - [ "TABLE_KEY", "model", "sample", "model_id" ]
+          - name: host_strain_name
+            charset: free_text
+            attributes:
+              - essential
+          - name: host_strain_nomenclature
+            charset: free_text
+            attributes:
+              - essential
+          - name: engraftment_site
+            charset: free_text
+            attributes:
+              - essential
+          - name: engraftment_type
+            attributes:
+              - essential
+            categories:
+              - heterotopic
+              - orthotopic
+              - not collected
+              - not provided
+          - name: sample_type
+            charset: free_text
+            attributes:
+              - essential
+          - name: sample_state
+            charset: free_text
+          - name: passage_number
+            attributes:
+              - essential
+            charset: numeric
+          - name: publications
+            charset: pmid_format
+      - table: model_validation
+        column_references:
+          - name: model_id
+            attributes:
+              - essential
+              - unique
+            relation:
+              - [ "TABLE_KEY", "model_validation" , "sample", "model_id" ]
+          - name: validation_technique
+            charset: free_text
+          - name: description
+            attributes:
+              - essential
+            charset: free_text
+          - name: passages_tested
+            attributes:
+              - essential
+            charset: numeric
+          - name: validation_host_strain_nomenclature
+            attributes:
+              - essential
+            charset: free_text
+      - table: sharing
+        column_references:
+          - name: model_id
+            attributes:
+              - essential
+              - unique
+            relation:
+              - [ "TABLE_KEY", "sharing", "sample", "model_id" ]
+          - name: provider_type
+            attributes:
+              - essential
+            categories:
+              - academia
+              - industry
+          - name: accessibility
+            attributes:
+              - essential
+            charset: free_text
+          - name: europdx_access_modality
+            attributes:
+              - essential
+            categories:
+              - transnational access
+              - collaboration only
+          - name: email
+            attributes:
+              - essential
+          - name: name
+            attributes:
+              - essential
+          - name: form_url
+          - name: database_url
+          - name: provider_name
+            attributes:
+              - essential
+          - name: provider_abbreviation
+            attributes:
+              - essential
+            charset: url_safe
+          - name: project
+            charset: url_safe

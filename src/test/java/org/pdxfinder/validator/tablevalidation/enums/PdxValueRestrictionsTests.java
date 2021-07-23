@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.rules;
+package org.pdxfinder.validator.tablevalidation.enums;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +17,9 @@ public class PdxValueRestrictionsTests {
     String expectedPass = "/T*J+*^|#@";
 
     Predicate<String> urlSafeRegex =
-        PdxValueRestrictions.getUrlSafeCharset().getInvalidValuePredicate();
+        Charsets.URL_SAFE
+            .getValueRestriction()
+            .getPredicate();
 
     Assert.assertFalse(urlSafeRegex.test(expectedFail));
     Assert.assertFalse(urlSafeRegex.test(expectedFail2));
@@ -30,10 +32,14 @@ public class PdxValueRestrictionsTests {
     String blank = "";
 
     Predicate<String> urlSafeRegex =
-        PdxValueRestrictions.getUrlSafeCharset().getInvalidValuePredicate();
+        Charsets.URL_SAFE
+            .getValueRestriction()
+            .getPredicate();
 
     Predicate<String> FreeTextRegex =
-        PdxValueRestrictions.getFreeTextCharset().getInvalidValuePredicate();
+        Charsets.FREE_TEXT
+            .getValueRestriction()
+            .getPredicate();
 
     Assert.assertTrue(urlSafeRegex.test(blank));
     Assert.assertTrue(FreeTextRegex.test(blank));
@@ -46,7 +52,9 @@ public class PdxValueRestrictionsTests {
     String expectedPass = "/T*J+*^|#@";
 
     Predicate<String> FreeTextRegex =
-        PdxValueRestrictions.getFreeTextCharset().getInvalidValuePredicate();
+        Charsets.FREE_TEXT
+            .getValueRestriction()
+            .getPredicate();
 
     Assert.assertFalse(FreeTextRegex.test(expectedFail));
     Assert.assertFalse(FreeTextRegex.test(expectedFail2));
@@ -63,7 +71,9 @@ public class PdxValueRestrictionsTests {
     String expectedPass3 = "/T*J+8*^|#@";
 
     Predicate<String> numberRegex =
-        PdxValueRestrictions.getNumericalCharset().getInvalidValuePredicate();
+        Charsets.NUMERIC
+            .getValueRestriction()
+            .getPredicate();
 
     Assert.assertFalse(numberRegex.test(expectedFail));
     Assert.assertFalse(numberRegex.test(expectedFail2));
@@ -83,7 +93,7 @@ public class PdxValueRestrictionsTests {
     String expectedpass2 = " regex ";
     String expectedpass3 = "pd'x fi;nder !!?!?!";
     Predicate<String> categoriesPredicate =
-        ValueRestrictions.of(categories).getInvalidValuePredicate();
+        ValueRestrictions.of(categories).getPredicate();
 
     Assert.assertFalse(categoriesPredicate.test(expectedfail));
     Assert.assertFalse(categoriesPredicate.test(expectedfail2));

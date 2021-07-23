@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
-import org.pdxfinder.validator.tablevalidation.rules.PdxValueRestrictions;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.enums.Charsets;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
@@ -51,7 +51,7 @@ public class IllegalValueErrorReportCreatorTest {
   @Test
   public void UrlSafeCharTest_columnWithUrlSafeString_returnNoError() {
     Map<String, Table> tableSet = makeTableSetWithSingleColumn(Arrays.asList("TEST", "T.E ST-~_"));
-    tableSetSpecification.addValueRestriction(columns, PdxValueRestrictions.getUrlSafeCharset());
+    tableSetSpecification.addValueRestriction(columns, Charsets.URL_SAFE.getValueRestriction());
     Assert.assertTrue(
         illegalValueErrorCreator.generateErrors(tableSet, tableSetSpecification).isEmpty());
   }
@@ -59,7 +59,7 @@ public class IllegalValueErrorReportCreatorTest {
   @Test
   public void UrlSafeError_columnWithNoneUrlSafeString_returnError() {
     Map<String, Table> tableSet = makeTableSetWithSingleColumn(Collections.singletonList("T#E/ST"));
-    tableSetSpecification.addValueRestriction(columns, PdxValueRestrictions.getUrlSafeCharset());
+    tableSetSpecification.addValueRestriction(columns, Charsets.URL_SAFE.getValueRestriction());
     Assert.assertFalse(
         illegalValueErrorCreator.generateErrors(tableSet, tableSetSpecification).isEmpty());
   }
@@ -68,7 +68,7 @@ public class IllegalValueErrorReportCreatorTest {
   public void UrlSafeError_columnWithMixOfNoneString_returnError() {
     Map<String, Table> tableSet =
         makeTableSetWithSingleColumn(Arrays.asList("T#E/ST", "TEST", "TEES", "TES23#"));
-    tableSetSpecification.addValueRestriction(columns, PdxValueRestrictions.getUrlSafeCharset());
+    tableSetSpecification.addValueRestriction(columns, Charsets.URL_SAFE.getValueRestriction());
     Assert.assertFalse(
         illegalValueErrorCreator.generateErrors(tableSet, tableSetSpecification).isEmpty());
   }

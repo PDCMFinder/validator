@@ -25,9 +25,6 @@ public class ValidationService {
   private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
   private List<ValidationError> validationErrors;
 
-  public ValidationService() {
-  }
-
   public List<ValidationError> validate(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     validationErrors = new ArrayList<>();
@@ -55,6 +52,7 @@ public class ValidationService {
       log.error(
           "Not all required tables and columns where present for {}. Aborting further validation",
           tableSetSpecification.getProvider());
+
     }
     return !CollectionUtils.isNotEmpty(validationErrors);
   }
@@ -69,10 +67,9 @@ public class ValidationService {
 
   private void checkRequiredColumnsPresent(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
-    if (tableSetSpecification.hasRequiredColumns()) {
+    if (tableSetSpecification.hasRequiredColumns())
       validationErrors.addAll(
           new MissingColumnErrorCreator().generateErrors(tableSet, tableSetSpecification));
-    }
   }
 
   private void checkAllNonEmptyValuesPresent(
