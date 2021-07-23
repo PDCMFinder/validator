@@ -41,7 +41,9 @@ public class DuplicateValueErrorCreator extends ErrorCreator {
     final Set<String> duplicates = new HashSet<>();
     final Set<String> set1 = new HashSet<>();
     for (String string : listContainingDuplicates) {
-      if (!set1.add(string)) duplicates.add(string);
+      if (!set1.add(string)) {
+        duplicates.add(string);
+      }
     }
     return duplicates;
   }

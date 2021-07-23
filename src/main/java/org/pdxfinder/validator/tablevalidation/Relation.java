@@ -41,9 +41,10 @@ public class Relation {
   }
 
   public static Relation betweenTableKeys(ColumnReference left, ColumnReference right) {
-    if (left.equals(right))
+    if (left.equals(right)) {
       throw new IllegalArgumentException(
           String.format("Unable to define a relation from a column to itself (%s)", left));
+    }
 
     return new Relation(
         ValidityType.TABLE_KEY, left.table(), left.column(), right.table(), right.column());
@@ -112,9 +113,13 @@ public class Relation {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
+    if (this == o) {
+      return true;
+    }
 
-    if (o == null || getClass() != o.getClass()) return false;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     Relation relation = (Relation) o;
 
