@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +17,10 @@ import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.enums.Charsets;
 import org.pdxfinder.validator.tablevalidation.enums.Rules;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"workbook_title", "workbook"})
 public class Workbook {
-
-  private static final Logger log = LoggerFactory.getLogger(Workbook.class);
 
   @JsonProperty("workbook_title")
   private String workbook_title;
@@ -45,11 +42,17 @@ public class Workbook {
 
   @JsonIgnore
   public Map<Set<ColumnReference>, ValueRestrictions> getColumnsByCharset() {
-    return Arrays.stream(Charsets.values())
-        .collect(Collectors.toMap(
-            getAllColumnsWithCharsets(),
-            Charsets::getValueRestriction
-        ));
+    Map<Set<ColumnReference>, ValueRestrictions> charsetColumnMap = new HashMap<>();
+    for (Charsets charset : Charsets.values()) {
+      Set<ColumnReference> columnsWithCharsets = getAllColumnsWithCharsets().apply(charset);
+      if (!columnsWithCharsets.isEmpty()) {
+        charsetColumnMap.put(
+            columnsWithCharsets,
+            charset.getValueRestriction()
+        );
+      }
+    }
+    return charsetColumnMap;
   }
 
   @JsonIgnore
@@ -73,22 +76,23 @@ public class Workbook {
 
   @JsonIgnore
   private Function<Charsets, Set<ColumnReference>> getAllColumnsWithCharsets() {
-    return vt -> workbookTables.stream()
-        .map(wb -> wb.getColumnsWithCharset(vt))
-        .flatMap(Set::stream)
-        .collect(Collectors.toSet());
+    return vt ->
+        workbookTables.stream()
+            .map(wb -> wb.getColumnsWithCharset(vt))
+            .flatMap(Set::stream)
+            .collect(Collectors.toSet());
   }
 
   @JsonIgnore
   public Set<ColumnReference> matchingColumnFromTable(String tableName, String columnNamePatterns) {
-    return getColumns().stream()
+    return getAllTableColumns().stream()
         .filter(c -> c.table().contains(tableName))
         .filter(c -> containsAny(c.column(), new String[]{columnNamePatterns}))
         .collect(Collectors.toSet());
   }
 
   @JsonIgnore
-  private Set<ColumnReference> getColumns() {
+  public Set<ColumnReference> getAllTableColumns() {
     return workbookTables.stream()
         .map(WorkbookTable::getColumnReferences)
         .flatMap(Collection::stream)
@@ -99,7 +103,7 @@ public class Workbook {
     return Arrays.stream(patterns).parallel().anyMatch(inputStr::equalsIgnoreCase);
   }
 
-  public Set<WorkbookTable> getAllTablesColumns() {
+  public Set<WorkbookTable> getAllTables() {
     return new HashSet<>(workbookTables);
   }
 

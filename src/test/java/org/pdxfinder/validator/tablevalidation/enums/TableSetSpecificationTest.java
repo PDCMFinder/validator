@@ -18,8 +18,10 @@ public class TableSetSpecificationTest {
   private final Set<String> REQUIRED_TABLES =
       new HashSet<>(Arrays.asList("file_1.tsv", "file_2.tsv"));
 
-  private final ColumnReference REQUIRED_COLUMN_1 = ColumnReference.of("table.tsv", "column_1");
-  private final ColumnReference REQUIRED_COLUMN_2 = ColumnReference.of("table.tsv", "column_2");
+  private final ColumnReference REQUIRED_COLUMN_1 = ColumnReference
+      .of("table.tsv", "column_1");
+  private final ColumnReference REQUIRED_COLUMN_2 = ColumnReference
+      .of("table.tsv", "column_2");
 
   @Test
   public void builderMethods_givenInstantiation_allReturnInstanceOfThisClass() {

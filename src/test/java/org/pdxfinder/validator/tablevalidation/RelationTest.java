@@ -13,7 +13,8 @@ public class RelationTest {
 
   private Relation createRelation() {
     return (Relation.betweenTableKeys(
-        ColumnReference.of("table1", "join_column"), ColumnReference.of("table2", "join_column")));
+        ColumnReference.of("table1", "join_column"), ColumnReference
+            .of("table2", "join_column")));
   }
 
   @Test
@@ -41,7 +42,8 @@ public class RelationTest {
   @Test
   public void getOtherColumn_givenIncorrectColumn_returnsError() {
     Relation relation = createRelation();
-    ColumnReference incorrectReference = ColumnReference.of("incorrectTable", "incorrectColumn");
+    ColumnReference incorrectReference = ColumnReference
+        .of("incorrectTable", "incorrectColumn");
     assertEquals(
         "table linked to incorrectTable not found",
         relation.getOtherColumn(incorrectReference).table());

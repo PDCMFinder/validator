@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,25 +18,19 @@ import org.pdxfinder.validator.tablevalidation.enums.Rules;
 @JsonPropertyOrder({"table", "column_references"})
 public class WorkbookTable {
 
+  @JsonProperty("table")
   private String table;
+  @JsonProperty("column_references")
   private List<ColumnReference> columnReferences;
 
   public WorkbookTable() {
   }
 
-  @JsonProperty("column_"
-      + "references")
-  public void setColumnReference(List<ColumnReference> columnReference) {
-    this.columnReferences = columnReferences;
-  }
-
-  public List<ColumnReference> getColumnReferences() {
-    return columnReferences;
-  }
-
   @JsonIgnore
   public Set<ColumnReference> getColumnsWithAttribute(Rules rule) {
-    return columnReferences.stream().filter(c -> c.hasAttribute(rule)).collect(Collectors.toSet());
+    return columnReferences.stream()
+        .filter(c -> c.hasAttribute(rule))
+        .collect(Collectors.toSet());
   }
 
   @JsonIgnore
@@ -59,6 +54,7 @@ public class WorkbookTable {
   public Set<Relation> getRelationsFromColumns() {
     return columnReferences.stream()
         .map(ColumnReference::getRelation)
+        .flatMap(Collection::stream)
         .collect(Collectors.toSet());
   }
 
@@ -71,7 +67,19 @@ public class WorkbookTable {
     return table;
   }
 
+  @JsonProperty("table")
   public void setTable(String table) {
     this.table = table;
+  }
+
+  @JsonProperty("column_references")
+  public void setColumnReference(List<ColumnReference> columnReference) {
+    this.columnReferences = columnReference;
+    applyTableName();
+
+  }
+
+  public List<ColumnReference> getColumnReferences() {
+    return columnReferences;
   }
 }

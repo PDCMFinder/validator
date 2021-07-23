@@ -35,9 +35,7 @@ public class TableSetCleaner {
   }
 
   static Map<String, Table> cleanTableNames(Map<String, Table> tableSet) {
-    tableSet =
-        applyFunctionToTableNames(tableSet, TableCleaner.substringAfterIfContainsSeparator("_"));
-    tableSet = applyFunctionToTableNames(tableSet, replaceAll("(metadata-|.tsv)", ""));
+    tableSet = applyFunctionToTableNames(tableSet, replaceAll("(([A-Z]+_)?metadata-|.tsv)", ""));
     return applyFunctionToTableNames(tableSet, TableCleaner.removeHashmarksAndNewlines());
   }
 
