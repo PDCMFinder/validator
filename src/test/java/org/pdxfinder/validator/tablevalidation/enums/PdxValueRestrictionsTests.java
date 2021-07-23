@@ -71,7 +71,7 @@ public class PdxValueRestrictionsTests {
     String expectedPass3 = "/T*J+8*^|#@";
 
     Predicate<String> numberRegex =
-        Charsets.NUMERICAL
+        Charsets.NUMERIC
             .getValueRestriction()
             .getPredicate();
 

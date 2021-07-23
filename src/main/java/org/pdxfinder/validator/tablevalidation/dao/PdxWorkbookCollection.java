@@ -39,4 +39,13 @@ public class PdxWorkbookCollection {
   public int len() {
     return workbooks.size();
   }
+
+  public List<Workbook> getWorkbooks() {
+    return workbooks;
+  }
+
+  public void setWorkbooks(List<Workbook> workbooks) {
+    this.workbooks = workbooks;
+  }
+
 }

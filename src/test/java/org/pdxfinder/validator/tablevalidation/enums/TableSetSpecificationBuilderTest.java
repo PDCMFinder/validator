@@ -1,20 +1,18 @@
 package org.pdxfinder.validator.tablevalidation.enums;
 
+import org.junit.Assert;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.dao.PdxWorkbookCollection;
-import org.pdxfinder.validator.tablevalidation.enums.CharsetRestrictions.Yml;
+import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.TableSetSpecificationBuilder;
 
 public class TableSetSpecificationBuilderTest {
 
   @Test
   public void Given_yamlConfigFiles_When_generateIsCalled_DoNotReturnNull() {
-    PdxWorkbookCollection workbook = PdxWorkbookCollection
-        .fromYaml(Yml.WORKBOOK_COLLECTION.Location());
+    var tableSetSpecificationBuilder = new TableSetSpecificationBuilder();
+    TableSetSpecification specification = tableSetSpecificationBuilder.generate();
 
-    System.out.print(workbook.toString());
-
-    //Assert.assertNotNull(workbook.getWorkbookTitle());
-    //Assert.assertNotNull(workbook.getWorkbookTables());
+    Assert.assertNotNull(specification);
   }
 
 }

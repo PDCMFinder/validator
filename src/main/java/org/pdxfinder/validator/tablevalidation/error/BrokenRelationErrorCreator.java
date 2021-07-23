@@ -45,6 +45,10 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     reportMissingColumnsInRelation(tableSet, relation, tableSetSpecification.getProvider());
     if (bothColumnsPresent(tableSet, relation)) {
       runAppropriateValidation(tableSet, relation, tableSetSpecification);
+    } else {
+      String errorMessage = String
+          .format("Columns was not found in relation %s", relation.toString());
+      log.error(errorMessage);
     }
   }
 

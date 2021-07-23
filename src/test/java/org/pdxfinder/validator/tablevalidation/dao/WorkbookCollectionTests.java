@@ -1,14 +1,10 @@
-package org.pdxfinder.validator.dao;
+package org.pdxfinder.validator.tablevalidation.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.junit.Assert;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.dao.PdxWorkbookCollection;
-import org.pdxfinder.validator.tablevalidation.dao.Workbook;
-import org.pdxfinder.validator.tablevalidation.dao.WorkbookTable;
 
 public class WorkbookCollectionTests {
 
@@ -20,41 +16,23 @@ public class WorkbookCollectionTests {
   }
 
   @Test
-  public void Given_ymlWithColumnReference_UsingMappper_ReturnDao() throws JsonProcessingException {
-    var mapper = new ObjectMapper(new YAMLFactory());
-    String columnReferenceYaml =
-        "name: patient_id\n"
-            + "charset: url_safe\n"
-            + "attributes:\n"
-            + "  - essential\n"
-            + "  - unique\n"
-            + "relation: []";
-    ColumnReference columnReference = mapper.readValue(columnReferenceYaml, ColumnReference.class);
-    Assert.assertNotNull(columnReference);
+  public void Given_completeMetadataYML_FromGeneratedPdxWorkbookCollection_testForNullPointers() {
+    PdxWorkbookCollection workbookCollection =
+        PdxWorkbookCollection.fromYaml("data/WorkbookCollection.yml");
+    var metadataWorkbook = workbookCollection.getWorkbooks().get(0);
+    Assert.assertNotNull(metadataWorkbook.getTableNames());
+    Assert.assertNotNull(metadataWorkbook.getWorkbookTitle());
+    Assert.assertNotNull(metadataWorkbook.getAllColumnRelations());
   }
 
-  @Test
-  public void Given_ymlWithEmptyWorkbookTable_When_UsingMapper_ReturnDAO()
-      throws JsonProcessingException {
-    var mapper = new ObjectMapper(new YAMLFactory());
-    mapper.findAndRegisterModules();
-    String WorkBookTableYaml =
-        "table: \"patient\" \n"
-            + "column_references: []";
-    WorkbookTable workBookTable = mapper.readValue(WorkBookTableYaml, WorkbookTable.class);
-    Assert.assertNotNull(workBookTable);
-  }
 
-  @Test
-  public void Given_ymlWithEmptyWorkbook_When_UsingMapper_ReturnDAO()
-      throws JsonProcessingException {
+  private Workbook getWorkbook() throws JsonProcessingException {
     var mapper = new ObjectMapper(new YAMLFactory());
     mapper.findAndRegisterModules();
     String WorkBookYaml =
-        "workbook_title: \"\"\n"
+        "workbook_title: metadata\n"
             + "workbook: []";
-    Workbook workBook = mapper.readValue(WorkBookYaml, Workbook.class);
-    Assert.assertNotNull(workBook);
+    return mapper.readValue(WorkBookYaml, Workbook.class);
   }
 
   @Test
@@ -83,7 +61,25 @@ public class WorkbookCollectionTests {
     PdxWorkbookCollection pdxWorkbookCollection = mapper
         .readValue(filledWorkbookCollectionYaml, PdxWorkbookCollection.class);
     Assert.assertNotNull(pdxWorkbookCollection);
-
   }
 
+
+  @Test
+  public void Given_ymlWithEmptyWorkbookTable_When_UsingMapper_ReturnDAO()
+      throws JsonProcessingException {
+    var mapper = new ObjectMapper(new YAMLFactory());
+    mapper.findAndRegisterModules();
+    String WorkBookTableYaml =
+        "table: \"patient\" \n"
+            + "column_references: []";
+    WorkbookTable workBookTable = mapper.readValue(WorkBookTableYaml, WorkbookTable.class);
+    Assert.assertNotNull(workBookTable);
+  }
+
+  @Test
+  public void Given_ymlWithEmptyWorkbook_When_UsingMapper_ReturnDAO()
+      throws JsonProcessingException {
+    var workbook = getWorkbook();
+    Assert.assertNotNull(workbook);
+  }
 }

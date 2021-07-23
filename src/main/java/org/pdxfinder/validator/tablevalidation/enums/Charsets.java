@@ -14,7 +14,7 @@ public enum Charsets {
       "^[\\p{Alpha}\\p{Digit}\\p{Space}._~-]+$",
       "have characters not contained in US ASCII Alphanumeric and ._~-"
   ),
-  NUMERICAL(
+  NUMERIC(
       "^[\\p{Digit}\\p{Space}pP\\.,-]+$",
       "have characters not contains in US ASCII numbers and pP-.,"
   ),
@@ -45,7 +45,8 @@ public enum Charsets {
     return Arrays.stream(Charsets.values())
         .filter(e -> e.name().equalsIgnoreCase(charset))
         .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(() -> new IllegalArgumentException(
+            String.format("Could not find matching Enum.Charset for %s", charset)));
   }
 }
 

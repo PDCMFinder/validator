@@ -52,6 +52,7 @@ public class ValidationService {
       log.error(
           "Not all required tables and columns where present for {}. Aborting further validation",
           tableSetSpecification.getProvider());
+
     }
     return !CollectionUtils.isNotEmpty(validationErrors);
   }
