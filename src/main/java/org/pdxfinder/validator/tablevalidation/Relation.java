@@ -31,9 +31,10 @@ public class Relation {
   }
 
   public static Relation betweenTableKeys(ColumnReference left, ColumnReference right) {
-    if (left.equals(right))
+    if (left.equals(right)) {
       throw new IllegalArgumentException(
           String.format("Unable to define a relation from a column to itself (%s)", left));
+    }
 
     return new Relation(
         ValidityType.TABLE_KEY, left.table(), left.column(), right.table(), right.column());
@@ -41,23 +42,26 @@ public class Relation {
 
   public static Relation betweenTableColumns(
       ValidityType plurality, ColumnReference left, ColumnReference right) {
-    if (left.equals(right))
+    if (left.equals(right)) {
       throw new IllegalArgumentException(
           String.format("Unable to define a relation from a column to itself (%s)", left));
+    }
 
     return new Relation(plurality, left.table(), left.column(), right.table(), right.column());
   }
 
   public ColumnReference getOtherColumn(ColumnReference queriedColumn) {
     ColumnReference otherColumn;
-    if (queriedColumn.equals(this.leftColumnReference())) otherColumn = this.rightColumnReference();
-    else if (queriedColumn.equals(this.rightColumnReference()))
+    if (queriedColumn.equals(this.leftColumnReference())) {
+      otherColumn = this.rightColumnReference();
+    } else if (queriedColumn.equals(this.rightColumnReference())) {
       otherColumn = this.leftColumnReference();
-    else
+    } else {
       otherColumn =
           ColumnReference.of(
               String.format("table linked to %s not found", queriedColumn.table()),
               String.format("column linked to %s not found", queriedColumn.column()));
+    }
     return otherColumn;
   }
 
@@ -95,9 +99,13 @@ public class Relation {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
+    if (this == o) {
+      return true;
+    }
 
-    if (o == null || getClass() != o.getClass()) return false;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     Relation relation = (Relation) o;
 

@@ -8,7 +8,8 @@ public class PdxValueRestrictions {
   static final String NOTCOLLECTED = "not collected";
   static final String NOTPROVIDED = "not provided";
 
-  private PdxValueRestrictions() {}
+  private PdxValueRestrictions() {
+  }
 
   private static final ValueRestrictions FREE_TEXT_CHARSET =
       ValueRestrictions.of(
