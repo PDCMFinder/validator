@@ -69,9 +69,10 @@ public class ValidationService {
 
   private void checkRequiredColumnsPresent(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
-    if (tableSetSpecification.hasRequiredColumns())
+    if (tableSetSpecification.hasRequiredColumns()) {
       validationErrors.addAll(
           new MissingColumnErrorCreator().generateErrors(tableSet, tableSetSpecification));
+    }
   }
 
   private void checkAllNonEmptyValuesPresent(

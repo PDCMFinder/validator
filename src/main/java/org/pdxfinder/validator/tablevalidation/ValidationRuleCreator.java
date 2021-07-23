@@ -18,7 +18,7 @@ public abstract class ValidationRuleCreator {
 
   protected static Set<ColumnReference> matchingColumnFromTable(
       Set<ColumnReference> columns, String tableName, String columnName) {
-    return matchingColumnsFromTable(columns, tableName, new String[] {columnName});
+    return matchingColumnsFromTable(columns, tableName, new String[]{columnName});
   }
 
   protected static Set<ColumnReference> matchingColumnsFromAnyTable(
