@@ -28,7 +28,7 @@ public class WorkbookTableTests {
             + "      - not collected\n"
             + "      - not provided\n"
             + "    relation:\n"
-            + "      - [\"TABLE_KEY\", \"sample\", \"model_id\"]";
+            + "      - [\"TABLE_KEY\", \"model\", \"sample\", \"model_id\"]";
     return mapper.readValue(workbookTableYaml, WorkbookTable.class);
   }
 
@@ -42,7 +42,7 @@ public class WorkbookTableTests {
             + "      - essential\n"
             + "    charset: free_text\n"
             + "    relation:\n"
-            + "      - [\"TABLE_KEY\", \"patient\", \"patient_id\"]";
+            + "      - [\"TABLE_KEY\", \"model\", \"patient\", \"patient_id\"]";
     return mapper.readValue(workbookTableYaml, WorkbookTable.class);
   }
 
