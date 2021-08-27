@@ -28,7 +28,7 @@ public class ValidationWebService {
   @Autowired
   public ValidationWebService(ValidationService validationService) {
     this.validationService = validationService;
-    this.pdxValidationRuleset = new TableSetSpecificationBuilder().generate();
+    this.pdxValidationRuleset = new TableSetSpecificationBuilder("metadata").generate();
   }
 
   public String proccessRequest(MultipartFile multipartFile) {

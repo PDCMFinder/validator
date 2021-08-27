@@ -11,17 +11,16 @@ import org.pdxfinder.validator.tablevalidation.enums.Rules;
 
 public class TableSetSpecificationBuilder {
 
-  private Workbook metadataWorkbook;
-  private static final String METADATA_WORKBOOK = "metadata";
+  private Workbook pdcmWorkbook;
 
-  public TableSetSpecificationBuilder() {
-    metadataWorkbook = PdxWorkbookCollection
+  public TableSetSpecificationBuilder(String workbook) {
+    pdcmWorkbook = PdxWorkbookCollection
         .fromYaml(Yml.WORKBOOK_COLLECTION.Location())
-        .getWorkbook(METADATA_WORKBOOK);
+        .getWorkbook(workbook);
   }
 
   public TableSetSpecification generate() {
-    Set<String> metadataTables = metadataWorkbook.getTableNames();
+    Set<String> metadataTables = pdcmWorkbook.getTableNames();
     Set<ColumnReference> uniqIdColumns = getUniqueColumns();
     Set<ColumnReference> essentialColumns = getEssentialColumns();
     Map<Set<ColumnReference>, ValueRestrictions> regexRestrictions = regexRestrictions();
@@ -40,22 +39,22 @@ public class TableSetSpecificationBuilder {
   }
 
   private Set<Relation> getRelations() {
-    return metadataWorkbook.getAllColumnRelations();
+    return pdcmWorkbook.getAllColumnRelations();
   }
 
   private Map<Set<ColumnReference>, ValueRestrictions> getCategoricalRestrictions() {
-    return metadataWorkbook.getAllColumnsByCategories();
+    return pdcmWorkbook.getAllColumnsByCategories();
   }
 
   private Map<Set<ColumnReference>, ValueRestrictions> regexRestrictions() {
-    return metadataWorkbook.getColumnsByCharset();
+    return pdcmWorkbook.getColumnsByCharset();
   }
 
   private Set<ColumnReference> getUniqueColumns() {
-    return metadataWorkbook.getAllColumnsWithAttribute(Rules.UNIQUE);
+    return pdcmWorkbook.getAllColumnsWithAttribute(Rules.UNIQUE);
   }
 
   private Set<ColumnReference> getEssentialColumns() {
-    return metadataWorkbook.getAllColumnsWithAttribute(Rules.ESSENTIAL);
+    return pdcmWorkbook.getAllColumnsWithAttribute(Rules.ESSENTIAL);
   }
 }

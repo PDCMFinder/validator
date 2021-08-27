@@ -178,6 +178,7 @@ class TableSetCleanerTest {
   @ParameterizedTest
   @CsvSource({
       "PROVIDER_metadata-sample.tsv,sample",
+      "Pr-cP-df_metadata-sample.tsv,sample",
       "sample,sample"
   })
   void given_variousFilenames_WhenCleanFilenamesIsCalled_TransformFilenameAppropriately(
