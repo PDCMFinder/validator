@@ -38,19 +38,30 @@ public class LocalValidationRunner implements CommandLineRunner {
   }
 
   public void validateDirectories(List<String> directories) {
-    TableSetSpecification pdxValidationRuleset = new TableSetSpecificationBuilder().generate();
+    String metadataWorkbookName = "metadata";
+    String molecularMetadataName = "molecular_medatadata";
     for (String provider : directories) {
       Path providerPath = Path.of(provider);
-      Map<String, Table> tableSet = readPdxTablesFromPath(providerPath.toAbsolutePath());
-      var cleanedTables = TableSetCleaner.cleanPdxTables(tableSet);
-      validationService.validate(cleanedTables, pdxValidationRuleset);
-      log.info(validationService.getJsonReport(providerPath.getFileName().toString()));
+      validateWorkbook(providerPath, metadataWorkbookName);
     }
   }
 
-  private Map<String, Table> readPdxTablesFromPath(Path updogProviderDirectory) {
+  private void validateWorkbook(Path providerPath, String metadataWorkbookName) {
+    TableSetSpecification metadataTableSpecification = new TableSetSpecificationBuilder(
+        metadataWorkbookName).generate();
+    Map<String, Table> metadataTableSet = readPdxTablesFromPath(metadataWorkbookName,
+        providerPath.toAbsolutePath());
+    var cleanedMetadataTables = TableSetCleaner.cleanPdxTables(metadataTableSet);
+    validationService.validate(cleanedMetadataTables, metadataTableSpecification);
+    log.info(validationService.getJsonReport(providerPath.getFileName().toString()));
+  }
+
+
+  private Map<String, Table> readPdxTablesFromPath(String workbookName,
+      Path updogProviderDirectory) {
+    var workbookNameGlobe = String.format("glob:**%s-*.tsv", workbookName);
     PathMatcher metadataFiles =
-        FileSystems.getDefault().getPathMatcher("glob:**{metadata-,sampleplatform}*.tsv");
+        FileSystems.getDefault().getPathMatcher(workbookNameGlobe);
     return FileReader.readAllTsvFilesIn(updogProviderDirectory, metadataFiles);
   }
 }

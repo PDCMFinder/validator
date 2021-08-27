@@ -85,7 +85,7 @@ public class FileReader {
           .forEach(
               path ->
                   tables.put(path.getFileName().toString(), readTsvOrReturnEmpty(path.toFile())));
-    } catch (IOException e) {
+    } catch (IOException | IndexOutOfBoundsException e) {
       log.error("There was an error reading the files", e);
     }
     return tables;
@@ -94,6 +94,7 @@ public class FileReader {
   public static Table readTsvOrReturnEmpty(File file) {
     Table dataTable = Table.create();
     log.trace("Reading tsv file {}", file);
+    System.out.println(file.toString());
     try {
       if (file.exists()) {
         dataTable = readTsv(file);
