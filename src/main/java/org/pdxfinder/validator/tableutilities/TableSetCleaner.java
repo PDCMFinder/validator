@@ -35,7 +35,7 @@ public class TableSetCleaner {
   }
 
   static Map<String, Table> cleanTableNames(Map<String, Table> tableSet) {
-    tableSet = applyFunctionToTableNames(tableSet, replaceAll("([A-Za-z0-9-]+_)?metadata-", ""));
+    tableSet = applyFunctionToTableNames(tableSet, replaceAll("([A-Za-z0-9-_]+)?metadata-", ""));
     tableSet = applyFunctionToTableNames(tableSet, replaceAll(".tsv", ""));
     return applyFunctionToTableNames(tableSet, TableCleaner.removeHashmarksAndNewlines());
   }

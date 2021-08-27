@@ -179,6 +179,7 @@ class TableSetCleanerTest {
   @CsvSource({
       "PROVIDER_metadata-sample.tsv,sample",
       "Pr-cP-df_metadata-sample.tsv,sample",
+      "CRL_molecular_metadata-platform_web.tsv,platform_web",
       "sample,sample"
   })
   void given_variousFilenames_WhenCleanFilenamesIsCalled_TransformFilenameAppropriately(

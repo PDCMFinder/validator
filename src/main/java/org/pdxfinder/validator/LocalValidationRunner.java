@@ -1,5 +1,6 @@
 package org.pdxfinder.validator;
 
+import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -39,11 +40,23 @@ public class LocalValidationRunner implements CommandLineRunner {
 
   public void validateDirectories(List<String> directories) {
     String metadataWorkbookName = "metadata";
-    String molecularMetadataName = "molecular_medatadata";
+    String molecularMetadataName = "molecular_metadata";
     for (String provider : directories) {
       Path providerPath = Path.of(provider);
       validateWorkbook(providerPath, metadataWorkbookName);
+      if (molecularMetadataExists(providerPath)) {
+        validateWorkbook(providerPath, molecularMetadataName);
+      }
     }
+  }
+
+  private boolean molecularMetadataExists(Path providerPath) {
+    int urlLen = providerPath.getNameCount();
+    Path providerName = providerPath.getName(urlLen - 1);
+    String metatadaWorkbook = String.format("%s/%s_molecular_metadata.xlsx", providerPath,
+        providerName.getFileName());
+    File metadataWorkbookFile = new File(metatadaWorkbook);
+    return metadataWorkbookFile.exists();
   }
 
   private void validateWorkbook(Path providerPath, String metadataWorkbookName) {
@@ -55,7 +68,6 @@ public class LocalValidationRunner implements CommandLineRunner {
     validationService.validate(cleanedMetadataTables, metadataTableSpecification);
     log.info(validationService.getJsonReport(providerPath.getFileName().toString()));
   }
-
 
   private Map<String, Table> readPdxTablesFromPath(String workbookName,
       Path updogProviderDirectory) {

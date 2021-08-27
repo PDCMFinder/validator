@@ -9,7 +9,7 @@ workbooks:
               - essential
               - unique
             relation:
-              - [ "TABLE_KEY", "patient", "sample", "patient_id" ]
+              - [ "TABLE_KEY", "patient", "patient_sample", "patient_id" ]
           - name: sex
             attributes:
               - essential
@@ -27,22 +27,22 @@ workbooks:
               - genetic
           - name: initial_diagnosis
             charset: free_text
-      - table: sample
+      - table: patient_sample
         column_references:
           - name: patient_id
             charset: url_safe
             attributes:
               - essential
             relation:
-              - [ "TABLE_KEY", "sample", "patient", "patient_id" ]
-              - [ "ONE_TO_MANY", "sample", "sample", "sample_id" ]
+              - [ "TABLE_KEY", "patient_sample", "patient", "patient_id" ]
+              - [ "ONE_TO_MANY", "patient_sample", "patient_sample", "sample_id" ]
           - name: sample_id
             charset: url_safe
             attributes:
               - essential
               - unique
             relation:
-              - [ "ONE_TO_ONE", "sample", "sample", "model_id" ]
+              - [ "ONE_TO_ONE", "patient_sample", "patient_sample", "model_id" ]
           - name: collection_date
             charset: COLLECTION_DATE
           - name: collection_event
@@ -113,17 +113,17 @@ workbooks:
               - essential
               - unique
             relation:
-              - [ "TABLE_KEY", "sample", "model", "model_id" ]
-              - [ "TABLE_KEY", "sample", "model_validation", "model_id" ]
-              - [ "TABLE_KEY", "sample","sharing", "model_id" ]
-      - table: model
+              - [ "TABLE_KEY", "patient_sample", "model", "model_id" ]
+              - [ "TABLE_KEY", "patient_sample", "model_validation", "model_id" ]
+              - [ "TABLE_KEY", "patient_sample","sharing", "model_id" ]
+      - table: pdx_models
         column_references:
           - name: model_id
             attributes:
               - essential
               - unique
             relation:
-              - [ "TABLE_KEY", "model", "sample", "model_id" ]
+              - [ "TABLE_KEY", "pdx_models", "sample", "model_id" ]
           - name: host_strain_name
             charset: free_text
             attributes:
@@ -185,7 +185,7 @@ workbooks:
               - essential
               - unique
             relation:
-              - [ "TABLE_KEY", "sharing", "sample", "model_id" ]
+              - [ "TABLE_KEY", "sharing", "patient_sample", "model_id" ]
           - name: provider_type
             attributes:
               - essential
@@ -210,12 +210,86 @@ workbooks:
               - essential
           - name: form_url
           - name: database_url
-          - name: provider_name
-            attributes:
-              - essential
-          - name: provider_abbreviation
+
+  - workbook_title: molecular_metadata
+    workbook:
+      - table: sample
+        column_references:
+          - name: model_id
             attributes:
               - essential
             charset: url_safe
-          - name: project
+          - name: sample_id
+            attributes:
+              - essential
             charset: url_safe
+          - name: sample_origin
+            attributes:
+              - essential
+            categories:
+              - xenograft
+              - patient
+          - name: passage
+            charset: NUMERIC
+          - name: host_strain_name
+            charset: free_text
+          - name: host_strain_nomenclature
+            charset: free_text
+          - name: engrafted_tumor_collection_site
+            charset: free_text
+          - name: raw_data_url
+            charset: free_text
+          - name: platform_id
+            charset: url_safe
+            relation:
+              - [ "TABLE_KEY", "sample", "platform", "platform_id" ]
+              - [ "TABLE_KEY", "sample", "web-platform", "platform_id" ]
+      - table: platform
+        column_references:
+          - name: platform_id
+            charset: url_safe
+            attributes:
+              - essential
+              - unique
+            relation:
+              - [ "TABLE_KEY", "platform", "sample", "platform_id" ]
+              - [ "TABLE_KEY", "platform", "web-platform", "platform_id" ]
+          - name: molecular_characterisation_type
+            attributes:
+              - essential
+            categories:
+              - copy number alteration
+              - expression
+              - mutation
+              - drug dosing
+              - cytogenetic
+          - name: instrument_model
+            attributes:
+              - essential
+            charset: free_text
+          - name: library_strategy
+            attributes:
+              - essential
+            charset: free_text
+          - name: library_selection
+            charset: free_text
+          - name: library_notes
+            charset: free_text
+          - name: genome_assembly
+            charset: free_text
+      - table: platform_web
+        column_references:
+          - name: platform_id
+            charset: url_safe
+            attributes:
+              - essential
+              - unique
+            relation:
+              - [ "TABLE_KEY", "platform_web", "sample", "platform_id" ]
+              - [ "TABLE_KEY", "platform_web", "web-platform", "platform_id" ]
+          - name: molecular_methods_description
+            charset: free_text
+          - name: analysis_description
+            charset: free_text
+          - name: table
+            charset: free_text
