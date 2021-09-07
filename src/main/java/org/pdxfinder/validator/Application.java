@@ -10,7 +10,7 @@ public class Application {
 
   public static void main(String[] args) {
     SpringApplication application = new SpringApplication(Application.class);
-    var webApplicationType = CommandCli.ParseWebApplicationType(args);
+    var webApplicationType = CommandCli.parseWebApplicationType(args);
     application.setWebApplicationType(webApplicationType);
     application.run(args);
   }

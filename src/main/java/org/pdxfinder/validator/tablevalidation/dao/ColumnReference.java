@@ -77,7 +77,7 @@ public class ColumnReference {
       String otherColumnName = relationArgs.get(3);
       relation = Relation
           .betweenTableColumns(validityType, this, ColumnReference.of(table, otherColumnName));
-    } else if (relationArgs != null && relationArgs.size() != 0) {
+    } else if (relationArgs != null && relationArgs.isEmpty()) {
       throw new IllegalArgumentException(
           String.format("Inappropriate format or content of %s", relationArgs));
     }

@@ -29,7 +29,7 @@ public class CommandCli {
   private CommandCli() {
   }
 
-  public static WebApplicationType ParseWebApplicationType(String[] args) {
+  public static WebApplicationType parseWebApplicationType(String[] args) {
     WebApplicationType webApplicationType = WebApplicationType.SERVLET;
     if (inLocalMode(args)) {
       webApplicationType = WebApplicationType.NONE;

@@ -10,13 +10,13 @@ public class CommandCliTest {
   @Test
   public void Given_NoArguments_ThenDefaultToServlet() {
     String[] args = new String[0];
-    Assert.assertEquals(WebApplicationType.SERVLET, CommandCli.ParseWebApplicationType(args));
+    Assert.assertEquals(WebApplicationType.SERVLET, CommandCli.parseWebApplicationType(args));
   }
 
   @Test
   public void Given_LocalIsPassed_WhenApplicationIsRun_ThenTurnOffWebApplication() {
     String[] args = {"--local"};
-    Assert.assertEquals(WebApplicationType.NONE, CommandCli.ParseWebApplicationType(args));
+    Assert.assertEquals(WebApplicationType.NONE, CommandCli.parseWebApplicationType(args));
   }
 
   @Test

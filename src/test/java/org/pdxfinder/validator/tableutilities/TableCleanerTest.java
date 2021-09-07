@@ -47,8 +47,7 @@ public class TableCleanerTest {
   }
 
   @Test
-  public void
-  removeSpacesAndLowerCase_GivenAColumnWithPaddingSpacesAndUppercase_returnsCleanedStrings() {
+  public void removeSpacesAndLowerCase_GivenAColumnWithPaddingSpacesAndUppercase_returnsCleanedStrings() {
     Table table =
         Table.create()
             .addColumns(
