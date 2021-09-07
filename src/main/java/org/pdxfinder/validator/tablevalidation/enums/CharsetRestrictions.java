@@ -48,7 +48,7 @@ public class CharsetRestrictions {
       fileUrl = fileLocation;
     }
 
-    public String Location() {
+    public String location() {
       return fileUrl;
     }
   }

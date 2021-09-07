@@ -23,7 +23,7 @@ import org.pdxfinder.validator.tablevalidation.enums.Rules;
 public class Workbook {
 
   @JsonProperty("workbook_title")
-  private String workbook_title;
+  private String workbookTitle;
 
   @JsonProperty("workbook")
   private List<WorkbookTable> workbookTables;
@@ -108,11 +108,11 @@ public class Workbook {
   }
 
   public String getWorkbookTitle() {
-    return workbook_title;
+    return workbookTitle;
   }
 
-  public void setWorkbook_title(String workbook_title) {
-    this.workbook_title = workbook_title;
+  public void setWorkbookTitle(String workbookTitle) {
+    this.workbookTitle = workbookTitle;
   }
 
   public List<WorkbookTable> getWorkbookTables() {

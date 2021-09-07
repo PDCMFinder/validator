@@ -80,7 +80,7 @@ public class IllegalValueErrorCreator extends ErrorCreator {
 
     if (!invalidValues.isEmpty()) {
 
-      HashSet<String> uniqueInvalidValues = new HashSet<String>(invalidValues);
+      HashSet<String> uniqueInvalidValues = new HashSet<>(invalidValues);
       String errorDescriptions =
           IllegalValueError.buildDescription(
               invalidValues.size(),

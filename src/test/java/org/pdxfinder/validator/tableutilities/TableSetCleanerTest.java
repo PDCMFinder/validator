@@ -17,7 +17,7 @@ import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.Column;
 
-class TableSetCleanerTest {
+public class TableSetCleanerTest {
 
   @Test
   public void removeHeaderRows_givenHeader_headerRemoved() {
@@ -152,7 +152,7 @@ class TableSetCleanerTest {
   }
 
   @Test
-  void GivenTable_returnTableWithAllRows() {
+  public void givenTable_returnTableWithAllRows() {
     final String TABLE_NAME = "table1";
     final String ROW_VALUE = "row_value";
     final String ROW_VALUE2 = "row_value2";
@@ -182,7 +182,7 @@ class TableSetCleanerTest {
       "CRL_molecular_metadata-platform_web.tsv,platform_web",
       "sample,sample"
   })
-  void given_variousFilenames_WhenCleanFilenamesIsCalled_TransformFilenameAppropriately(
+  public void given_variousFilenames_WhenCleanFilenamesIsCalled_TransformFilenameAppropriately(
       String testFilename, String expected) {
     Map<String, Table> pdxFiles = Map.of(testFilename, createTestTable());
     Assert.assertTrue(TableSetCleaner.cleanPdxTables(pdxFiles).containsKey(expected));
