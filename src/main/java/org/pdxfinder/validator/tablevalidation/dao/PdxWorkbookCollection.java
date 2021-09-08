@@ -7,6 +7,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +31,17 @@ public class PdxWorkbookCollection {
     return workbook;
   }
 
-  public Workbook getWorkbook(String workbook_title) {
-    return workbooks.stream()
-        .filter(worbook -> worbook.getWorkbookTitle().matches(workbook_title))
+  public Workbook getWorkbook(String workbookRegex) {
+    return getWorkbooks(workbookRegex).stream()
         .findFirst()
         .orElseGet(Workbook::new);
+  }
+
+  public List<Workbook> getWorkbooks(String workbookRegex) {
+    return workbooks.stream()
+        .filter(Objects::nonNull)
+        .filter(workbook -> workbook.getWorkbookTitle().matches(workbookRegex))
+        .collect(Collectors.toList());
   }
 
   public int len() {

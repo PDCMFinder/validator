@@ -77,16 +77,27 @@ public class FileReader {
         .collect(Collectors.toList());
   }
 
+  public static List<Path> findAllFilesIn(Path targetDirectory, PathMatcher filter) {
+    List<Path> matchingFiles = new ArrayList<>();
+    try (final Stream<Path> stream = Files.walk(targetDirectory)) {
+      matchingFiles = stream
+          .filter(filter::matches)
+          .collect(Collectors.toList());
+    } catch (IOException e) {
+      log.error("There was an error reading the files", e);
+    }
+    return matchingFiles;
+  }
+
   public static Map<String, Table> readAllTsvFilesIn(Path targetDirectory, PathMatcher filter) {
     HashMap<String, Table> tables = new HashMap<>();
-    try (final Stream<Path> stream = Files.list(targetDirectory)) {
-      stream
-          .filter(filter::matches)
-          .forEach(
-              path ->
-                  tables.put(path.getFileName().toString(), readTsvOrReturnEmpty(path.toFile())));
-    } catch (IOException | IndexOutOfBoundsException e) {
-      log.error("There was an error reading the files", e);
+    try {
+      var matchingFiles = findAllFilesIn(targetDirectory, filter);
+      matchingFiles.forEach(
+          path ->
+              tables.put(path.getFileName().toString(), readTsvOrReturnEmpty(path.toFile())));
+    } catch (IndexOutOfBoundsException e) {
+      log.error("Broken file detected", e);
     }
     return tables;
   }
@@ -94,9 +105,8 @@ public class FileReader {
   public static Table readTsvOrReturnEmpty(File file) {
     Table dataTable = Table.create();
     log.trace("Reading tsv file {}", file);
-    System.out.println(file.toString());
     try {
-      if (file.exists()) {
+      if (file.exists() && file.isFile()) {
         dataTable = readTsv(file);
       }
     } catch (IOException e) {

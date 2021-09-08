@@ -6,13 +6,13 @@ workbooks:
           - name: patient_id
             charset: url_safe
             attributes:
-              - essential
+              - not_empty
               - unique
             relation:
               - [ "TABLE_KEY", "patient", "patient_sample", "patient_id" ]
           - name: sex
             attributes:
-              - essential
+              - not_empty
             categories:
               - male
               - female
@@ -32,14 +32,14 @@ workbooks:
           - name: patient_id
             charset: url_safe
             attributes:
-              - essential
+              - not_empty
             relation:
               - [ "TABLE_KEY", "patient_sample", "patient", "patient_id" ]
               - [ "ONE_TO_MANY", "patient_sample", "patient_sample", "sample_id" ]
           - name: sample_id
             charset: url_safe
             attributes:
-              - essential
+              - not_empty
               - unique
             relation:
               - [ "ONE_TO_ONE", "patient_sample", "patient_sample", "model_id" ]
@@ -53,10 +53,10 @@ workbooks:
             charset: NUMERIC
           - name: diagnosis
             attributes:
-              - essential
+              - not_empty
           - name: tumour_type
             attributes:
-              - essential
+              - not_empty
             categories:
               - primary
               - metastatic
@@ -64,11 +64,11 @@ workbooks:
               - refractory
           - name: primary_site
             attributes:
-              - essential
+              - not_empty
             charset: free_text
           - name: collection_site
             attributes:
-              - essential
+              - not_empty
             charset: free_text
           - name: stage
             charset: free_text
@@ -82,14 +82,14 @@ workbooks:
             charset: free_text
           - name: sharable
             attributes:
-              - essential
+              - not_empty
             categories:
               - yes
               - no
               - not provided
           - name: treatment_naive_at_collection
             attributes:
-              - essential
+              - not_empty
             categories:
               - treatment naive
               - not treatment naive
@@ -110,7 +110,7 @@ workbooks:
           - name: model_id
             charset: url_safe
             attributes:
-              - essential
+              - not_empty
               - unique
             relation:
               - [ "TABLE_KEY", "patient_sample", "model", "model_id" ]
@@ -120,25 +120,25 @@ workbooks:
         column_references:
           - name: model_id
             attributes:
-              - essential
+              - not_empty
               - unique
             relation:
               - [ "TABLE_KEY", "pdx_models", "sample", "model_id" ]
           - name: host_strain_name
             charset: free_text
             attributes:
-              - essential
+              - not_empty
           - name: host_strain_nomenclature
             charset: free_text
             attributes:
-              - essential
+              - not_empty
           - name: engraftment_site
             charset: free_text
             attributes:
-              - essential
+              - not_empty
           - name: engraftment_type
             attributes:
-              - essential
+              - not_empty
             categories:
               - heterotopic
               - orthotopic
@@ -147,12 +147,12 @@ workbooks:
           - name: sample_type
             charset: free_text
             attributes:
-              - essential
+              - not_empty
           - name: sample_state
             charset: free_text
           - name: passage_number
             attributes:
-              - essential
+              - not_empty
             charset: numeric
           - name: publications
             charset: pmid_format
@@ -160,7 +160,7 @@ workbooks:
         column_references:
           - name: model_id
             attributes:
-              - essential
+              - not_empty
               - unique
             relation:
               - [ "TABLE_KEY", "model_validation" , "sample", "model_id" ]
@@ -168,46 +168,43 @@ workbooks:
             charset: free_text
           - name: description
             attributes:
-              - essential
+              - not_empty
             charset: free_text
           - name: passages_tested
             attributes:
-              - essential
+              - not_empty
             charset: numeric
           - name: validation_host_strain_nomenclature
             attributes:
-              - essential
+              - not_empty
             charset: free_text
       - table: sharing
         column_references:
           - name: model_id
             attributes:
-              - essential
+              - not_empty
               - unique
             relation:
               - [ "TABLE_KEY", "sharing", "patient_sample", "model_id" ]
-          - name: provider_type
-            attributes:
-              - essential
             categories:
               - academia
               - industry
           - name: accessibility
             attributes:
-              - essential
+              - not_empty
             charset: free_text
           - name: europdx_access_modality
             attributes:
-              - essential
+              - not_empty
             categories:
               - transnational access
               - collaboration only
           - name: email
             attributes:
-              - essential
+              - not_empty
           - name: name
             attributes:
-              - essential
+              - not_empty
           - name: form_url
           - name: database_url
 
@@ -217,15 +214,15 @@ workbooks:
         column_references:
           - name: model_id
             attributes:
-              - essential
+              - not_empty
             charset: url_safe
           - name: sample_id
             attributes:
-              - essential
+              - not_empty
             charset: url_safe
           - name: sample_origin
             attributes:
-              - essential
+              - not_empty
             categories:
               - xenograft
               - patient
@@ -243,20 +240,20 @@ workbooks:
             charset: url_safe
             relation:
               - [ "TABLE_KEY", "sample", "platform", "platform_id" ]
-              - [ "TABLE_KEY", "sample", "web-platform", "platform_id" ]
+              - [ "TABLE_KEY", "sample", "platform_web", "platform_id" ]
       - table: platform
         column_references:
           - name: platform_id
             charset: url_safe
             attributes:
-              - essential
+              - not_empty
               - unique
             relation:
               - [ "TABLE_KEY", "platform", "sample", "platform_id" ]
-              - [ "TABLE_KEY", "platform", "web-platform", "platform_id" ]
+              - [ "TABLE_KEY", "platform", "platform_web", "platform_id" ]
           - name: molecular_characterisation_type
             attributes:
-              - essential
+              - not_empty
             categories:
               - copy number alteration
               - expression
@@ -265,11 +262,11 @@ workbooks:
               - cytogenetic
           - name: instrument_model
             attributes:
-              - essential
+              - not_empty
             charset: free_text
           - name: library_strategy
             attributes:
-              - essential
+              - not_empty
             charset: free_text
           - name: library_selection
             charset: free_text
@@ -282,14 +279,163 @@ workbooks:
           - name: platform_id
             charset: url_safe
             attributes:
-              - essential
+              - not_empty
               - unique
             relation:
-              - [ "TABLE_KEY", "platform_web", "sample", "platform_id" ]
-              - [ "TABLE_KEY", "platform_web", "web-platform", "platform_id" ]
+              - [ "TABLE_KEY", "platform", "sample", "platform_id" ]
+              - [ "TABLE_KEY", "platform", "platform_web", "platform_id" ]
           - name: molecular_methods_description
             charset: free_text
           - name: analysis_description
             charset: free_text
           - name: table
             charset: free_text
+
+  - workbook_title: mut
+    workbook:
+      - table: mut
+        column_references:
+          - name: sample_id
+            attributes:
+              - not_empty
+          - name: symbol
+          - name: biotype
+          - name: coding_sequence_change
+          - name: variant_class
+          - name: codon_change
+          - name: amino_acid_change
+          - name: consequence
+          - name: functional_prediction
+          - name: read_depth
+          - name: allele_frequency
+          - name: chromosome
+            attributes:
+              - not_empty
+          - name: seq_start_position
+          - name: strand
+          - name: ref_allele
+            attributes:
+              - not_empty
+          - name: alt_allele
+            attributes:
+              - not_empty
+          - name: ucsc_gene_id
+          - name: ncbi_gene_id
+          - name: ncbi_transcript_id
+          - name: ensembl_gene_id
+          - name: ensembl_transcript_id
+          - name: variation_id
+          - name: platform_id
+            attributes:
+              - not_empty
+
+  - workbook_title: expression
+    workbook:
+      - table: expression
+        column_references:
+          - name: sample_id
+            attributes:
+              - not_empty
+          - name: chromosome
+          - name: strand
+          - name: seq_start_position
+          - name: seq_end_position
+          - name: symbol
+          - name: ucsc_gene_id
+          - name: ncbi_gene_id
+          - name: ensembl_gene_id
+          - name: ensembl_transcript_id
+          - name: rnaseq_coverage
+          - name: rnaseq_fpkm
+          - name: rnaseq_tpm
+          - name: rnaseq_count
+          - name: affy_hgea_probe_id
+          - name: affy_hgea_expression_value
+          - name: illumina_hgea_probe_id
+          - name: illumina_hgea_expression_value
+          - name: z_score
+          - name: platform_id
+            attributes:
+              - not_empty
+
+  - workbook_title: cna
+    workbook:
+      - table: cna
+        column_references:
+          - name: sample_id
+            attributes:
+              - not_empty
+          - name: chromosome
+          - name: strand
+          - name: seq_start_position
+          - name: seq_end_position
+            attributes:
+              - not_empty
+          - name: symbol
+          - name: ucsc_gene_id
+          - name: ncbi_gene_id
+          - name: ensembl_gene_id
+          - name: log10r_cna
+          - name: log2r_cna
+          - name: fold_change
+          - name: copy_number_status
+          - name: gistic_value
+          - name: picnic_value
+          - name: platform_id
+            attributes:
+              - not_empty
+
+  - workbook_title: cyto
+    workbook:
+      - table: cyto
+        column_references:
+          - name: sample_id
+            attributes:
+              - not_empty
+          - name: symbol
+          - name: marker_status
+            attributes:
+              - not_empty
+          - name: essential_or_additional_marker
+          - name: platform_id
+            attributes:
+              - not_empty
+
+  - workbook_title: treatment
+    workbook:
+        - table: treatment
+          column_references:
+            - name: patient_id
+              attributes:
+                - not_empty
+            - name: treatment_name
+            - name: treatment_dose
+            - name: treatment_starting_date
+            - name: treatment_duration
+            - name: treatment_event
+            - name: elapsed_time
+            - name: treatment_response
+            - name: response_classification
+            - name: model_id
+
+  - workbook_title: drug
+    workbook:
+        - table: drug
+          column_references:
+            - name: model_id
+              attributes:
+                - not_empty
+            - name: passage_range
+            - name: treatment_name
+            - name: treatment_type
+            - name: treatment_dose
+            - name: administration_route
+            - name: treatment_schedule
+            - name: treatment_length
+            - name: treatment_response
+            - name: response_classification
+            - name: platform_id
+              attributes:
+                - not_empty
+
+

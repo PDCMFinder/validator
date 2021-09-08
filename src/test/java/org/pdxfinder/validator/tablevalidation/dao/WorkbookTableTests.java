@@ -20,7 +20,7 @@ public class WorkbookTableTests {
             + "column_references:\n"
             + "  - name: sex\n"
             + "    attributes:\n"
-            + "      - essential\n"
+            + "      - not_empty\n"
             + "      - unique\n"
             + "    categories:\n"
             + "      - male\n"
@@ -39,7 +39,7 @@ public class WorkbookTableTests {
             + "column_references:\n"
             + "  - name: patient_id\n"
             + "    attributes:\n"
-            + "      - essential\n"
+            + "      - not_empty\n"
             + "    charset: free_text\n"
             + "    relation:\n"
             + "      - [\"TABLE_KEY\", \"model\", \"patient\", \"patient_id\"]";
@@ -83,7 +83,7 @@ public class WorkbookTableTests {
     Assert.assertEquals("patient", workbookTable.getTable());
     Assert.assertEquals(1, workbookTable.getColumnReferences().size());
     Assert.assertEquals(1, workbookTable.getRelationsFromColumns().size());
-    Assert.assertEquals(1, workbookTable.getColumnsWithAttribute(Rules.ESSENTIAL).size());
+    Assert.assertEquals(1, workbookTable.getColumnsWithAttribute(Rules.NOT_EMPTY).size());
     Assert.assertEquals(1, workbookTable.getColumnsWithAttribute(Rules.UNIQUE).size());
     var columnsByCategories = workbookTable.getColumnsByCategories();
     var predicate = columnsByCategories
@@ -110,7 +110,7 @@ public class WorkbookTableTests {
         .setWorkbookTables(Arrays.asList(workbookTableWithCategories, workbookTableWithCharset));
     Assert.assertEquals("metadata", workbook.getWorkbookTitle());
     Assert.assertEquals(2, workbook.getWorkbookTables().size());
-    Assert.assertEquals(2, workbook.getAllColumnsWithAttribute(Rules.ESSENTIAL).size());
+    Assert.assertEquals(2, workbook.getAllColumnsWithAttribute(Rules.NOT_EMPTY).size());
     Assert.assertEquals(1, workbook.getAllColumnsWithAttribute(Rules.UNIQUE).size());
     Assert.assertEquals(2, workbook.getAllColumnRelations().size());
     Assert.assertTrue(workbook.getTableNames().contains("patient"));

@@ -13,16 +13,20 @@ public class TableSetSpecificationBuilder {
 
   private Workbook pdcmWorkbook;
 
-  public TableSetSpecificationBuilder(String workbook) {
-    pdcmWorkbook = PdxWorkbookCollection
-        .fromYaml(Yml.WORKBOOK_COLLECTION.Location())
-        .getWorkbook(workbook);
+  public TableSetSpecificationBuilder(Workbook pdcmWorkbook) {
+    this.pdcmWorkbook = pdcmWorkbook;
+  }
+
+  public TableSetSpecificationBuilder(String pdcmWorkbook) {
+    var pdxWorkbookCollection = PdxWorkbookCollection.fromYaml(Yml.WORKBOOK_COLLECTION.location());
+    this.pdcmWorkbook = pdxWorkbookCollection.getWorkbook(pdcmWorkbook);
   }
 
   public TableSetSpecification generate() {
     Set<String> metadataTables = pdcmWorkbook.getTableNames();
     Set<ColumnReference> uniqIdColumns = getUniqueColumns();
-    Set<ColumnReference> essentialColumns = getEssentialColumns();
+    Set<ColumnReference> requiredColumns = getAllColumns();
+    Set<ColumnReference> notEmptyColumns = getNotEmptyColumns();
     Map<Set<ColumnReference>, ValueRestrictions> regexRestrictions = regexRestrictions();
     Map<Set<ColumnReference>, ValueRestrictions> categoricalRestrictions =
         getCategoricalRestrictions();
@@ -30,12 +34,13 @@ public class TableSetSpecificationBuilder {
 
     return TableSetSpecification.create()
         .addRequiredTables(metadataTables)
-        .addRequiredColumns(essentialColumns)
-        .addNonEmptyColumns(essentialColumns)
+        .addRequiredColumns(requiredColumns)
+        .addNonEmptyColumns(notEmptyColumns)
         .addAllValueRestrictions(regexRestrictions)
         .addAllValueRestrictions(categoricalRestrictions)
         .addUniqueColumns(uniqIdColumns)
-        .addRelations(relations);
+        .addRelations(relations)
+        .setTablesetSpecificationName(this.pdcmWorkbook.getWorkbookTitle());
   }
 
   private Set<Relation> getRelations() {
@@ -54,7 +59,11 @@ public class TableSetSpecificationBuilder {
     return pdcmWorkbook.getAllColumnsWithAttribute(Rules.UNIQUE);
   }
 
-  private Set<ColumnReference> getEssentialColumns() {
-    return pdcmWorkbook.getAllColumnsWithAttribute(Rules.ESSENTIAL);
+  private Set<ColumnReference> getNotEmptyColumns() {
+    return pdcmWorkbook.getAllColumnsWithAttribute(Rules.NOT_EMPTY);
+  }
+
+  private Set<ColumnReference> getAllColumns() {
+    return pdcmWorkbook.getAllTableColumns();
   }
 }
