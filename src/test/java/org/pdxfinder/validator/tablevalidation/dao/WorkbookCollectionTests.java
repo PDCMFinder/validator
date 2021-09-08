@@ -12,7 +12,7 @@ public class WorkbookCollectionTests {
   public void Given_ymlFile_fromYamlIsCalled_returnWorkbookCollection() {
     PdxWorkbookCollection workbookCollection =
         PdxWorkbookCollection.fromYaml("data/WorkbookCollection.yml");
-    Assert.assertEquals(1, workbookCollection.len());
+    Assert.assertTrue(0 < workbookCollection.len());
   }
 
   @Test

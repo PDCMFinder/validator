@@ -10,7 +10,7 @@ import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import tech.tablesaw.api.Table;
 
 public class TableSetSpecification {
-
+  private String tablesetSpecificationName;
   private Set<String> requiredTables;
   private Set<ColumnReference> requiredColumns;
   private Set<ColumnReference> nonEmptyColumns;
@@ -98,6 +98,11 @@ public class TableSetSpecification {
     return this;
   }
 
+  public TableSetSpecification setTablesetSpecificationName(String tablesetSpecificationName) {
+    this.tablesetSpecificationName = tablesetSpecificationName;
+    return this;
+  }
+
   public Set<ColumnReference> getRequiredNonEmptyColumns() {
     return this.nonEmptyColumns;
   }
@@ -112,6 +117,10 @@ public class TableSetSpecification {
 
   public Set<ColumnReference> getRequiredColumns() {
     return this.requiredColumns;
+  }
+
+  public String getTablesetSpecificationName() {
+    return tablesetSpecificationName;
   }
 
   public boolean hasRequiredColumns() {
