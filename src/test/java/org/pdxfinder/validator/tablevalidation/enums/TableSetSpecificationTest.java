@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.Relation;
+import org.pdxfinder.validator.tablevalidation.RelationTestUtilities;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
@@ -119,7 +119,8 @@ public class TableSetSpecificationTest {
             .addNonEmptyColumns(columnReference2)
             .addUniqueColumns(columnReference1)
             .addUniqueColumns(columnReference2)
-            .addRelations(Relation.betweenTableKeys(columnReference1, columnReference2));
+            .addRelations(
+                RelationTestUtilities.betweenTableKeys(columnReference1, columnReference2));
     TableSetSpecification specification1 =
         TableSetSpecification.create()
             .setProvider("provider")
@@ -127,7 +128,8 @@ public class TableSetSpecificationTest {
             .addRequiredColumns(columnReference1)
             .addNonEmptyColumns(columnReference1)
             .addUniqueColumns(columnReference1)
-            .addRelations(Relation.betweenTableKeys(columnReference1, columnReference2));
+            .addRelations(
+                RelationTestUtilities.betweenTableKeys(columnReference1, columnReference2));
     TableSetSpecification specfication2 =
         TableSetSpecification.create()
             .setProvider("provider")
@@ -135,7 +137,8 @@ public class TableSetSpecificationTest {
             .addRequiredColumns(columnReference2)
             .addNonEmptyColumns(columnReference2)
             .addUniqueColumns(columnReference2)
-            .addRelations(Relation.betweenTableKeys(columnReference1, columnReference2));
+            .addRelations(
+                RelationTestUtilities.betweenTableKeys(columnReference1, columnReference2));
     assertEquals(expected, TableSetSpecification.merge(specification1, specfication2));
   }
 

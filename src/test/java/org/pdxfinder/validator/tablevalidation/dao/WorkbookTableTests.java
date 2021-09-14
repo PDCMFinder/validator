@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import org.junit.Assert;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.Relation.ValidityType;
 import org.pdxfinder.validator.tablevalidation.enums.Charsets;
+import org.pdxfinder.validator.tablevalidation.enums.RelationType;
 import org.pdxfinder.validator.tablevalidation.enums.Rules;
 
 public class WorkbookTableTests {
@@ -67,7 +67,7 @@ public class WorkbookTableTests {
     var relation = columnReference.getRelation().get(0);
     Assert.assertEquals("model_id", relation.rightColumn());
     Assert.assertEquals("sample", relation.rightColumnReference().table());
-    Assert.assertEquals(ValidityType.TABLE_KEY, relation.getValidity());
+    Assert.assertEquals(RelationType.TABLE_KEY, relation.getValidity());
   }
 
   @Test

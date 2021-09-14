@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.PdxWorkbookCollection;
+import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dao.Workbook;
 import org.pdxfinder.validator.tablevalidation.enums.CharsetRestrictions.Yml;
 import org.pdxfinder.validator.tablevalidation.enums.Rules;

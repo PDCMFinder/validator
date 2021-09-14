@@ -1,67 +1,39 @@
-package org.pdxfinder.validator.tablevalidation;
+package org.pdxfinder.validator.tablevalidation.dao;
 
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.enums.RelationType;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Relation {
 
-  private ValidityType validity;
+  private RelationType validity;
   private String leftTableName;
   private String leftColumnName;
+  private String rightWorkbook;
   private String rightTableName;
   private String rightColumnName;
 
-  public enum ValidityType {
-    TABLE_KEY,
-    ONE_TO_ONE,
-    ONE_TO_MANY,
-    MISSING;
-
-    public static ValidityType parseValidityType(String type) {
-      return Arrays.stream(ValidityType.values())
-          .filter(e -> e.name().equalsIgnoreCase(type))
-          .findFirst()
-          .orElseThrow(IllegalArgumentException::new);
-    }
-  }
-
-  private Relation(
-      ValidityType validity,
-      String leftTableName,
-      String leftColumnName,
-      String rightTableName,
-      String rightColumnName) {
-    this.validity = validity;
-    this.leftTableName = leftTableName;
-    this.leftColumnName = leftColumnName;
+  @JsonCreator
+  public Relation(
+      @JsonProperty("type") String relationType,
+      @JsonProperty("right_workbook") String rightWorkbook,
+      @JsonProperty("right_table") String rightTableName,
+      @JsonProperty("right_column") String rightColumnName
+  ) {
+    this.validity = RelationType.parseRelationType(relationType);
+    this.rightWorkbook = rightWorkbook;
     this.rightTableName = rightTableName;
     this.rightColumnName = rightColumnName;
   }
 
-  public static Relation betweenTableKeys(ColumnReference left, ColumnReference right) {
-    if (left.equals(right)) {
-      throw new IllegalArgumentException(
-          String.format("Unable to define a relation from a column to itself (%s)", left));
-    }
-
-    return new Relation(
-        ValidityType.TABLE_KEY, left.table(), left.column(), right.table(), right.column());
-  }
-
-  public static Relation betweenTableColumns(
-      ValidityType plurality, ColumnReference left, ColumnReference right) {
-    if (left.equals(right)) {
-      throw new IllegalArgumentException(
-          String.format("Unable to define a relation from a column to itself (%s)", left));
-    }
-
-    return new Relation(plurality, left.table(), left.column(), right.table(), right.column());
-  }
-
-  public static Relation createEmpty() {
-    return new Relation(ValidityType.MISSING, "", "", "", "");
+  public Relation addLeftTableAndColumn(String leftTableName, String leftColumnName) {
+    this.leftTableName = leftTableName;
+    this.leftColumnName = leftColumnName;
+    return this;
   }
 
   public ColumnReference getOtherColumn(ColumnReference queriedColumn) {
@@ -103,12 +75,16 @@ public class Relation {
     return ColumnReference.of(rightTable(), rightColumn());
   }
 
-  public ValidityType getValidity() {
+  public RelationType getValidity() {
     return validity;
   }
 
-  public void setValidity(ValidityType validity) {
-    this.validity = validity;
+  public void setLeftTable(String leftTableName) {
+    this.leftTableName = leftTableName;
+  }
+
+  public void setLeftColumnName(String leftColumnName) {
+    this.leftColumnName = leftColumnName;
   }
 
   @Override
@@ -116,13 +92,10 @@ public class Relation {
     if (this == o) {
       return true;
     }
-
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-
     Relation relation = (Relation) o;
-
     return new EqualsBuilder()
         .append(leftTableName, relation.leftTableName)
         .append(leftColumnName, relation.leftColumnName)

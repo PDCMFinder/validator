@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.enums.Charsets;
 import org.pdxfinder.validator.tablevalidation.enums.Rules;
@@ -23,7 +22,10 @@ public class WorkbookTable {
   @JsonProperty("column_references")
   private List<ColumnReference> columnReferences;
 
-  public WorkbookTable() {
+  @JsonIgnore
+  public void init() {
+    applyTableName();
+    columnReferences.forEach(ColumnReference::init);
   }
 
   @JsonIgnore
