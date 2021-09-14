@@ -23,6 +23,7 @@ public class ValidationWebService {
 
   private TableSetSpecification pdxValidationRuleset;
   private ValidationService validationService;
+
   private static final Logger log = LoggerFactory.getLogger(ValidationWebService.class);
 
   @Autowired

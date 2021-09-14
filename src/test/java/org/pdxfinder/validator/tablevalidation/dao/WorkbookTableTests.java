@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import org.junit.Assert;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.Relation.ValidityType;
 import org.pdxfinder.validator.tablevalidation.enums.Charsets;
+import org.pdxfinder.validator.tablevalidation.enums.RelationType;
 import org.pdxfinder.validator.tablevalidation.enums.Rules;
 
 public class WorkbookTableTests {
@@ -28,7 +28,9 @@ public class WorkbookTableTests {
             + "      - not collected\n"
             + "      - not provided\n"
             + "    relation:\n"
-            + "      - [\"TABLE_KEY\", \"model\", \"sample\", \"model_id\"]";
+            + "      - type: TABLE_KEY\n"
+            + "        right_table: sample\n"
+            + "        right_column: model_id\n";
     return mapper.readValue(workbookTableYaml, WorkbookTable.class);
   }
 
@@ -42,7 +44,9 @@ public class WorkbookTableTests {
             + "      - not_empty\n"
             + "    charset: free_text\n"
             + "    relation:\n"
-            + "      - [\"TABLE_KEY\", \"model\", \"patient\", \"patient_id\"]";
+            + "      - type: TABLE_KEY\n"
+            + "        right_table: patient\n"
+            + "        right_column: patient_id\n";
     return mapper.readValue(workbookTableYaml, WorkbookTable.class);
   }
 
@@ -67,7 +71,7 @@ public class WorkbookTableTests {
     var relation = columnReference.getRelation().get(0);
     Assert.assertEquals("model_id", relation.rightColumn());
     Assert.assertEquals("sample", relation.rightColumnReference().table());
-    Assert.assertEquals(ValidityType.TABLE_KEY, relation.getValidity());
+    Assert.assertEquals(RelationType.TABLE_KEY, relation.getValidity());
   }
 
   @Test

@@ -21,14 +21,19 @@ public class PdxWorkbookCollection {
   private List<Workbook> workbooks;
 
   public static PdxWorkbookCollection fromYaml(String yamlUrl) {
-    PdxWorkbookCollection workbook = new PdxWorkbookCollection();
+    PdxWorkbookCollection workbookCollection = new PdxWorkbookCollection();
     var mapper = new ObjectMapper(new YAMLFactory());
     try {
-      workbook = mapper.readValue(new File(yamlUrl), PdxWorkbookCollection.class);
+      workbookCollection = mapper.readValue(new File(yamlUrl), PdxWorkbookCollection.class);
     } catch (IOException ex) {
       log.error("Failure to map yml {}", yamlUrl, ex);
     }
-    return workbook;
+    workbookCollection.init();
+    return workbookCollection;
+  }
+
+  private void init() {
+    workbooks.forEach(Workbook::init);
   }
 
   public Workbook getWorkbook(String workbookRegex) {
