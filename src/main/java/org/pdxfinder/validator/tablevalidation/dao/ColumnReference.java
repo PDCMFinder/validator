@@ -1,15 +1,15 @@
 package org.pdxfinder.validator.tablevalidation.dao;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.enums.Charsets;
 import org.pdxfinder.validator.tablevalidation.enums.Rules;
@@ -30,13 +30,24 @@ public class ColumnReference {
       @JsonProperty("charset") String charset,
       @JsonProperty("categories") List<String> categories,
       @JsonProperty("attributes") List<String> attributes,
-      @JsonProperty("relation") List<List<String>> relation
+      @JsonProperty("relation") List<Relation> relations
   ) {
     this.columnName = columnName;
     this.charset = createCharsetRestriction(charset);
-    this.attributes = (attributes != null) ? attributes : new ArrayList<>();
+    this.attributes = defaultIfNull(attributes, new ArrayList<>());
     this.categories = createCategories(categories);
-    this.relations = createRelation(relation);
+    this.relations = defaultIfNull(relations, new ArrayList<>());
+  }
+
+  @JsonIgnore
+  public void init() {
+    applyNamesToRelations();
+  }
+
+  @JsonIgnore
+  private void applyNamesToRelations() {
+    relations.forEach(x ->
+        x.addLeftTableAndColumn(tableName, columnName));
   }
 
   @JsonIgnore
@@ -53,35 +64,6 @@ public class ColumnReference {
       charsetRestriction = valueRestriction.getValueRestriction();
     }
     return charsetRestriction;
-  }
-
-  @JsonIgnore
-  private List<Relation> createRelation(List<List<String>> relationArgs) {
-    List<Relation> parsedRelations = new ArrayList<>();
-    if (relationArgs != null) {
-      parsedRelations = relationArgs.stream()
-          .map(this::parseRelationList)
-          .collect(Collectors.toList());
-
-    }
-    return parsedRelations;
-  }
-
-  @JsonIgnore
-  private Relation parseRelationList(List<String> relationArgs) {
-    Relation relation = Relation.createEmpty();
-    if (relationArgs != null && relationArgs.size() == 4) {
-      var validityType = Relation.ValidityType.parseValidityType(relationArgs.get(0));
-      setTableName(relationArgs.get(1));
-      String table = relationArgs.get(2);
-      String otherColumnName = relationArgs.get(3);
-      relation = Relation
-          .betweenTableColumns(validityType, this, ColumnReference.of(table, otherColumnName));
-    } else if (relationArgs != null && relationArgs.isEmpty()) {
-      throw new IllegalArgumentException(
-          String.format("Inappropriate format or content of %s", relationArgs));
-    }
-    return relation;
   }
 
   @JsonIgnore
@@ -157,7 +139,6 @@ public class ColumnReference {
   public void setAttributes(List<String> attributes) {
     this.attributes = attributes;
   }
-
 
   @Override
   public boolean equals(Object o) {

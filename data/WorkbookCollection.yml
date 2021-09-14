@@ -1,3 +1,4 @@
+---
 workbooks:
   - workbook_title: metadata
     workbook:
@@ -9,7 +10,9 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - [ "TABLE_KEY", "patient", "patient_sample", "patient_id" ]
+              - type: TABLE_KEY
+                right_table: patient_sample
+                right_column: patient_id
           - name: sex
             attributes:
               - not_empty
@@ -34,15 +37,21 @@ workbooks:
             attributes:
               - not_empty
             relation:
-              - [ "TABLE_KEY", "patient_sample", "patient", "patient_id" ]
-              - [ "ONE_TO_MANY", "patient_sample", "patient_sample", "sample_id" ]
+              - type: TABLE_KEY
+                right_table: patient
+                right_column: patient_id
+              - type: ONE_TO_MANY
+                right_table: patient_sample
+                right_column: sample_id
           - name: sample_id
             charset: url_safe
             attributes:
               - not_empty
               - unique
             relation:
-              - [ "ONE_TO_ONE", "patient_sample", "patient_sample", "model_id" ]
+              - type: ONE_TO_ONE
+                right_table: patient_sample
+                right_column: model_id
           - name: collection_date
             charset: COLLECTION_DATE
           - name: collection_event
@@ -113,9 +122,15 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - [ "TABLE_KEY", "patient_sample", "model", "model_id" ]
-              - [ "TABLE_KEY", "patient_sample", "model_validation", "model_id" ]
-              - [ "TABLE_KEY", "patient_sample","sharing", "model_id" ]
+              - type: TABLE_KEY
+                right_table: pdx_models
+                right_column: model_id
+              - type: TABLE_KEY
+                right_table: model_validation
+                right_column: model_id
+              - type: TABLE_KEY
+                right_table: sharing
+                right_column: model_id
       - table: pdx_models
         column_references:
           - name: model_id
@@ -123,7 +138,9 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - [ "TABLE_KEY", "pdx_models", "sample", "model_id" ]
+              - type: TABLE_KEY
+                right_table: sample
+                right_column: model_id
           - name: host_strain_name
             charset: free_text
             attributes:
@@ -163,7 +180,9 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - [ "TABLE_KEY", "model_validation" , "sample", "model_id" ]
+              - type: TABLE_KEY
+                right_table: sample
+                right_column: model_id
           - name: validation_technique
             charset: free_text
           - name: description
@@ -185,7 +204,9 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - [ "TABLE_KEY", "sharing", "patient_sample", "model_id" ]
+              - type: TABLE_KEY
+                right_table: patient_sample
+                right_column: model_id
             categories:
               - academia
               - industry
@@ -207,7 +228,6 @@ workbooks:
               - not_empty
           - name: form_url
           - name: database_url
-
   - workbook_title: molecular_metadata
     workbook:
       - table: sample
@@ -239,8 +259,12 @@ workbooks:
           - name: platform_id
             charset: url_safe
             relation:
-              - [ "TABLE_KEY", "sample", "platform", "platform_id" ]
-              - [ "TABLE_KEY", "sample", "platform_web", "platform_id" ]
+              - type: TABLE_KEY
+                right_table: platform
+                right_column: platform_id
+              - type: TABLE_KEY
+                right_table: platform_web
+                right_column: platform_id
       - table: platform
         column_references:
           - name: platform_id
@@ -249,8 +273,12 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - [ "TABLE_KEY", "platform", "sample", "platform_id" ]
-              - [ "TABLE_KEY", "platform", "platform_web", "platform_id" ]
+              - type: TABLE_KEY
+                right_table: sample
+                right_column: platform_id
+              - type: TABLE_KEY
+                right_table: platform_web
+                right_column: platform_id
           - name: molecular_characterisation_type
             attributes:
               - not_empty
@@ -282,15 +310,18 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - [ "TABLE_KEY", "platform", "sample", "platform_id" ]
-              - [ "TABLE_KEY", "platform", "platform_web", "platform_id" ]
+              - type: TABLE_KEY
+                right_table: sample
+                right_column: platform_id
+              - type: TABLE_KEY
+                right_table: platform_web
+                right_column: platform_id
           - name: molecular_methods_description
             charset: free_text
           - name: analysis_description
             charset: free_text
           - name: table
             charset: free_text
-
   - workbook_title: mut
     workbook:
       - table: mut
@@ -403,39 +434,37 @@ workbooks:
 
   - workbook_title: treatment
     workbook:
-        - table: treatment
-          column_references:
-            - name: patient_id
-              attributes:
-                - not_empty
-            - name: treatment_name
-            - name: treatment_dose
-            - name: treatment_starting_date
-            - name: treatment_duration
-            - name: treatment_event
-            - name: elapsed_time
-            - name: treatment_response
-            - name: response_classification
-            - name: model_id
+      - table: treatment
+        column_references:
+          - name: patient_id
+            attributes:
+              - not_empty
+          - name: treatment_name
+          - name: treatment_dose
+          - name: treatment_starting_date
+          - name: treatment_duration
+          - name: treatment_event
+          - name: elapsed_time
+          - name: treatment_response
+          - name: response_classification
+          - name: model_id
 
   - workbook_title: drug
     workbook:
-        - table: drug
-          column_references:
-            - name: model_id
-              attributes:
-                - not_empty
-            - name: passage_range
-            - name: treatment_name
-            - name: treatment_type
-            - name: treatment_dose
-            - name: administration_route
-            - name: treatment_schedule
-            - name: treatment_length
-            - name: treatment_response
-            - name: response_classification
-            - name: platform_id
-              attributes:
-                - not_empty
-
-
+      - table: drug
+        column_references:
+          - name: model_id
+            attributes:
+              - not_empty
+          - name: passage_range
+          - name: treatment_name
+          - name: treatment_type
+          - name: treatment_dose
+          - name: administration_route
+          - name: treatment_schedule
+          - name: treatment_length
+          - name: treatment_response
+          - name: response_classification
+          - name: platform_id
+            attributes:
+              - not_empty

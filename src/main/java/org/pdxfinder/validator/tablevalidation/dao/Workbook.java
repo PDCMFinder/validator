@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.pdxfinder.validator.tablevalidation.Relation;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.enums.Charsets;
 import org.pdxfinder.validator.tablevalidation.enums.Rules;
@@ -27,6 +26,10 @@ public class Workbook {
 
   @JsonProperty("workbook")
   private List<WorkbookTable> workbookTables;
+
+  public void init() {
+    workbookTables.forEach(WorkbookTable::init);
+  }
 
   public Set<String> getTableNames() {
     return workbookTables.stream().map(WorkbookTable::getTable).collect(Collectors.toSet());

@@ -25,8 +25,14 @@ public class ValidationService {
   private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
   private List<ValidationError> validationErrors;
 
-  public List<ValidationError> validate(
-      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
+  public List<ValidationError> validate(Map<String, Table> tableSet,
+      TableSetSpecification tableSetSpecification) {
+    return validateWithDependency(tableSet, tableSetSpecification, Map.of("empty", Table.create()));
+  }
+
+  public List<ValidationError> validateWithDependency(
+      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification,
+      Map<String, Table> relationDependencies) {
     validationErrors = new ArrayList<>();
     checkRequiredTablesPresent(tableSet, tableSetSpecification);
     if (thereAreNoErrors(validationErrors, tableSetSpecification)) {
