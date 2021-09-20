@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: pdx-validator
-          image: 'pdxfinder/pdx-validator:master'
+          image: 'pdxfinder/pdx-validator:master_image'
           ports:
             - containerPort: 8080
 
