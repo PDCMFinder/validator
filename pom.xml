@@ -119,14 +119,22 @@
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>2.7.0</version>
                 <configuration>
-                    <to>
-                        <image>pdxfinder/pdx-validator</image>
-                    </to>
-                    <container>
-                        <ports>
-                            <port>8080</port>
-                        </ports>
-                    </container>
+                  <to>
+                    <image>pdxfinder/pdx-validator</image>
+                  </to>
+                  <container>
+                    <ports>
+                      <port>8080</port>
+                    </ports>
+                  </container>
+                  <extraDirectories>
+                    <paths>
+                      <path>
+                        <from>data</from>
+                        <into>/data</into>
+                      </path>
+                    </paths>
+                  </extraDirectories>
                 </configuration>
             </plugin>
             <plugin>
