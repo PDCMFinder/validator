@@ -14,10 +14,11 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.pdxfinder.validator.tablesetutilities.TableUtilities;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.Relation;
+import org.pdxfinder.validator.tableutilities.TableUtilities;
+import org.pdxfinder.validator.tablevalidation.RelationTestUtilities;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
@@ -29,7 +30,7 @@ public class EmptyValueErrorReportCreatorTest {
   private final String LEFT_TABLE = "left_table.tsv";
   private final String RIGHT_TABLE = "right_table.tsv";
   private final Relation RELATION =
-      Relation.betweenTableKeys(
+      RelationTestUtilities.betweenTableKeys(
           ColumnReference.of(LEFT_TABLE, "id"), ColumnReference.of(RIGHT_TABLE, "table_1_id"));
   private final String PROVIDER = "PROVIDER-BC";
   private EmptyValueErrorCreator emptyValueErrorCreator = new EmptyValueErrorCreator();
@@ -106,8 +107,7 @@ public class EmptyValueErrorReportCreatorTest {
                     tableWithMissingValue.where(
                         tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
                     PROVIDER,
-                    "[7]"
-                )
+                    "[7]")
                 .getValidationError());
     assertEquals(
         expected.toString(),

@@ -4,8 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.Relation;
+import org.pdxfinder.validator.tablevalidation.RelationTestUtilities;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
@@ -23,7 +24,7 @@ public class BrokenRelationReportErrorTest {
             + " not_foo_id  |\n"
             + "--------------";
     Relation relation =
-        Relation.betweenTableKeys(
+        RelationTestUtilities.betweenTableKeys(
             ColumnReference.of("foo.tsv", "foo_id"), ColumnReference.of("bar.tsv", "foo_id"));
     Table tableMissingColumn = Table.create().addColumns(StringColumn.create("not_foo_id"));
 
@@ -49,7 +50,7 @@ public class BrokenRelationReportErrorTest {
             + "      1  |\n"
             + "      1  |";
     Relation relation =
-        Relation.betweenTableKeys(
+        RelationTestUtilities.betweenTableKeys(
             ColumnReference.of("foo.tsv", "foo_id"), ColumnReference.of("bar.tsv", "foo_id"));
     Table tableMissingValues =
         Table.create().addColumns(StringColumn.create("foo_id", Arrays.asList("1", "1")));
@@ -71,7 +72,7 @@ public class BrokenRelationReportErrorTest {
             + "Broken TABLE_KEY relation [(foo.tsv) foo_id -> foo_id (bar.tsv)]: "
             + "2 orphan row(s) found in [bar.tsv]";
     Relation relation =
-        Relation.betweenTableKeys(
+        RelationTestUtilities.betweenTableKeys(
             ColumnReference.of("foo.tsv", "foo_id"), ColumnReference.of("bar.tsv", "foo_id"));
     Table tableMissingValues =
         Table.create().addColumns(StringColumn.create("foo_id", Arrays.asList("1", "1")));

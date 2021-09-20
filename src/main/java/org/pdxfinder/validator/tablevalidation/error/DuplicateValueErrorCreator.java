@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.StringColumn;
@@ -41,7 +41,9 @@ public class DuplicateValueErrorCreator extends ErrorCreator {
     final Set<String> duplicates = new HashSet<>();
     final Set<String> set1 = new HashSet<>();
     for (String string : listContainingDuplicates) {
-      if (!set1.add(string)) duplicates.add(string);
+      if (!set1.add(string)) {
+        duplicates.add(string);
+      }
     }
     return duplicates;
   }

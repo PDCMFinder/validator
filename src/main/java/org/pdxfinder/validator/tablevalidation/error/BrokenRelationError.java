@@ -1,6 +1,6 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
-import org.pdxfinder.validator.tablevalidation.Relation;
+import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import tech.tablesaw.api.Table;
 
 public class BrokenRelationError extends ValidationErrorBuilder {

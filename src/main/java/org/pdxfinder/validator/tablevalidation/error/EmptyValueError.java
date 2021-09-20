@@ -1,6 +1,6 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import tech.tablesaw.api.Table;
 
 public class EmptyValueError extends ValidationErrorBuilder {
@@ -10,7 +10,10 @@ public class EmptyValueError extends ValidationErrorBuilder {
   private String message;
   private String description;
 
-  EmptyValueError(ColumnReference nonEmptyColumn, Table invalidRows, String provider,
+  EmptyValueError(
+      ColumnReference nonEmptyColumn,
+      Table invalidRows,
+      String provider,
       String missingRowNumbers) {
     description = buildDescription(missingRowNumbers);
     super.buildValidationErrors(
@@ -20,8 +23,7 @@ public class EmptyValueError extends ValidationErrorBuilder {
   }
 
   private String buildDescription(String missingColumns) {
-    return String.format("Missing value(s) in row numbers [%s]",
-        missingColumns);
+    return String.format("Missing value(s) in row numbers [%s]", missingColumns);
   }
 
   private String buildMessage(String table, String provider, String description) {

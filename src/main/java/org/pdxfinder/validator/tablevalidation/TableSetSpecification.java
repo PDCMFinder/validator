@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import tech.tablesaw.api.Table;
 
 public class TableSetSpecification {
-
+  private String tablesetSpecificationName;
   private Set<String> requiredTables;
   private Set<ColumnReference> requiredColumns;
   private Set<ColumnReference> nonEmptyColumns;
@@ -97,6 +99,11 @@ public class TableSetSpecification {
     return this;
   }
 
+  public TableSetSpecification setTablesetSpecificationName(String tablesetSpecificationName) {
+    this.tablesetSpecificationName = tablesetSpecificationName;
+    return this;
+  }
+
   public Set<ColumnReference> getRequiredNonEmptyColumns() {
     return this.nonEmptyColumns;
   }
@@ -111,6 +118,10 @@ public class TableSetSpecification {
 
   public Set<ColumnReference> getRequiredColumns() {
     return this.requiredColumns;
+  }
+
+  public String getTablesetSpecificationName() {
+    return tablesetSpecificationName;
   }
 
   public boolean hasRequiredColumns() {
@@ -147,7 +158,9 @@ public class TableSetSpecification {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
+    if (this == o) {
+      return true;
+    }
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
@@ -186,8 +199,9 @@ public class TableSetSpecification {
   public int hashCode() {
     int result = getRequiredTables() != null ? getRequiredTables().hashCode() : 0;
     result = 31 * result + (getRequiredColumns() != null ? getRequiredColumns().hashCode() : 0);
-    result = 31 * result + (getRequiredNonEmptyColumns() != null ? getRequiredNonEmptyColumns()
-        .hashCode() : 0);
+    result =
+        31 * result
+            + (getRequiredNonEmptyColumns() != null ? getRequiredNonEmptyColumns().hashCode() : 0);
     result = 31 * result + (getUniqueColumns() != null ? getUniqueColumns().hashCode() : 0);
     result = 31 * result + (getRelations() != null ? getRelations().hashCode() : 0);
     result = 31 * result + getProvider().hashCode();
@@ -201,28 +215,28 @@ public class TableSetSpecification {
         .add(
             "requiredColumns=\n\t"
                 + String.join(
-                    "\n\t",
-                    requiredColumns.stream()
-                        .map(ColumnReference::toString)
-                        .collect(Collectors.toSet())))
+                "\n\t",
+                requiredColumns.stream()
+                    .map(ColumnReference::toString)
+                    .collect(Collectors.toSet())))
         .add(
             "nonEmptyColumns=\n\t"
                 + String.join(
-                    "\n\t",
-                    nonEmptyColumns.stream()
-                        .map(ColumnReference::toString)
-                        .collect(Collectors.toSet())))
+                "\n\t",
+                nonEmptyColumns.stream()
+                    .map(ColumnReference::toString)
+                    .collect(Collectors.toSet())))
         .add(
             "uniqueColumns=\n\t"
                 + String.join(
-                    "\n\t",
-                    uniqueColumns.stream()
-                        .map(ColumnReference::toString)
-                        .collect(Collectors.toSet())))
+                "\n\t",
+                uniqueColumns.stream()
+                    .map(ColumnReference::toString)
+                    .collect(Collectors.toSet())))
         .add(
             "relations=\n\t"
                 + String.join(
-                    "\n\t", relations.stream().map(Relation::toString).collect(Collectors.toSet())))
+                "\n\t", relations.stream().map(Relation::toString).collect(Collectors.toSet())))
         .add("provider=\n\t'" + provider + "'")
         .toString();
   }

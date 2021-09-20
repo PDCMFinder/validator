@@ -11,11 +11,12 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.Relation;
-import org.pdxfinder.validator.tablevalidation.Relation.ValidityType;
+import org.pdxfinder.validator.tablevalidation.RelationTestUtilities;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.enums.RelationType;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
@@ -27,18 +28,18 @@ public class BrokenRelationReportErrorCreatorTest {
   private final String LEFT_TABLE = "left_table.tsv";
   private final String RIGHT_TABLE = "right_table.tsv";
   private final Relation INTER_TABLE_RELATION =
-      Relation.betweenTableKeys(
+      RelationTestUtilities.betweenTableKeys(
           ColumnReference.of(LEFT_TABLE, "id"), ColumnReference.of(RIGHT_TABLE, "table_1_id"));
 
   private final Relation INTRA_TABLE_ONE_TO_MANY =
-      Relation.betweenTableColumns(
-          ValidityType.ONE_TO_MANY,
+      RelationTestUtilities.betweenTableColumns(
+          RelationType.ONE_TO_MANY,
           ColumnReference.of(LEFT_TABLE, "id"),
           ColumnReference.of(LEFT_TABLE, "table_1_id"));
 
   private final Relation INTRA_TABLE_ONE_TO_ONE =
-      Relation.betweenTableColumns(
-          ValidityType.ONE_TO_ONE,
+      RelationTestUtilities.betweenTableColumns(
+          RelationType.ONE_TO_ONE,
           ColumnReference.of(LEFT_TABLE, "id"),
           ColumnReference.of(LEFT_TABLE, "table_1_id"));
 

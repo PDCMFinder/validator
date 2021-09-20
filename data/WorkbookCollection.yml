@@ -1,0 +1,470 @@
+---
+workbooks:
+  - workbook_title: metadata
+    workbook:
+      - table: patient
+        column_references:
+          - name: patient_id
+            charset: url_safe
+            attributes:
+              - not_empty
+              - unique
+            relation:
+              - type: TABLE_KEY
+                right_table: patient_sample
+                right_column: patient_id
+          - name: sex
+            attributes:
+              - not_empty
+            categories:
+              - male
+              - female
+              - not collected
+              - not provided
+          - name: history
+            charset: free_text
+          - name: ethnicity
+          - name: ethnicity_assessment_method
+            categories:
+              - self-assessed
+              - genetic
+          - name: initial_diagnosis
+            charset: free_text
+      - table: patient_sample
+        column_references:
+          - name: patient_id
+            charset: url_safe
+            attributes:
+              - not_empty
+            relation:
+              - type: TABLE_KEY
+                right_table: patient
+                right_column: patient_id
+              - type: ONE_TO_MANY
+                right_table: patient_sample
+                right_column: sample_id
+          - name: sample_id
+            charset: url_safe
+            attributes:
+              - not_empty
+              - unique
+            relation:
+              - type: ONE_TO_ONE
+                right_table: patient_sample
+                right_column: model_id
+          - name: collection_date
+            charset: COLLECTION_DATE
+          - name: collection_event
+            charset: COLLECTION_EVENT
+          - name: months_since_collection_1
+            charset: NUMERIC
+          - name: age_in_years_at_collection
+            charset: NUMERIC
+          - name: diagnosis
+            attributes:
+              - not_empty
+          - name: tumour_type
+            attributes:
+              - not_empty
+            categories:
+              - primary
+              - metastatic
+              - recurrent
+              - refractory
+          - name: primary_site
+            attributes:
+              - not_empty
+            charset: free_text
+          - name: collection_site
+            attributes:
+              - not_empty
+            charset: free_text
+          - name: stage
+            charset: free_text
+          - name: staging_system
+            charset: free_text
+          - name: grade
+            charset: free_text
+          - name: grading_system
+            charset: free_text
+          - name: virology_status
+            charset: free_text
+          - name: sharable
+            attributes:
+              - not_empty
+            categories:
+              - yes
+              - no
+              - not provided
+          - name: treatment_naive_at_collection
+            attributes:
+              - not_empty
+            categories:
+              - treatment naive
+              - not treatment naive
+              - not collected
+              - not provided
+          - name: treated
+            categories:
+              - yes
+              - no
+              - not provided
+              - not collected
+          - name: prior_treatment
+            categories:
+              - yes
+              - no
+              - not collected
+              - not provided
+          - name: model_id
+            charset: url_safe
+            attributes:
+              - not_empty
+              - unique
+            relation:
+              - type: TABLE_KEY
+                right_table: pdx_models
+                right_column: model_id
+              - type: TABLE_KEY
+                right_table: model_validation
+                right_column: model_id
+              - type: TABLE_KEY
+                right_table: sharing
+                right_column: model_id
+      - table: pdx_models
+        column_references:
+          - name: model_id
+            attributes:
+              - not_empty
+              - unique
+            relation:
+              - type: TABLE_KEY
+                right_table: sample
+                right_column: model_id
+          - name: host_strain_name
+            charset: free_text
+            attributes:
+              - not_empty
+          - name: host_strain_nomenclature
+            charset: free_text
+            attributes:
+              - not_empty
+          - name: engraftment_site
+            charset: free_text
+            attributes:
+              - not_empty
+          - name: engraftment_type
+            attributes:
+              - not_empty
+            categories:
+              - heterotopic
+              - orthotopic
+              - not collected
+              - not provided
+          - name: sample_type
+            charset: free_text
+            attributes:
+              - not_empty
+          - name: sample_state
+            charset: free_text
+          - name: passage_number
+            attributes:
+              - not_empty
+            charset: numeric
+          - name: publications
+            charset: pmid_format
+      - table: model_validation
+        column_references:
+          - name: model_id
+            attributes:
+              - not_empty
+              - unique
+            relation:
+              - type: TABLE_KEY
+                right_table: sample
+                right_column: model_id
+          - name: validation_technique
+            charset: free_text
+          - name: description
+            attributes:
+              - not_empty
+            charset: free_text
+          - name: passages_tested
+            attributes:
+              - not_empty
+            charset: numeric
+          - name: validation_host_strain_nomenclature
+            attributes:
+              - not_empty
+            charset: free_text
+      - table: sharing
+        column_references:
+          - name: model_id
+            attributes:
+              - not_empty
+              - unique
+            relation:
+              - type: TABLE_KEY
+                right_table: patient_sample
+                right_column: model_id
+            categories:
+              - academia
+              - industry
+          - name: accessibility
+            attributes:
+              - not_empty
+            charset: free_text
+          - name: europdx_access_modality
+            attributes:
+              - not_empty
+            categories:
+              - transnational access
+              - collaboration only
+          - name: email
+            attributes:
+              - not_empty
+          - name: name
+            attributes:
+              - not_empty
+          - name: form_url
+          - name: database_url
+  - workbook_title: molecular_metadata
+    workbook:
+      - table: sample
+        column_references:
+          - name: model_id
+            attributes:
+              - not_empty
+            charset: url_safe
+          - name: sample_id
+            attributes:
+              - not_empty
+            charset: url_safe
+          - name: sample_origin
+            attributes:
+              - not_empty
+            categories:
+              - xenograft
+              - patient
+          - name: passage
+            charset: NUMERIC
+          - name: host_strain_name
+            charset: free_text
+          - name: host_strain_nomenclature
+            charset: free_text
+          - name: engrafted_tumor_collection_site
+            charset: free_text
+          - name: raw_data_url
+            charset: free_text
+          - name: platform_id
+            charset: url_safe
+            relation:
+              - type: TABLE_KEY
+                right_table: platform
+                right_column: platform_id
+              - type: TABLE_KEY
+                right_table: platform_web
+                right_column: platform_id
+      - table: platform
+        column_references:
+          - name: platform_id
+            charset: url_safe
+            attributes:
+              - not_empty
+              - unique
+            relation:
+              - type: TABLE_KEY
+                right_table: sample
+                right_column: platform_id
+              - type: TABLE_KEY
+                right_table: platform_web
+                right_column: platform_id
+          - name: molecular_characterisation_type
+            attributes:
+              - not_empty
+            categories:
+              - copy number alteration
+              - expression
+              - mutation
+              - drug dosing
+              - cytogenetic
+          - name: instrument_model
+            attributes:
+              - not_empty
+            charset: free_text
+          - name: library_strategy
+            attributes:
+              - not_empty
+            charset: free_text
+          - name: library_selection
+            charset: free_text
+          - name: library_notes
+            charset: free_text
+          - name: genome_assembly
+            charset: free_text
+      - table: platform_web
+        column_references:
+          - name: platform_id
+            charset: url_safe
+            attributes:
+              - not_empty
+              - unique
+            relation:
+              - type: TABLE_KEY
+                right_table: sample
+                right_column: platform_id
+              - type: TABLE_KEY
+                right_table: platform_web
+                right_column: platform_id
+          - name: molecular_methods_description
+            charset: free_text
+          - name: analysis_description
+            charset: free_text
+          - name: table
+            charset: free_text
+  - workbook_title: mut
+    workbook:
+      - table: mut
+        column_references:
+          - name: sample_id
+            attributes:
+              - not_empty
+          - name: symbol
+          - name: biotype
+          - name: coding_sequence_change
+          - name: variant_class
+          - name: codon_change
+          - name: amino_acid_change
+          - name: consequence
+          - name: functional_prediction
+          - name: read_depth
+          - name: allele_frequency
+          - name: chromosome
+            attributes:
+              - not_empty
+          - name: seq_start_position
+          - name: strand
+          - name: ref_allele
+            attributes:
+              - not_empty
+          - name: alt_allele
+            attributes:
+              - not_empty
+          - name: ucsc_gene_id
+          - name: ncbi_gene_id
+          - name: ncbi_transcript_id
+          - name: ensembl_gene_id
+          - name: ensembl_transcript_id
+          - name: variation_id
+          - name: platform_id
+            attributes:
+              - not_empty
+
+  - workbook_title: expression
+    workbook:
+      - table: expression
+        column_references:
+          - name: sample_id
+            attributes:
+              - not_empty
+          - name: chromosome
+          - name: strand
+          - name: seq_start_position
+          - name: seq_end_position
+          - name: symbol
+          - name: ucsc_gene_id
+          - name: ncbi_gene_id
+          - name: ensembl_gene_id
+          - name: ensembl_transcript_id
+          - name: rnaseq_coverage
+          - name: rnaseq_fpkm
+          - name: rnaseq_tpm
+          - name: rnaseq_count
+          - name: affy_hgea_probe_id
+          - name: affy_hgea_expression_value
+          - name: illumina_hgea_probe_id
+          - name: illumina_hgea_expression_value
+          - name: z_score
+          - name: platform_id
+            attributes:
+              - not_empty
+
+  - workbook_title: cna
+    workbook:
+      - table: cna
+        column_references:
+          - name: sample_id
+            attributes:
+              - not_empty
+          - name: chromosome
+          - name: strand
+          - name: seq_start_position
+          - name: seq_end_position
+            attributes:
+              - not_empty
+          - name: symbol
+          - name: ucsc_gene_id
+          - name: ncbi_gene_id
+          - name: ensembl_gene_id
+          - name: log10r_cna
+          - name: log2r_cna
+          - name: fold_change
+          - name: copy_number_status
+          - name: gistic_value
+          - name: picnic_value
+          - name: platform_id
+            attributes:
+              - not_empty
+
+  - workbook_title: cyto
+    workbook:
+      - table: cyto
+        column_references:
+          - name: sample_id
+            attributes:
+              - not_empty
+          - name: symbol
+          - name: marker_status
+            attributes:
+              - not_empty
+          - name: essential_or_additional_marker
+          - name: platform_id
+            attributes:
+              - not_empty
+
+  - workbook_title: treatment
+    workbook:
+      - table: treatment
+        column_references:
+          - name: patient_id
+            attributes:
+              - not_empty
+          - name: treatment_name
+          - name: treatment_dose
+          - name: treatment_starting_date
+          - name: treatment_duration
+          - name: treatment_event
+          - name: elapsed_time
+          - name: treatment_response
+          - name: response_classification
+          - name: model_id
+
+  - workbook_title: drug
+    workbook:
+      - table: drug
+        column_references:
+          - name: model_id
+            attributes:
+              - not_empty
+          - name: passage_range
+          - name: treatment_name
+          - name: treatment_type
+          - name: treatment_dose
+          - name: administration_route
+          - name: treatment_schedule
+          - name: treatment_length
+          - name: treatment_response
+          - name: response_classification
+          - name: platform_id
+            attributes:
+              - not_empty

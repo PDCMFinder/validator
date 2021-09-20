@@ -25,11 +25,18 @@ public class ValueRestrictions {
   }
 
   public static ValueRestrictions of(List<String> categories) {
-    String errorDescription =
-        String.format(
-            "not in a required category. " + "Required Categories: [%s] Value found",
-            String.join(",", categories));
+    String errorDescription = buildErrorDescription(categories);
     return new ValueRestrictions(listToCaseInsensitivePredicate(categories), errorDescription);
+  }
+
+  public static ValueRestrictions createEmpty() {
+    return new ValueRestrictions("", "");
+  }
+
+  private static String buildErrorDescription(List<String> categories) {
+    return String.format(
+        "not in a required category. " + "Required Categories: [%s] Value found",
+        String.join(",", categories));
   }
 
   private static Predicate<String> listToCaseInsensitivePredicate(List<String> categories) {
@@ -46,21 +53,17 @@ public class ValueRestrictions {
     return Pattern.compile(regex).asPredicate();
   }
 
-  public ValueRestrictions cannotBeEmpty() {
-    canBeEmpty = false;
-    return this;
-  }
-
   public Predicate<String> getEmptyFilter() {
     Predicate<String> emptyFilter = String::isEmpty;
     return (canBeEmpty) ? emptyFilter.negate() : emptyFilter;
   }
 
-  public Predicate<String> getInvalidValuePredicate() {
+  public Predicate<String> getPredicate() {
     return predicate.negate();
   }
 
   public String getErrorDescription() {
     return errorDescription;
   }
+
 }

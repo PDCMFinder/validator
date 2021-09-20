@@ -1,7 +1,6 @@
 package org.pdxfinder.validator.api;
 
 import java.util.Optional;
-import org.pdxfinder.validator.ValidatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/validation/")
 public class Uploader {
 
-  private ValidatorService validatorService;
+  private ValidationWebService validatorService;
   private static final String EXCEL_CONTENT_TYPE =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
   @Autowired
-  Uploader(ValidatorService validatorService) {
+  Uploader(ValidationWebService validatorService) {
     this.validatorService = validatorService;
   }
 
@@ -31,7 +30,7 @@ public class Uploader {
     String entity = "{ \"Error\" : \"HttpStatus Error\" }";
     if (multipartFileIsMissing(optionalFile)) {
       responseStatus = HttpStatus.NO_CONTENT;
-    } else if (multipartFileIsUnsupportedType(optionalFile)) {
+    } else if (multipartFileIsUnsupportedType(optionalFile.get())) {
       responseStatus = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
     } else {
       entity = validatorService.proccessRequest(optionalFile.get());
@@ -40,12 +39,11 @@ public class Uploader {
   }
 
   private boolean multipartFileIsMissing(Optional<MultipartFile> multipartFile) {
-    return multipartFile.isEmpty() || multipartFile.get().isEmpty()
-        || multipartFile.get().getContentType() == null;
+    return (multipartFile.isEmpty() || multipartFile.get().isEmpty());
   }
 
-  private boolean multipartFileIsUnsupportedType(Optional<MultipartFile> multipartFile) {
-    return !multipartFile.get().getContentType().equals(EXCEL_CONTENT_TYPE);
+  private boolean multipartFileIsUnsupportedType(MultipartFile multipartFile) {
+    return multipartFile.getContentType() == null
+        || !multipartFile.getContentType().equals(EXCEL_CONTENT_TYPE);
   }
-
 }

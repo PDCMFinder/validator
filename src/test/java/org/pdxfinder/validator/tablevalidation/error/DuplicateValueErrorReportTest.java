@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 
 public class DuplicateValueErrorReportTest {
   private DuplicateValueErrorCreator duplicateValueErrorCreator = new DuplicateValueErrorCreator();
@@ -14,8 +14,7 @@ public class DuplicateValueErrorReportTest {
 
   @Test
   public void message() {
-    String expected =
-        "Error in [table] for provider [provider]: Duplicates found : [a]";
+    String expected = "Error in [table] for provider [provider]: Duplicates found : [a]";
     ColumnReference uniqueColumn = ColumnReference.of("table", "column");
     Set<String> duplicateValues = new HashSet<>(Arrays.asList("a"));
 
