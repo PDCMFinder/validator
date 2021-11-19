@@ -20,7 +20,9 @@ public class ValidationXlsxReaderTest {
       String fileName = name + ".xlsx";
       List<Table> tables =
           new ValidationXlsxReader()
-              .readMultiple(XlsxReadOptions.builder("./data/test/" + fileName).build(), true);
+              .readMultiple(
+                  XlsxReadOptions.builder("./src/main/resources/test_data/" + fileName).build(),
+                  true);
       assertNotNull(tables, "No tables read from " + fileName);
       assertEquals(expectedCount, tables.size(), "Wrong number of tables in " + fileName);
       return tables;
@@ -132,22 +134,23 @@ public class ValidationXlsxReaderTest {
 
   @Test
   void testSheetIndex() throws IOException {
+    String filepath = "./src/main/resources/test_data/multiplesheets.xlsx";
     Table table =
         new ValidationXlsxReader()
-            .read(XlsxReadOptions.builder("./data/test/multiplesheets.xlsx").sheetIndex(1).build());
+            .read(XlsxReadOptions.builder(filepath).sheetIndex(1).build());
     assertNotNull(table, "No table read from multiplesheets.xlsx");
     assertColumnValues(table.stringColumn("stringcol"), "John", "Doe");
     assertEquals("multiplesheets.xlsx#Sheet2", table.name(), "table name is different");
 
     Table tableImplicit =
         new ValidationXlsxReader()
-            .read(XlsxReadOptions.builder("./data/test/multiplesheets.xlsx").build());
+            .read(XlsxReadOptions.builder(filepath).build());
     // the table from the 2nd sheet should be picked up
     assertNotNull(tableImplicit, "No table read from multiplesheets.xlsx");
 
     try {
       new ValidationXlsxReader()
-          .read(XlsxReadOptions.builder("./data/test/multiplesheets.xlsx").sheetIndex(0).build());
+          .read(XlsxReadOptions.builder(filepath).sheetIndex(0).build());
       fail("First sheet is empty, no table should be found");
     } catch (IllegalArgumentException iae) {
       // expected
@@ -155,7 +158,7 @@ public class ValidationXlsxReaderTest {
 
     try {
       new ValidationXlsxReader()
-          .read(XlsxReadOptions.builder("./data/test/multiplesheets.xlsx").sheetIndex(5).build());
+          .read(XlsxReadOptions.builder(filepath).sheetIndex(5).build());
       fail("Only 2 sheets exist, no sheet 5");
     } catch (IndexOutOfBoundsException iobe) {
       // expected

@@ -3,6 +3,7 @@ package org.pdxfinder.validator.tablevalidation.dao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import java.io.InputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,15 +11,17 @@ public class WorkbookCollectionTests {
 
   @Test
   public void Given_ymlFile_fromYamlIsCalled_returnWorkbookCollection() {
+    InputStream inputStream = getClass().getResourceAsStream("/WorkbookCollection.yml");
     PdxWorkbookCollection workbookCollection =
-        PdxWorkbookCollection.fromYaml("data/WorkbookCollection.yml");
+        PdxWorkbookCollection.fromYaml(inputStream);
     Assert.assertTrue(0 < workbookCollection.len());
   }
 
   @Test
   public void Given_completeMetadataYML_FromGeneratedPdxWorkbookCollection_testForNullPointers() {
+    InputStream inputStream = getClass().getResourceAsStream("/WorkbookCollection.yml");
     PdxWorkbookCollection workbookCollection =
-        PdxWorkbookCollection.fromYaml("data/WorkbookCollection.yml");
+        PdxWorkbookCollection.fromYaml(inputStream);
     var metadataWorkbook = workbookCollection.getWorkbooks().get(0);
     Assert.assertNotNull(metadataWorkbook.getTableNames());
     Assert.assertNotNull(metadataWorkbook.getWorkbookTitle());
