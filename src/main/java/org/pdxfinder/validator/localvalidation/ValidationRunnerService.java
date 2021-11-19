@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.tablesaw.api.Table;
 
+
 @Service
 public class ValidationRunnerService {
 
@@ -51,9 +52,9 @@ public class ValidationRunnerService {
     log.info(validationService.getJsonReport(reportId));
   }
 
-  public TableSetSpecification getTablSetSpecificiation(String workbookName) {
+  public TableSetSpecification getTablSetSpecificiation(String workbookName, String providerName) {
     var workbook = pdxWorkbookCollection.getWorkbook(workbookName);
-    return new TableSetSpecificationBuilder(workbook).generate();
+    return new TableSetSpecificationBuilder(workbook).setProvider(providerName).build();
   }
 
   public List<Workbook> getWorkbooks(String workbookRegex) {

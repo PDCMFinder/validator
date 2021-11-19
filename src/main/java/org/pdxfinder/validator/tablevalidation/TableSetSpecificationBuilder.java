@@ -1,6 +1,7 @@
 package org.pdxfinder.validator.tablevalidation;
 
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
@@ -13,17 +14,24 @@ import org.pdxfinder.validator.tablevalidation.enums.Rules;
 public class TableSetSpecificationBuilder {
 
   private Workbook pdcmWorkbook;
+  private String provider = "provider";
 
   public TableSetSpecificationBuilder(Workbook pdcmWorkbook) {
     this.pdcmWorkbook = pdcmWorkbook;
   }
 
   public TableSetSpecificationBuilder(String pdcmWorkbook) {
-    var pdxWorkbookCollection = PdxWorkbookCollection.fromYaml(Yml.WORKBOOK_COLLECTION.location());
+    InputStream inputStream = getClass().getResourceAsStream(Yml.WORKBOOK_COLLECTION.location());
+    var pdxWorkbookCollection = PdxWorkbookCollection.fromYaml(inputStream);
     this.pdcmWorkbook = pdxWorkbookCollection.getWorkbook(pdcmWorkbook);
   }
 
-  public TableSetSpecification generate() {
+  public TableSetSpecificationBuilder setProvider(String provider) {
+    this.provider = provider;
+    return this;
+  }
+
+  public TableSetSpecification build() {
     Set<String> metadataTables = pdcmWorkbook.getTableNames();
     Set<ColumnReference> uniqIdColumns = getUniqueColumns();
     Set<ColumnReference> requiredColumns = getAllColumns();
@@ -34,6 +42,7 @@ public class TableSetSpecificationBuilder {
     Set<Relation> relations = getRelations();
 
     return TableSetSpecification.create()
+        .setProvider(provider)
         .addRequiredTables(metadataTables)
         .addRequiredColumns(requiredColumns)
         .addNonEmptyColumns(notEmptyColumns)

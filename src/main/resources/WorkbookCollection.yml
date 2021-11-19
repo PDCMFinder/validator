@@ -1,4 +1,3 @@
----
 workbooks:
   - workbook_title: metadata
     workbook:
@@ -228,6 +227,7 @@ workbooks:
               - not_empty
           - name: form_url
           - name: database_url
+
   - workbook_title: molecular_metadata
     workbook:
       - table: sample
@@ -322,6 +322,7 @@ workbooks:
             charset: free_text
           - name: table
             charset: free_text
+
   - workbook_title: mut
     workbook:
       - table: mut
@@ -329,6 +330,10 @@ workbooks:
           - name: sample_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: sample
+                right_column: sample_id
           - name: symbol
           - name: biotype
           - name: coding_sequence_change
@@ -359,6 +364,10 @@ workbooks:
           - name: platform_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: platform
+                right_column: platform_id
 
   - workbook_title: expression
     workbook:
@@ -367,6 +376,11 @@ workbooks:
           - name: sample_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: sample
+                right_column: sample_id
+          - name: symbol
           - name: chromosome
           - name: strand
           - name: seq_start_position
@@ -388,6 +402,11 @@ workbooks:
           - name: platform_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: platform
+                right_column: platform_id
+
 
   - workbook_title: cna
     workbook:
@@ -396,6 +415,11 @@ workbooks:
           - name: sample_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: sample
+                right_column: sample_id
+          - name: symbol
           - name: chromosome
           - name: strand
           - name: seq_start_position
@@ -415,6 +439,11 @@ workbooks:
           - name: platform_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: platform
+                right_column: platform_id
+
 
   - workbook_title: cyto
     workbook:
@@ -423,6 +452,11 @@ workbooks:
           - name: sample_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: sample
+                right_column: sample_id
+          - name: symbol
           - name: symbol
           - name: marker_status
             attributes:
@@ -431,6 +465,11 @@ workbooks:
           - name: platform_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: platform
+                right_column: platform_id
+
 
   - workbook_title: treatment
     workbook:
@@ -439,6 +478,10 @@ workbooks:
           - name: patient_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: patient
+                right_column: patient_id
           - name: treatment_name
           - name: treatment_dose
           - name: treatment_starting_date
@@ -448,6 +491,10 @@ workbooks:
           - name: treatment_response
           - name: response_classification
           - name: model_id
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: patient_sample
+                right_column: model_id
 
   - workbook_title: drug
     workbook:
@@ -456,6 +503,10 @@ workbooks:
           - name: model_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: patient_sample
+                right_column: model_id
           - name: passage_range
           - name: treatment_name
           - name: treatment_type
@@ -468,3 +519,8 @@ workbooks:
           - name: platform_id
             attributes:
               - not_empty
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: platform
+                right_column: platform_id
+

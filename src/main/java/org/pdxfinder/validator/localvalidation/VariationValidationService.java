@@ -33,10 +33,10 @@ public class VariationValidationService {
     var variantWorkbooks = validationRunnerService.getWorkbooks(variantWorkbooksRe);
     for (Workbook workbook : variantWorkbooks) {
       String workbookTitle = workbook.getWorkbookTitle();
-      workbookFiles.put(
-          workbookTitle,
-          getAllMatchingFilesFromWorkBookTitle(workbookTitle, providerPath)
-      );
+      var matchingFiles = getAllMatchingFilesFromWorkBookTitle(workbookTitle, providerPath);
+      if (!matchingFiles.isEmpty()) {
+        workbookFiles.put(workbookTitle, matchingFiles);
+      }
     }
     validateVariantFiles(workbookFiles, providerPath);
   }
@@ -48,9 +48,10 @@ public class VariationValidationService {
 
   private Consumer<Entry<String, List<Path>>> validationEachFileByVariantWorkbook(
       Path providerPath) {
+    String providerName = providerPath.getFileName().toString();
     return entry ->
         validateForEachVariantFile(providerPath, entry.getKey(), entry.getValue(),
-            validationRunnerService.getTablSetSpecificiation(entry.getKey()));
+            validationRunnerService.getTablSetSpecificiation(entry.getKey(), providerName));
   }
 
   private void validateForEachVariantFile(Path providerPath, String tableName, List<Path> filepaths,
