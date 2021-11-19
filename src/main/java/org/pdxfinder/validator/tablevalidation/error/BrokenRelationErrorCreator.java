@@ -55,6 +55,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   private void runAppropriateValidation(
       Map<String, Table> tableSet, Relation relation, TableSetSpecification tableSetSpecification) {
     RelationType validity = relation.getValidity();
+    String provider = tableSetSpecification.getProvider();
     if (validity.equals(RelationType.TABLE_KEY)) {
       reportOrphanRowsWhenMissingValuesInRelation(
           tableSet, relation, tableSetSpecification.getProvider());

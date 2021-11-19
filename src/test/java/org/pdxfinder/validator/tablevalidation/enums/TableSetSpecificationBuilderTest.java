@@ -10,7 +10,7 @@ public class TableSetSpecificationBuilderTest {
   @Test
   public void Given_yamlConfigFiles_When_generateIsCalled_DoNotReturnNull() {
     var tableSetSpecificationBuilder = new TableSetSpecificationBuilder("metadata");
-    TableSetSpecification specification = tableSetSpecificationBuilder.generate();
+    TableSetSpecification specification = tableSetSpecificationBuilder.build();
 
     Assert.assertNotNull(specification);
   }
