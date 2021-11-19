@@ -37,7 +37,7 @@ public class MockXssfWorkbook {
     XSSFWorkbook workbook = new XSSFWorkbook();
     for (int i = 0; i < sheetCount; i++) {
       XSSFSheet sheet = workbook.createSheet(sheetNames.get(i));
-      sheet.createRow(0).createCell(0).setCellValue("test");
+      sheet.createRow(0).createCell(0).setCellValue("test_data");
     }
     return workbook;
   }
