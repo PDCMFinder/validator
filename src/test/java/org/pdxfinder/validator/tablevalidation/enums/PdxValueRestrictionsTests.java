@@ -86,8 +86,8 @@ public class PdxValueRestrictionsTests {
   @Test
   public void ListToRegex_givenList_regexHasDiscreteCategories() {
     List<String> categories =
-        Arrays.asList("a", "test", "for", "regex", "categories", "value with space");
-    String expectedfail = "test";
+        Arrays.asList("a", "test_data", "for", "regex", "categories", "value with space");
+    String expectedfail = "test_data";
     String expectedfail2 = "value with space";
     String expectedpass = "atestfor";
     String expectedpass2 = " regex ";
