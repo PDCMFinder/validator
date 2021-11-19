@@ -1,14 +1,13 @@
-package org.pdxfinder.validator;
+package org.pdxfinder.validator.localvalidation;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import org.pdxfinder.validator.CommandCli;
 import org.pdxfinder.validator.tableutilities.FileReader;
 import org.pdxfinder.validator.tableutilities.TableSetCleaner;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -17,17 +16,14 @@ import tech.tablesaw.api.Table;
 @Component
 public class LocalValidationRunner implements CommandLineRunner {
 
-  private static final Logger log = LoggerFactory.getLogger(LocalValidationRunner.class);
   private ValidationRunnerService validationRunnerService;
-  private VariationValidationRunner variationValidationRunner;
-  private Map<String, Table> metadataTables;
-  private Map<String, Table> allMolecularMetadataTables;
+  private VariationValidationService variationValidation;
 
   @Autowired
   LocalValidationRunner(ValidationRunnerService validationRunnerService,
-      VariationValidationRunner variationValidationRunner) {
+      VariationValidationService variationValidation) {
     this.validationRunnerService = validationRunnerService;
-    this.variationValidationRunner = variationValidationRunner;
+    this.variationValidation = variationValidation;
   }
 
   @Override
@@ -44,23 +40,30 @@ public class LocalValidationRunner implements CommandLineRunner {
     String molecularMetadataName = "molecular_metadata";
     for (String provider : directories) {
       Path providerPath = Path.of(provider);
-      var metadataSpecification = getTablSetSpecificiation(metadataWorkbookName);
-      metadataTables = readTablesAndCleanTables(providerPath, metadataWorkbookName);
-      validationRunnerService.validateWorkbook(providerPath, metadataTables, metadataSpecification,
+      String providerName = providerPath.getFileName().toString();
+      var metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
+      var allMetadataTables = readTablesAndCleanTables(providerPath, metadataWorkbookName);
+      validationRunnerService.validateWorkbook(providerPath, allMetadataTables,
+          metadataSpecification,
           metadataWorkbookName);
-      if (molecularMetadataExists(providerPath)) {
-        var molecularMetadataSpecification = getTablSetSpecificiation(molecularMetadataName);
-        var cleanedMolecularMetadataTables = readTablesAndCleanTables(providerPath,
-            molecularMetadataName);
-        validationRunnerService.validateWorkbook(providerPath, cleanedMolecularMetadataTables,
+      if (molecularMetadataExists(providerPath) && molecularMetadataIsInTableset(
+          allMetadataTables)) {
+        var molecularMetadataSpecification = getTablSetSpecificiation(molecularMetadataName,
+            providerName);
+        validationRunnerService.validateWorkbook(providerPath, allMetadataTables,
             molecularMetadataSpecification, molecularMetadataName);
-        variationValidationRunner.validateVariantData(providerPath);
+        variationValidation.validateVariantData(providerPath, allMetadataTables);
       }
     }
   }
 
-  private TableSetSpecification getTablSetSpecificiation(String workbookName) {
-    return validationRunnerService.getTablSetSpecificiation(workbookName);
+  private boolean molecularMetadataIsInTableset(Map<String, Table> allMetadataTables) {
+    return allMetadataTables.containsKey("sample") && allMetadataTables.containsKey("platform")
+        && allMetadataTables.containsKey("platform_web");
+  }
+
+  private TableSetSpecification getTablSetSpecificiation(String workbookName, String providerName) {
+    return validationRunnerService.getTablSetSpecificiation(workbookName, providerName);
   }
 
   private Map<String, Table> readTablesAndCleanTables(Path providerPath, String workbookName) {

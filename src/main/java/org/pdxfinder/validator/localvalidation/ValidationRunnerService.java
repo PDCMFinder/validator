@@ -1,4 +1,4 @@
-package org.pdxfinder.validator;
+package org.pdxfinder.validator.localvalidation;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
