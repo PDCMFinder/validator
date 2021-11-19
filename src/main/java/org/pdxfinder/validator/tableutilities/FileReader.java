@@ -93,9 +93,13 @@ public class FileReader {
     HashMap<String, Table> tables = new HashMap<>();
     try {
       var matchingFiles = findAllFilesIn(targetDirectory, filter);
-      matchingFiles.forEach(
-          path ->
-              tables.put(path.getFileName().toString(), readTsvOrReturnEmpty(path.toFile())));
+      for (Path matchingFile : matchingFiles) {
+        Table matchingFileTable = readTsvOrReturnEmpty(matchingFile.toFile());
+        String tablename = matchingFile.getFileName().toString();
+        if (!matchingFileTable.isEmpty()) {
+          tables.put(tablename, matchingFileTable);
+        }
+      }
     } catch (IndexOutOfBoundsException e) {
       log.error("Broken file detected", e);
     }
@@ -109,8 +113,10 @@ public class FileReader {
       if (file.exists() && file.isFile()) {
         dataTable = readTsv(file);
       }
-    } catch (IOException e) {
-      log.error("There was an error reading the tsv file", e);
+    } catch (IOException | NullPointerException e) {
+      var error = String.format("Error reading file %s Please check file content",
+          file.getAbsolutePath());
+      log.error(error);
     }
     return dataTable;
   }

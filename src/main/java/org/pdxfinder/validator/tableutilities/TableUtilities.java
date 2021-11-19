@@ -31,7 +31,7 @@ public class TableUtilities {
   public static Map<String, Table> mergeTableMaps(Map<String, Table> map1,
       Map<String, Table> map2) {
     var keyset1 = map1.keySet();
-    if (map2.keySet().stream().anyMatch(key -> keyset1.contains(key))) {
+    if (map2.keySet().stream().anyMatch(keyset1::contains)) {
       throw new IllegalStateException("Namespace error: two tables contain the same name");
     }
     map1.putAll(map2);

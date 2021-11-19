@@ -57,6 +57,7 @@ public class VariationValidationService {
       TableSetSpecification tableSetSpecification) {
     filepaths.stream()
         .map(path -> FileReader.readTsvOrReturnEmpty(path.toFile()))
+        .filter(Predicate.not(Table::isEmpty))
         .forEach(
             table -> validateVariantTable(providerPath, tableName, table, tableSetSpecification));
   }
