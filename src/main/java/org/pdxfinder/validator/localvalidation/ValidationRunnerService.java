@@ -1,5 +1,6 @@
 package org.pdxfinder.validator.localvalidation;
 
+import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -30,7 +31,8 @@ public class ValidationRunnerService {
   @Autowired
   ValidationRunnerService(ValidationService validationService) {
     this.validationService = validationService;
-    this.pdxWorkbookCollection = PdxWorkbookCollection.fromYaml(Yml.WORKBOOK_COLLECTION.location());
+    InputStream inputStream = getClass().getResourceAsStream(Yml.WORKBOOK_COLLECTION.location());
+    this.pdxWorkbookCollection = PdxWorkbookCollection.fromYaml(inputStream);
   }
 
   public PathMatcher createPathMatchingGlobe(String workbookName) {
