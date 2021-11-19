@@ -10,22 +10,20 @@ import org.pdxfinder.validator.tablevalidation.enums.RelationType;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Relation {
 
+
   private RelationType validity;
   private String leftTableName;
   private String leftColumnName;
-  private String rightWorkbook;
   private String rightTableName;
   private String rightColumnName;
 
   @JsonCreator
   public Relation(
       @JsonProperty("type") String relationType,
-      @JsonProperty("right_workbook") String rightWorkbook,
       @JsonProperty("right_table") String rightTableName,
       @JsonProperty("right_column") String rightColumnName
   ) {
     this.validity = RelationType.parseRelationType(relationType);
-    this.rightWorkbook = rightWorkbook;
     this.rightTableName = rightTableName;
     this.rightColumnName = rightColumnName;
   }
@@ -77,6 +75,10 @@ public class Relation {
 
   public RelationType getValidity() {
     return validity;
+  }
+
+  public void setValidity(RelationType validity) {
+    this.validity = validity;
   }
 
   public void setLeftTable(String leftTableName) {
