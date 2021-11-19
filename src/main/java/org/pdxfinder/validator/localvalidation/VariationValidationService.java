@@ -1,4 +1,4 @@
-package org.pdxfinder.validator;
+package org.pdxfinder.validator.localvalidation;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -6,26 +6,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import org.pdxfinder.validator.tableutilities.FileReader;
+import org.pdxfinder.validator.tableutilities.TableUtilities;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import tech.tablesaw.api.Table;
 
-@Component
-public class VariationValidationRunner {
+@Service
+public class VariationValidationService {
 
   private ValidationRunnerService validationRunnerService;
+  private Map<String, Table> molecularMetadata;
 
   @Autowired
-  public void VariationValidationRunner(ValidationRunnerService validationRunnerService) {
+  public void variationValidationRunner(ValidationRunnerService validationRunnerService) {
     this.validationRunnerService = validationRunnerService;
   }
 
-  public void validateVariantData(Path providerPath) {
+  public void validateVariantData(Path providerPath, Map<String, Table> molecularMetadata) {
     String variantWorkbooksRe = "(mut|expression|cna|cyto|drug|treatment)";
     Map<String, List<Path>> workbookFiles = new HashMap<>();
+    this.molecularMetadata = molecularMetadata;
     var variantWorkbooks = validationRunnerService.getWorkbooks(variantWorkbooksRe);
     for (Workbook workbook : variantWorkbooks) {
       String workbookTitle = workbook.getWorkbookTitle();
@@ -59,7 +63,11 @@ public class VariationValidationRunner {
 
   private void validateVariantTable(Path providerpath, String tableName, Table table,
       TableSetSpecification tableSetSpecification) {
-    validationRunnerService.validateWorkbook(providerpath, Map.of(tableName, table),
+    var variantTable = new HashMap<String, Table>();
+    variantTable.put(tableName, table);
+    var variantTableWithMolecularMetadata = TableUtilities.mergeTableMaps(variantTable,
+        molecularMetadata);
+    validationRunnerService.validateWorkbook(providerpath, variantTableWithMolecularMetadata,
         tableSetSpecification, table.name());
   }
 
