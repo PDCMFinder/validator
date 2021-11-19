@@ -57,14 +57,16 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     RelationType validity = relation.getValidity();
     String provider = tableSetSpecification.getProvider();
     if (validity.equals(RelationType.TABLE_KEY)) {
-      reportOrphanRowsWhenMissingValuesInRelation(
-          tableSet, relation, tableSetSpecification.getProvider());
+      reportOrphanRowsWhenMissingValuesInRelation(tableSet, relation, provider);
+    } else if (validity.equals(RelationType.TABLE_KEY_MANY_TO_ONE)) {
+      reportOneSidedOrphanedRosWhenMissingValuesInRelation(tableSet, relation, provider);
     } else if (validity.equals(RelationType.ONE_TO_ONE)) {
-      reportBrokenOneToOneRelation(tableSet, relation, tableSetSpecification.getProvider());
+      reportBrokenOneToOneRelation(tableSet, relation, provider);
     } else if (validity.equals(RelationType.ONE_TO_MANY)) {
-      reportBrokenOneToManyRelation(tableSet, relation, tableSetSpecification.getProvider());
+      reportBrokenOneToManySheetRelation(tableSet, relation, provider);
     }
   }
+
 
   private void reportBrokenOneToOneRelation(
       Map<String, Table> tableSet, Relation relation, String provider) {
@@ -124,7 +126,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     return box.stream().mapToInt(x -> x).toArray();
   }
 
-  private void reportBrokenOneToManyRelation(
+  private void reportBrokenOneToManySheetRelation(
       Map<String, Table> tableSet, Relation relation, String provider) {
     ColumnReference leftColumn = relation.leftColumnReference();
     ColumnReference rightColumn = relation.getOtherColumn(leftColumn);
@@ -202,6 +204,11 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
       Map<String, Table> tableSet, Relation relation, String provider) {
     reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference(), provider);
     reportOrphanRowsFor(tableSet, relation, relation.rightColumnReference(), provider);
+  }
+
+  private void reportOneSidedOrphanedRosWhenMissingValuesInRelation(Map<String, Table> tableSet,
+      Relation relation, String provider) {
+    reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference(), provider);
   }
 
   private void reportOrphanRowsFor(

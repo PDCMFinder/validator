@@ -25,14 +25,8 @@ public class ValidationService {
   private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
   private List<ValidationError> validationErrors;
 
-  public List<ValidationError> validate(Map<String, Table> tableSet,
-      TableSetSpecification tableSetSpecification) {
-    return validateWithDependency(tableSet, tableSetSpecification, Map.of("empty", Table.create()));
-  }
-
-  public List<ValidationError> validateWithDependency(
-      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification,
-      Map<String, Table> relationDependencies) {
+  public List<ValidationError> validate(
+      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     validationErrors = new ArrayList<>();
     checkRequiredTablesPresent(tableSet, tableSetSpecification);
     if (thereAreNoErrors(validationErrors, tableSetSpecification)) {
@@ -56,7 +50,7 @@ public class ValidationService {
       List<ValidationError> validationErrors, TableSetSpecification tableSetSpecification) {
     if (CollectionUtils.isNotEmpty(validationErrors)) {
       log.error(
-          "Not all required tables and columns where present for {}. Aborting further validation",
+          "Not all required tables and columns where present for {}. Aborting further validation. Please Fix an rerun validation",
           tableSetSpecification.getProvider());
 
     }
@@ -110,7 +104,7 @@ public class ValidationService {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     ErrorReport errorReport = new ErrorReport();
     if (!reportName.isBlank()) {
-      errorReport.setID(reportName);
+      errorReport.setId(reportName);
     }
     errorReport.setValidationErrors(validationErrors);
     return gson.toJson(errorReport);

@@ -28,7 +28,7 @@ public class RelationTestUtilities {
 
   public static Relation relationOf(RelationType validity, String leftTableName,
       String leftColumnName, String rightTableName, String rightColumnName) {
-    return new Relation(validity.name(), "", rightTableName, rightColumnName).addLeftTableAndColumn(
+    return new Relation(validity.name(), rightTableName, rightColumnName).addLeftTableAndColumn(
         leftTableName, leftColumnName);
   }
 
