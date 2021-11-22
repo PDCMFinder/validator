@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creators;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,6 +16,7 @@ import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.enums.RelationType;
+import org.pdxfinder.validator.tablevalidation.error.BrokenRelationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -36,8 +37,8 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   }
 
   public BrokenRelationError create(
-      String tableName, Relation relation, Table invalidRows, String description) {
-    return new BrokenRelationError(tableName, relation, invalidRows, description);
+      String tableName, Relation relation, String description) {
+    return new BrokenRelationError(tableName, relation, description);
   }
 
   private void reportRelationErrors(
@@ -92,7 +93,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
           create(
               leftRefColumn.table(),
               relation,
-              workingTable.rows(indexOfDuplicates),
               description)
               .getValidationError());
     }
@@ -161,7 +161,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
           create(
               leftColumn.table(),
               relation,
-              workingTable.rows(invalidRows),
               description)
               .getValidationError());
     }
@@ -177,7 +176,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
           create(
               relation.leftTable(),
               relation,
-              tableSet.get(relation.leftTable()).emptyCopy(),
               String.format(
                   "because [%s] is missing column [%s]",
                   relation.leftTable(), relation.leftColumn()))
@@ -188,7 +186,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
           create(
               relation.rightTable(),
               relation,
-              tableSet.get(relation.rightTable()).emptyCopy(),
               String.format(
                   "because [%s] is missing column [%s]",
                   relation.rightTable(), relation.rightColumn()))
@@ -219,7 +216,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
       String description =
           String.format("%s orphan row(s) found in [%s]", orphanTable.rowCount(), child.table());
       errors.add(
-          create(parent.table(), relation, orphanTable, description)
+          create(parent.table(), relation, description)
               .getValidationError());
     }
   }

@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creators;
 
 import java.util.ArrayList;
 import java.util.List;

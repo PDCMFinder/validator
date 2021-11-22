@@ -8,7 +8,8 @@ public class DuplicateValueError extends ValidationErrorBuilder {
   private String errorType = "value duplication";
   private String description;
 
-  DuplicateValueError(ColumnReference uniqueColumn, Set<String> duplicateValues, String provider) {
+  public DuplicateValueError(ColumnReference uniqueColumn, Set<String> duplicateValues,
+      String provider) {
     this.description = buildDescription(duplicateValues.toString());
     buildMessage(uniqueColumn.table(), provider, description);
     super.buildValidationErrors(

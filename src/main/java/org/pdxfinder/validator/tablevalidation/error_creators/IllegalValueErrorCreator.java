@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creators;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -11,6 +11,7 @@ import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error.IllegalValueError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

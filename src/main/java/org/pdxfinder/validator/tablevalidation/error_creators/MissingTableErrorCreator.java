@@ -1,9 +1,10 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creators;
 
 import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error.MissingTableError;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 
@@ -16,7 +17,6 @@ public class MissingTableErrorCreator extends ErrorCreator {
       errors.add(
           new MissingTableError(table).getValidationError());
     }
-
     return errors;
   }
 

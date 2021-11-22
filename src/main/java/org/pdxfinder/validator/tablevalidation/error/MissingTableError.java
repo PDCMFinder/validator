@@ -5,7 +5,7 @@ public class MissingTableError extends ValidationErrorBuilder {
   private String errorType = "missing table";
   private String description;
 
-  MissingTableError(String tableName) {
+  public MissingTableError(String tableName) {
     this.description = buildDescription(tableName);
     super.buildValidationErrors(errorType, tableName, description, "whole table error");
   }
