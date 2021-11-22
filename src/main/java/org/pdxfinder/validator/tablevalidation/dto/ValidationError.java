@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.pdxfinder.validator.tablevalidation.error.ValidationErrorBuilder;
 
 public class ValidationError {
 
@@ -22,6 +23,7 @@ public class ValidationError {
   public TableReport getTableReport() {
     return tableReport;
   }
+
 
   public void setTableReport(TableReport tableReport) {
     this.tableReport = tableReport;
@@ -65,5 +67,14 @@ public class ValidationError {
         .append(tableReport.getColumnReport().getMessage())
         .append(tableReport.getColumnReport().getMessage())
         .toHashCode();
+  }
+
+  public static <T extends ValidationErrorBuilder> String getMessageFromValidationError(
+      T validationError) {
+    return validationError
+        .getValidationError()
+        .getTableReport()
+        .getColumnReport()
+        .getMessage();
   }
 }

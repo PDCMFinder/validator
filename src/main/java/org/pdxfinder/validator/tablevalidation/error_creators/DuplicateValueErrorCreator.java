@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creators;
 
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error.DuplicateValueError;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;

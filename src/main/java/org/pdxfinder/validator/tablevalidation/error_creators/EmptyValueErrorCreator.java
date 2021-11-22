@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creators;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error.EmptyValueError;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 
@@ -22,7 +23,7 @@ public class EmptyValueErrorCreator extends ErrorCreator {
         int[] missingRowNumbers = table.column(tested.column()).isMissing().toArray();
         String missRowNumberPrint = Arrays.toString(shiftMissingRowNumbers(missingRowNumbers));
         errors.add(
-            create(tested, missing, tableSetSpecification.getProvider(), missRowNumberPrint)
+            create(tested, missRowNumberPrint)
                 .getValidationError());
       }
     }
@@ -31,10 +32,8 @@ public class EmptyValueErrorCreator extends ErrorCreator {
 
   public EmptyValueError create(
       ColumnReference columnReference,
-      Table invalidRows,
-      String provider,
       String missingRowNumbers) {
-    return new EmptyValueError(columnReference, invalidRows, provider, missingRowNumbers);
+    return new EmptyValueError(columnReference, missingRowNumbers);
   }
 
   public int[] shiftMissingRowNumbers(int[] missingRowNumbers) {

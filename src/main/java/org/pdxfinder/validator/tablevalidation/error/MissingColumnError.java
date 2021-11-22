@@ -7,9 +7,8 @@ public class MissingColumnError extends ValidationErrorBuilder {
   private String errorType = "missing column";
   private String description;
 
-  MissingColumnError(ColumnReference columnReference, String provider) {
+  public MissingColumnError(ColumnReference columnReference) {
     this.description = buildDescription(columnReference.column());
-    buildMessage(columnReference.table(), provider, description);
     super.buildValidationErrors(
         errorType, columnReference.table(), description, columnReference.column());
   }
@@ -17,9 +16,4 @@ public class MissingColumnError extends ValidationErrorBuilder {
   static String buildDescription(String columnName) {
     return String.format("Missing column: [%s]", columnName);
   }
-
-  static String buildMessage(String tableName, String provider, String description) {
-    return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
-  }
-
 }
