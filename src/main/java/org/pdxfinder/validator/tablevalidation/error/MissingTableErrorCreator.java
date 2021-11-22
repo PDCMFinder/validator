@@ -14,13 +14,13 @@ public class MissingTableErrorCreator extends ErrorCreator {
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     for (String table : tableSetSpecification.getMissingTablesFrom(tableSet)) {
       errors.add(
-          new MissingTableError(table, tableSetSpecification.getProvider()).getValidationError());
+          new MissingTableError(table).getValidationError());
     }
 
     return errors;
   }
 
-  public MissingTableError create(String tableName, String provider) {
-    return new MissingTableError(tableName, provider);
+  public MissingTableError create(String tableName) {
+    return new MissingTableError(tableName);
   }
 }

@@ -8,10 +8,6 @@ public abstract class ValidationErrorBuilder {
 
   private ValidationError validationError;
 
-  public abstract String message();
-
-  abstract String verboseMessage();
-
   void buildValidationErrors(
       String type, String tableName, String description, String columnDescription) {
     var error = new ValidationError();
