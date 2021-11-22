@@ -6,23 +6,12 @@ public class MissingColumnError extends ValidationErrorBuilder {
 
   private String errorType = "missing column";
   private String description;
-  private String message;
 
   MissingColumnError(ColumnReference columnReference, String provider) {
     this.description = buildDescription(columnReference.column());
-    this.message = buildMessage(columnReference.table(), provider, description);
+    buildMessage(columnReference.table(), provider, description);
     super.buildValidationErrors(
         errorType, columnReference.table(), description, columnReference.column());
-  }
-
-  @Override
-  public String message() {
-    return message;
-  }
-
-  @Override
-  String verboseMessage() {
-    return message;
   }
 
   static String buildDescription(String columnName) {
@@ -33,8 +22,4 @@ public class MissingColumnError extends ValidationErrorBuilder {
     return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
   }
 
-  @Override
-  public String toString() {
-    return message();
-  }
 }

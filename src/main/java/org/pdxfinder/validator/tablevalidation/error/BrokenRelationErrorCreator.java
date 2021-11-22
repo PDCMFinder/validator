@@ -36,13 +36,13 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   }
 
   public BrokenRelationError create(
-      String tableName, Relation relation, Table invalidRows, String description, String provider) {
-    return new BrokenRelationError(tableName, relation, invalidRows, description, provider);
+      String tableName, Relation relation, Table invalidRows, String description) {
+    return new BrokenRelationError(tableName, relation, invalidRows, description);
   }
 
   private void reportRelationErrors(
       Map<String, Table> tableSet, Relation relation, TableSetSpecification tableSetSpecification) {
-    reportMissingColumnsInRelation(tableSet, relation, tableSetSpecification.getProvider());
+    reportMissingColumnsInRelation(tableSet, relation);
     if (bothColumnsPresent(tableSet, relation)) {
       runAppropriateValidation(tableSet, relation, tableSetSpecification);
     } else {
@@ -61,7 +61,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     } else if (validity.equals(RelationType.TABLE_KEY_MANY_TO_ONE)) {
       reportOneSidedOrphanedRosWhenMissingValuesInRelation(tableSet, relation, provider);
     } else if (validity.equals(RelationType.ONE_TO_ONE)) {
-      reportBrokenOneToOneRelation(tableSet, relation, provider);
+      reportBrokenOneToOneRelation(tableSet, relation);
     } else if (validity.equals(RelationType.ONE_TO_MANY)) {
       reportBrokenOneToManySheetRelation(tableSet, relation, provider);
     }
@@ -69,7 +69,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
 
 
   private void reportBrokenOneToOneRelation(
-      Map<String, Table> tableSet, Relation relation, String provider) {
+      Map<String, Table> tableSet, Relation relation) {
     ColumnReference leftRefColumn = relation.leftColumnReference();
     ColumnReference rightRefColumn = relation.getOtherColumn(leftRefColumn);
     StringColumn leftRestrictedColumn =
@@ -93,8 +93,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               leftRefColumn.table(),
               relation,
               workingTable.rows(indexOfDuplicates),
-              description,
-              provider)
+              description)
               .getValidationError());
     }
   }
@@ -163,14 +162,13 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               leftColumn.table(),
               relation,
               workingTable.rows(invalidRows),
-              description,
-              provider)
+              description)
               .getValidationError());
     }
   }
 
   private void reportMissingColumnsInRelation(
-      Map<String, Table> tableSet, Relation relation, String provider) {
+      Map<String, Table> tableSet, Relation relation) {
     if (tableSet.get(relation.leftTable()) == null || tableSet.get(relation.rightTable()) == null) {
       return;
     }
@@ -182,8 +180,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               tableSet.get(relation.leftTable()).emptyCopy(),
               String.format(
                   "because [%s] is missing column [%s]",
-                  relation.leftTable(), relation.leftColumn()),
-              provider)
+                  relation.leftTable(), relation.leftColumn()))
               .getValidationError());
     }
     if (missingRightColumn(tableSet, relation)) {
@@ -194,8 +191,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               tableSet.get(relation.rightTable()).emptyCopy(),
               String.format(
                   "because [%s] is missing column [%s]",
-                  relation.rightTable(), relation.rightColumn()),
-              provider)
+                  relation.rightTable(), relation.rightColumn()))
               .getValidationError());
     }
   }
@@ -223,7 +219,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
       String description =
           String.format("%s orphan row(s) found in [%s]", orphanTable.rowCount(), child.table());
       errors.add(
-          create(parent.table(), relation, orphanTable, description, provider)
+          create(parent.table(), relation, orphanTable, description)
               .getValidationError());
     }
   }

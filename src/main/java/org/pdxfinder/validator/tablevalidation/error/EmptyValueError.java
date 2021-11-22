@@ -5,9 +5,7 @@ import tech.tablesaw.api.Table;
 
 public class EmptyValueError extends ValidationErrorBuilder {
 
-  private Table invalidRows;
   private String errorType = "Empty value error";
-  private String message;
   private String description;
 
   EmptyValueError(
@@ -18,8 +16,7 @@ public class EmptyValueError extends ValidationErrorBuilder {
     description = buildDescription(missingRowNumbers);
     super.buildValidationErrors(
         errorType, nonEmptyColumn.table(), description, nonEmptyColumn.column());
-    this.message = buildMessage(nonEmptyColumn.table(), provider, description);
-    this.invalidRows = invalidRows;
+    buildMessage(nonEmptyColumn.table(), provider, description);
   }
 
   private String buildDescription(String missingColumns) {
@@ -28,24 +25,5 @@ public class EmptyValueError extends ValidationErrorBuilder {
 
   private String buildMessage(String table, String provider, String description) {
     return String.format("Error in [%s] for provider [%s]: %s", table, provider, description);
-  }
-
-  @Override
-  public String verboseMessage() {
-    return String.format("%s:%n%s", message(), getInvalidRows());
-  }
-
-  @Override
-  public String message() {
-    return message;
-  }
-
-  private Table getInvalidRows() {
-    return invalidRows;
-  }
-
-  @Override
-  public String toString() {
-    return verboseMessage();
   }
 }

@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
@@ -38,9 +37,8 @@ public class IllegalValueErrorCreator extends ErrorCreator {
       String tableName,
       String errorDescription,
       String columnName,
-      Table invalidRows,
       String provider) {
-    return new IllegalValueError(tableName, errorDescription, columnName, invalidRows, provider);
+    return new IllegalValueError(tableName, errorDescription, columnName, provider);
   }
 
   private void reportIllegalValue(
@@ -72,14 +70,8 @@ public class IllegalValueErrorCreator extends ErrorCreator {
             .filter(testValues)
             .filter(testEmptiness)
             .collect(Collectors.toCollection(LinkedList::new));
-    int[] indexOfInvalids =
-        invalidValues.stream()
-            .map(column::indexOf)
-            .flatMapToInt(x -> IntStream.of(x.intValue()))
-            .toArray();
 
     if (!invalidValues.isEmpty()) {
-
       HashSet<String> uniqueInvalidValues = new HashSet<>(invalidValues);
       String errorDescriptions =
           IllegalValueError.buildDescription(
@@ -91,7 +83,6 @@ public class IllegalValueErrorCreator extends ErrorCreator {
               columnReference.table(),
               errorDescriptions,
               columnReference.column(),
-              workingTable.rows(indexOfInvalids),
               provider)
               .getValidationError());
     }

@@ -6,7 +6,6 @@ import tech.tablesaw.api.Table;
 public class BrokenRelationError extends ValidationErrorBuilder {
 
   private String errorType = "Broken Relation";
-  private String message;
   private String description;
   private Table invalidRows;
 
@@ -14,10 +13,8 @@ public class BrokenRelationError extends ValidationErrorBuilder {
       String tableName,
       Relation relation,
       Table invalidRows,
-      String additionalDescription,
-      String provider) {
+      String additionalDescription) {
     this.description = buildDescription(relation, additionalDescription);
-    this.message = buildMessage(tableName, provider, description);
     this.invalidRows = invalidRows;
     super.buildValidationErrors(tableName, errorType, description, relation.toString());
   }
@@ -28,23 +25,8 @@ public class BrokenRelationError extends ValidationErrorBuilder {
         relation.getValidity(), relation.toString(), additionalDescription);
   }
 
-  private static String buildMessage(String tableName, String provider, String description) {
-    return String.format("Error in [%s] for provider [%s]: %s", tableName, provider, description);
-  }
-
   private Table getInvalidRows() {
     return this.invalidRows;
   }
 
-  public String message() {
-    return message;
-  }
-
-  public String toString() {
-    return verboseMessage();
-  }
-
-  public String verboseMessage() {
-    return String.format("%s:%n%s", message(), getInvalidRows());
-  }
 }

@@ -7,11 +7,10 @@ public class DuplicateValueError extends ValidationErrorBuilder {
 
   private String errorType = "value duplication";
   private String description;
-  private String message;
 
   DuplicateValueError(ColumnReference uniqueColumn, Set<String> duplicateValues, String provider) {
     this.description = buildDescription(duplicateValues.toString());
-    this.message = buildMessage(uniqueColumn.table(), provider, description);
+    buildMessage(uniqueColumn.table(), provider, description);
     super.buildValidationErrors(
         errorType, uniqueColumn.table(), description, uniqueColumn.column());
   }
@@ -22,20 +21,5 @@ public class DuplicateValueError extends ValidationErrorBuilder {
 
   private String buildMessage(String table, String provider, String description) {
     return String.format("Error in [%s] for provider [%s]: %s", table, provider, description);
-  }
-
-  @Override
-  public String message() {
-    return message;
-  }
-
-  @Override
-  String verboseMessage() {
-    return message;
-  }
-
-  @Override
-  public String toString() {
-    return verboseMessage();
   }
 }

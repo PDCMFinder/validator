@@ -18,7 +18,6 @@ public class MissingColumnErrorCreator extends ErrorCreator {
         errors.add(create(required, tableSetSpecification.getProvider()).getValidationError());
       }
     }
-
     return errors;
   }
 
