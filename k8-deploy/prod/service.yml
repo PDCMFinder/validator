@@ -4,7 +4,7 @@ metadata:
   name: pdx-validator
   labels:
     app: pdx-validator
-  namespace: pdx-validator-dev
+  namespace: pdx-validator
 spec:
   ports:
     - port: 80
