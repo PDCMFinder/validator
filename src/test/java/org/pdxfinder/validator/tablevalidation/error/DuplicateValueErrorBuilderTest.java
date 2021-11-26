@@ -7,20 +7,20 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error_creators.DuplicateValueErrorCreator;
 
-public class DuplicateValueErrorReportTest {
+public class DuplicateValueErrorBuilderTest {
+
   private DuplicateValueErrorCreator duplicateValueErrorCreator = new DuplicateValueErrorCreator();
-  private String PROVIDER = "provider";
 
   @Test
   public void message() {
-    String expected = "Error in [table] for provider [provider]: Duplicates found : [a]";
+    String expected = "Duplicates values found: [a]";
     ColumnReference uniqueColumn = ColumnReference.of("table", "column");
     Set<String> duplicateValues = new HashSet<>(Arrays.asList("a"));
-
-    DuplicateValueError error =
-        duplicateValueErrorCreator.create(uniqueColumn, duplicateValues, PROVIDER);
-
-    assertEquals(expected, error.verboseMessage());
+    ValidationError error =
+        duplicateValueErrorCreator.create(uniqueColumn, duplicateValues);
+    assertEquals(expected, error.getColumnMessage());
   }
 }

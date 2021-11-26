@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creator;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -19,10 +19,11 @@ import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error_creators.DuplicateValueErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class DuplicateValueErrorReportCreatorTest {
+public class DuplicateValueErrorCreatorTest {
 
   private Map<String, Table> completeTableSet = new HashMap<>();
   private final String TABLE_1 = "table_1.tsv";
@@ -87,9 +88,7 @@ public class DuplicateValueErrorReportCreatorTest {
     List<ValidationError> expected =
         Arrays.asList(
             duplicateValueErrorCreator
-                .create(uniqueCol, duplicateValue, PROVIDER)
-                .getValidationError());
-
+                .create(uniqueCol, duplicateValue));
     assertEquals(
         expected.toString(),
         duplicateValueErrorCreator

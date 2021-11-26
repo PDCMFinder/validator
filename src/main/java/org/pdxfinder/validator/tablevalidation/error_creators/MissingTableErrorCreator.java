@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error.MissingTableError;
+import org.pdxfinder.validator.tablevalidation.error.MissingTableErrorBuilder;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 
@@ -15,12 +15,12 @@ public class MissingTableErrorCreator extends ErrorCreator {
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     for (String table : tableSetSpecification.getMissingTablesFrom(tableSet)) {
       errors.add(
-          new MissingTableError(table).getValidationError());
+          new MissingTableErrorBuilder(table).build());
     }
     return errors;
   }
 
-  public MissingTableError create(String tableName) {
-    return new MissingTableError(tableName);
+  public MissingTableErrorBuilder create(String tableName) {
+    return new MissingTableErrorBuilder(tableName);
   }
 }

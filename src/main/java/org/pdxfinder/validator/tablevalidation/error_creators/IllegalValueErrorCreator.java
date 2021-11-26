@@ -11,7 +11,7 @@ import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error.IllegalValueError;
+import org.pdxfinder.validator.tablevalidation.error.IllegalValueErrorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -25,34 +25,32 @@ public class IllegalValueErrorCreator extends ErrorCreator {
 
   public List<ValidationError> generateErrors(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
-    String provider = tableSetSpecification.getProvider();
     tableSetSpecification
         .getCharSetRestrictions()
         .forEach(
             (columns, valueRestriction) ->
-                reportIllegalValue(columns, valueRestriction, tableSet, provider));
+                reportIllegalValue(columns, valueRestriction, tableSet));
     return errors;
   }
 
-  public IllegalValueError create(
+  public ValidationError create(
       String tableName,
-      String errorDescription,
-      String columnName,
-      String provider) {
-    return new IllegalValueError(tableName, errorDescription, columnName, provider);
+      int count, String errorDescription,
+      String invalidValues, String columnName) {
+    return new IllegalValueErrorBuilder(tableName, count, errorDescription, invalidValues,
+        columnName).build();
   }
 
   private void reportIllegalValue(
       Set<ColumnReference> columns,
       ValueRestrictions valueRestrictions,
-      Map<String, Table> tableSet,
-      String provider) {
+      Map<String, Table> tableSet) {
     for (ColumnReference columnReference : columns) {
       if (!tableMissingColumn(
           tableSet.get(columnReference.table()),
           columnReference.column(),
           columnReference.table())) {
-        validateColumn(columnReference, valueRestrictions, tableSet, provider);
+        validateColumn(columnReference, valueRestrictions, tableSet);
       }
     }
   }
@@ -60,8 +58,7 @@ public class IllegalValueErrorCreator extends ErrorCreator {
   private void validateColumn(
       ColumnReference columnReference,
       ValueRestrictions valueRestrictions,
-      Map<String, Table> tableSet,
-      String provider) {
+      Map<String, Table> tableSet) {
     Table workingTable = tableSet.get(columnReference.table());
     StringColumn column = workingTable.column(columnReference.column()).asStringColumn();
     Predicate<String> testValues = valueRestrictions.getPredicate();
@@ -71,21 +68,16 @@ public class IllegalValueErrorCreator extends ErrorCreator {
             .filter(testValues)
             .filter(testEmptiness)
             .collect(Collectors.toCollection(LinkedList::new));
-
     if (!invalidValues.isEmpty()) {
       HashSet<String> uniqueInvalidValues = new HashSet<>(invalidValues);
-      String errorDescriptions =
-          IllegalValueError.buildDescription(
-              invalidValues.size(),
-              valueRestrictions.getErrorDescription(),
-              uniqueInvalidValues.toString());
       errors.add(
           create(
               columnReference.table(),
-              errorDescriptions,
-              columnReference.column(),
-              provider)
-              .getValidationError());
+              invalidValues.size(),
+              valueRestrictions.getErrorDescription(),
+              uniqueInvalidValues.toString(),
+              columnReference.column())
+      );
     }
   }
 

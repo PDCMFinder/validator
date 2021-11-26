@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,25 +15,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tableutilities.TableUtilities;
-import org.pdxfinder.validator.tablevalidation.RelationTestUtilities;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error_creators.MissingValueErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class EmptyValueErrorReportCreatorTest {
+public class EmptyValueErrorCreatorTest {
 
   private Map<String, Table> completeTableSet = new HashMap<>();
   private final String TABLE_1 = "table_1.tsv";
-  private final String LEFT_TABLE = "left_table.tsv";
-  private final String RIGHT_TABLE = "right_table.tsv";
-  private final Relation RELATION =
-      RelationTestUtilities.betweenTableKeys(
-          ColumnReference.of(LEFT_TABLE, "id"), ColumnReference.of(RIGHT_TABLE, "table_1_id"));
   private final String PROVIDER = "PROVIDER-BC";
-  private EmptyValueErrorCreator emptyValueErrorCreator = new EmptyValueErrorCreator();
+  private MissingValueErrorCreator emptyValueErrorCreator = new MissingValueErrorCreator();
 
   private Set<String> minimalRequiredTable = Stream.of(TABLE_1).collect(Collectors.toSet());
 
@@ -73,17 +67,20 @@ public class EmptyValueErrorReportCreatorTest {
             .get(TABLE_1)
             .addColumns(StringColumn.create("required_col", Collections.singletonList("")));
     ColumnReference requiredCol = ColumnReference.of(TABLE_1, "required_col");
-
+    String missingValues = "[6]";
     fileSetWithInvalidTable.put(TABLE_1, tableWithMissingValue);
     List<ValidationError> expected =
         Collections.singletonList(
             emptyValueErrorCreator
-                .create(requiredCol, tableWithMissingValue, requireColumn.getProvider(), "[6]")
-                .getValidationError());
+                .create(requiredCol, missingValues));
 
-    assertEquals(
-        expected.toString(),
-        emptyValueErrorCreator.generateErrors(fileSetWithInvalidTable, requireColumn).toString());
+    List<ValidationError> error = emptyValueErrorCreator.generateErrors(fileSetWithInvalidTable,
+        requireColumn);
+    var table_error = error.get(0);
+    ValidationError expected_error = expected.get(0);
+    assertEquals(expected_error.getColumnMessage(), table_error.getColumnMessage());
+    assertEquals(expected_error.getTableName(), table_error.getTableName());
+    assertEquals(expected_error.getType(), expected_error.getType());
   }
 
   @Test
@@ -98,19 +95,16 @@ public class EmptyValueErrorReportCreatorTest {
                 StringColumn.create("other_col", Arrays.asList("", "This is the invalid row")));
     fileSetWithInvalidTable.put(TABLE_1, tableWithMissingValue);
     ColumnReference requiredCol = ColumnReference.of(TABLE_1, "required_col");
-
+    String missingRowNumbers = "[7]";
     List<ValidationError> expected =
-        Collections.singletonList(
-            emptyValueErrorCreator
-                .create(
-                    requiredCol,
-                    tableWithMissingValue.where(
-                        tableWithMissingValue.stringColumn("required_col").isEqualTo("")),
-                    PROVIDER,
-                    "[7]")
-                .getValidationError());
-    assertEquals(
-        expected.toString(),
-        emptyValueErrorCreator.generateErrors(fileSetWithInvalidTable, requireColumn).toString());
+        Collections.singletonList(emptyValueErrorCreator.create(requiredCol, missingRowNumbers));
+
+    List<ValidationError> error = emptyValueErrorCreator.generateErrors(fileSetWithInvalidTable,
+        requireColumn);
+    ValidationError missing_error = error.get(0);
+    ValidationError expected_error = expected.get(0);
+    assertEquals(expected_error.getColumnMessage(), missing_error.getColumnMessage());
+    assertEquals(expected_error.getTableName(), missing_error.getTableName());
+    assertEquals(expected_error.getType(), expected_error.getType());
   }
 }

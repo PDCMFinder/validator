@@ -2,9 +2,9 @@ package org.pdxfinder.validator.tablevalidation.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.pdxfinder.validator.tablevalidation.error.ValidationErrorBuilder;
 
 public class ValidationError {
 
@@ -23,7 +23,6 @@ public class ValidationError {
   public TableReport getTableReport() {
     return tableReport;
   }
-
 
   public void setTableReport(TableReport tableReport) {
     this.tableReport = tableReport;
@@ -57,7 +56,7 @@ public class ValidationError {
 
     return new EqualsBuilder()
         .append("message", tableReport.getColumnReport().getMessage())
-        .append("columName", tableReport.getColumnReport().getMessage())
+        .append("columName", tableReport.getColumnReport().getColumnName())
         .isEquals();
   }
 
@@ -65,16 +64,16 @@ public class ValidationError {
   public int hashCode() {
     return new HashCodeBuilder(17, 37)
         .append(tableReport.getColumnReport().getMessage())
-        .append(tableReport.getColumnReport().getMessage())
+        .append(tableReport.getColumnReport().getColumnName())
         .toHashCode();
   }
 
-  public static <T extends ValidationErrorBuilder> String getMessageFromValidationError(
-      T validationError) {
-    return validationError
-        .getValidationError()
-        .getTableReport()
-        .getColumnReport()
-        .getMessage();
+  public String getColumnMessage() {
+    return Optional.ofNullable(tableReport)
+        .map(TableReport::getColumnReport)
+        .map(ColumnReport::getMessage)
+        .orElseThrow(
+            () -> new IllegalStateException("Column message is null. Error building DTA objects."));
   }
 }
+

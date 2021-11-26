@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creator;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -17,10 +17,11 @@ import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error_creators.MissingColumnErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class MissingColumnReportErrorReportCreatorTest {
+public class MissingColumnErrorCreatorTest {
 
   private Map<String, Table> completeTableSet = new HashMap<>();
   private final String TABLE_1 = "table_1.tsv";
@@ -61,7 +62,7 @@ public class MissingColumnReportErrorReportCreatorTest {
     ColumnReference missing = ColumnReference.of(TABLE_1, "missing_column");
     List<ValidationError> expected =
         Collections.singletonList(
-            missingColumnErrorCreator.create(missing, PROVIDER).getValidationError());
+            missingColumnErrorCreator.create(missing));
     TableSetSpecification tableSetSpecification =
         TableSetSpecification.create().setProvider(PROVIDER).addRequiredColumns(missing);
 

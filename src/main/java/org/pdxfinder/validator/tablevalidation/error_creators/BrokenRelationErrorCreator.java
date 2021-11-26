@@ -16,7 +16,7 @@ import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.enums.RelationType;
-import org.pdxfinder.validator.tablevalidation.error.BrokenRelationError;
+import org.pdxfinder.validator.tablevalidation.error.BrokenRelationErrorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -36,9 +36,9 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     return errors;
   }
 
-  public BrokenRelationError create(
+  public BrokenRelationErrorBuilder create(
       String tableName, Relation relation, String description) {
-    return new BrokenRelationError(tableName, relation, description);
+    return new BrokenRelationErrorBuilder(tableName, relation, description);
   }
 
   private void reportRelationErrors(
@@ -56,15 +56,14 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   private void runAppropriateValidation(
       Map<String, Table> tableSet, Relation relation, TableSetSpecification tableSetSpecification) {
     RelationType validity = relation.getValidity();
-    String provider = tableSetSpecification.getProvider();
     if (validity.equals(RelationType.TABLE_KEY)) {
-      reportOrphanRowsWhenMissingValuesInRelation(tableSet, relation, provider);
+      reportOrphanRowsWhenMissingValuesInRelation(tableSet, relation);
     } else if (validity.equals(RelationType.TABLE_KEY_MANY_TO_ONE)) {
-      reportOneSidedOrphanedRosWhenMissingValuesInRelation(tableSet, relation, provider);
+      reportOneSidedOrphanedRosWhenMissingValuesInRelation(tableSet, relation);
     } else if (validity.equals(RelationType.ONE_TO_ONE)) {
       reportBrokenOneToOneRelation(tableSet, relation);
     } else if (validity.equals(RelationType.ONE_TO_MANY)) {
-      reportBrokenOneToManySheetRelation(tableSet, relation, provider);
+      reportBrokenOneToManySheetRelation(tableSet, relation);
     }
   }
 
@@ -94,7 +93,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               leftRefColumn.table(),
               relation,
               description)
-              .getValidationError());
+              .build());
     }
   }
 
@@ -126,7 +125,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   }
 
   private void reportBrokenOneToManySheetRelation(
-      Map<String, Table> tableSet, Relation relation, String provider) {
+      Map<String, Table> tableSet, Relation relation) {
     ColumnReference leftColumn = relation.leftColumnReference();
     ColumnReference rightColumn = relation.getOtherColumn(leftColumn);
     StringColumn oneRestrictedColumn =
@@ -162,7 +161,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               leftColumn.table(),
               relation,
               description)
-              .getValidationError());
+              .build());
     }
   }
 
@@ -179,7 +178,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               String.format(
                   "because [%s] is missing column [%s]",
                   relation.leftTable(), relation.leftColumn()))
-              .getValidationError());
+              .build());
     }
     if (missingRightColumn(tableSet, relation)) {
       errors.add(
@@ -189,23 +188,23 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               String.format(
                   "because [%s] is missing column [%s]",
                   relation.rightTable(), relation.rightColumn()))
-              .getValidationError());
+              .build());
     }
   }
 
   private void reportOrphanRowsWhenMissingValuesInRelation(
-      Map<String, Table> tableSet, Relation relation, String provider) {
-    reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference(), provider);
-    reportOrphanRowsFor(tableSet, relation, relation.rightColumnReference(), provider);
+      Map<String, Table> tableSet, Relation relation) {
+    reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference());
+    reportOrphanRowsFor(tableSet, relation, relation.rightColumnReference());
   }
 
   private void reportOneSidedOrphanedRosWhenMissingValuesInRelation(Map<String, Table> tableSet,
-      Relation relation, String provider) {
-    reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference(), provider);
+      Relation relation) {
+    reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference());
   }
 
   private void reportOrphanRowsFor(
-      Map<String, Table> tableSet, Relation relation, ColumnReference child, String provider) {
+      Map<String, Table> tableSet, Relation relation, ColumnReference child) {
     ColumnReference parent = relation.getOtherColumn(child);
     Table orphanTable =
         getTableOfOrphanRows(
@@ -217,7 +216,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
           String.format("%s orphan row(s) found in [%s]", orphanTable.rowCount(), child.table());
       errors.add(
           create(parent.table(), relation, description)
-              .getValidationError());
+              .build());
     }
   }
 
