@@ -6,9 +6,7 @@ import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 
 public abstract class ValidationErrorBuilder {
 
-  private ValidationError validationError;
-
-  void buildValidationErrors(
+  public ValidationError buildValidationErrors(
       String type, String tableName, String description, String columnDescription) {
     var error = new ValidationError();
     var tableReport = new TableReport();
@@ -19,10 +17,8 @@ public abstract class ValidationErrorBuilder {
     error.setTableReport(tableReport);
     error.setType(type);
     error.setTableName(tableName);
-    this.validationError = error;
+    return error;
   }
 
-  public ValidationError getValidationError() {
-    return validationError;
-  }
+  public abstract ValidationError build();
 }

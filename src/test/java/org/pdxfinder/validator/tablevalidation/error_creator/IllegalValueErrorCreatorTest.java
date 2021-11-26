@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creator;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,10 +12,11 @@ import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.enums.Charsets;
+import org.pdxfinder.validator.tablevalidation.error_creators.IllegalValueErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
-public class IllegalValueErrorReportCreatorTest {
+public class IllegalValueErrorCreatorTest {
 
   private IllegalValueErrorCreator illegalValueErrorCreator = new IllegalValueErrorCreator();
   private static final String PROVIDER = "PROVIDER-BC";

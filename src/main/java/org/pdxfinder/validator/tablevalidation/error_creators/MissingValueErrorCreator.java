@@ -7,12 +7,12 @@ import java.util.stream.IntStream;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error.EmptyValueError;
+import org.pdxfinder.validator.tablevalidation.error.MissingValueErrorBuilder;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 
 @Component
-public class EmptyValueErrorCreator extends ErrorCreator {
+public class MissingValueErrorCreator extends ErrorCreator {
 
   public List<ValidationError> generateErrors(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
@@ -24,16 +24,16 @@ public class EmptyValueErrorCreator extends ErrorCreator {
         String missRowNumberPrint = Arrays.toString(shiftMissingRowNumbers(missingRowNumbers));
         errors.add(
             create(tested, missRowNumberPrint)
-                .getValidationError());
+        );
       }
     }
     return errors;
   }
 
-  public EmptyValueError create(
+  public ValidationError create(
       ColumnReference columnReference,
       String missingRowNumbers) {
-    return new EmptyValueError(columnReference, missingRowNumbers);
+    return new MissingValueErrorBuilder(columnReference, missingRowNumbers).build();
   }
 
   public int[] shiftMissingRowNumbers(int[] missingRowNumbers) {

@@ -94,13 +94,13 @@ public class ColumnReference {
 
   @JsonIgnore
   public boolean hasCharset(Charsets charsetRestriction) {
-    String errorDescription = charsetRestriction.getValueRestriction().getErrorDescription();
-    return charset.getErrorDescription().equals(errorDescription);
+    ValueRestrictions errorDescription = charsetRestriction.getValueRestriction();
+    return charset.equals(errorDescription);
   }
 
   @JsonIgnore
   public boolean hasCategories() {
-    return !categories.getErrorDescription().equalsIgnoreCase("");
+    return !categories.getErrorDescription().equals("");
   }
 
   @JsonIgnore

@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.error_creator;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -16,9 +16,10 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.error_creators.MissingTableErrorCreator;
 import tech.tablesaw.api.Table;
 
-public class MissingTableErrorReportCreatorTest {
+public class MissingTableErrorCreatorTest {
 
   private Map<String, Table> completeTableSet = new HashMap<>();
   private Map<String, Table> incompleteTableSet = new HashMap<>();
@@ -71,7 +72,7 @@ public class MissingTableErrorReportCreatorTest {
   public void passesValidation_givenIncompleteFileSet_failsValidation() {
     List<ValidationError> expected =
         Collections.singletonList(
-            missingTableErrorCreator.create(TABLE_1, PROVIDER).getValidationError());
+            missingTableErrorCreator.create(TABLE_1).build());
     assertEquals(
         expected.toString(),
         missingTableErrorCreator.generateErrors(incompleteTableSet, requireTable).toString());
@@ -104,7 +105,7 @@ public class MissingTableErrorReportCreatorTest {
   public void validate_givenIncompleteFileSet_addsErrorWithCorrectContextToErrorList() {
     List<ValidationError> expected =
         Collections.singletonList(
-            missingTableErrorCreator.create(TABLE_1, PROVIDER).getValidationError());
+            missingTableErrorCreator.create(TABLE_1).build());
     assertEquals(
         expected.toString(),
         missingTableErrorCreator.generateErrors(incompleteTableSet, requireTable).toString());

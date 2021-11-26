@@ -10,10 +10,10 @@ import org.pdxfinder.validator.tablevalidation.dto.ErrorReport;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.error_creators.BrokenRelationErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error_creators.DuplicateValueErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error_creators.EmptyValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error_creators.IllegalValueErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error_creators.MissingColumnErrorCreator;
 import org.pdxfinder.validator.tablevalidation.error_creators.MissingTableErrorCreator;
+import org.pdxfinder.validator.tablevalidation.error_creators.MissingValueErrorCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -75,7 +75,7 @@ public class ValidationService {
   private void checkAllNonEmptyValuesPresent(
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     validationErrors.addAll(
-        new EmptyValueErrorCreator().generateErrors(tableSet, tableSetSpecification));
+        new MissingValueErrorCreator().generateErrors(tableSet, tableSetSpecification));
   }
 
   private void checkAllUniqueColumnsForDuplicates(
