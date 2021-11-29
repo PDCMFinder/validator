@@ -1,28 +1,40 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
-import java.util.Set;
-import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.enums.ErrorTypes;
+import org.pdxfinder.validator.tablevalidation.enums.ErrorType;
 
 public class DuplicateValueErrorBuilder extends ValidationErrorBuilder {
 
-  private String errorType = ErrorTypes.DUPLICATE_VALUES.getErrorType();
-  private ColumnReference uniqueColumn;
-  private String description;
+  private String errorType = ErrorType.DUPLICATE_VALUES.getErrorType();
+  private String tableName;
+  private String columnName;
+  private String cause = "";
+  private String rule = "";
 
-
-  public DuplicateValueErrorBuilder(ColumnReference uniqueColumn, Set<String> duplicateValues) {
-    this.uniqueColumn = uniqueColumn;
-    this.description = buildDescription(duplicateValues.toString());
+  public DuplicateValueErrorBuilder(String tableName, String columnName) {
+    this.tableName = tableName;
+    this.columnName = columnName;
   }
 
-  public String buildDescription(String duplicateValues) {
-    return String.format("Duplicates values found: %s", duplicateValues);
+  @Override
+  public ValidationErrorBuilder<?> buildCause(String duplicates) {
+    this.cause = String.format("Duplicated values found: %s", duplicates);
+    return this;
+  }
+
+  @Override
+  public ValidationErrorBuilder<?> buildRule(String rule) {
+    this.rule = rule;
+    return this;
   }
 
   public ValidationError build() {
-    return super.buildValidationErrors(errorType, uniqueColumn.table(), description,
-        uniqueColumn.column());
+    return new ValidationError.Builder(errorType)
+            .setTableName(tableName)
+            .setColumnName(columnName)
+            .setCause(cause)
+            .setRule(rule)
+            .build();
+
   }
 }

@@ -1,25 +1,37 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.enums.ErrorTypes;
+import org.pdxfinder.validator.tablevalidation.enums.ErrorType;
 
 public class MissingTableErrorBuilder extends ValidationErrorBuilder {
 
-  private String errorType = ErrorTypes.MISSING_COLUMN.getErrorType();
-  private String tableName;
-  private String description;
+    private String errorType = ErrorType.MISSING_COLUMN.getErrorType();
+    private String tableName;
+    private String cause = "Required table is not found";
+    private String rule;
 
-  public MissingTableErrorBuilder(String tableName) {
-    this.tableName = tableName;
-    this.description = buildDescription(tableName);
-  }
+    public MissingTableErrorBuilder(String tableName) {
+        this.tableName = tableName;
+    }
 
-  static String buildDescription(String tableName) {
-    return String.format("Missing required table: [%s]", tableName);
-  }
+    @Override
+    public ValidationErrorBuilder<?> buildCause(String cause) {
+        this.cause = cause;
+        return this;
+    }
 
-  @Override
-  public ValidationError build() {
-    return super.buildValidationErrors(errorType, tableName, description, "whole table error");
-  }
+    @Override
+    public ValidationErrorBuilder<?> buildRule(String rule) {
+        this.rule = rule;
+        return this;
+    }
+
+    @Override
+    public ValidationError build() {
+        return new ValidationError.Builder(errorType)
+                .setTableName(tableName)
+                .setRule(rule)
+                .setCause(cause)
+                .build();
+    }
 }

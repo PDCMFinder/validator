@@ -1,29 +1,47 @@
 package org.pdxfinder.validator.tablevalidation.error;
 
-import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.enums.ErrorTypes;
+import org.pdxfinder.validator.tablevalidation.enums.ErrorType;
 
 public class MissingValueErrorBuilder extends ValidationErrorBuilder {
 
-  private String errorType = ErrorTypes.MISSING_VALUE.getErrorType();
-  private ColumnReference nonEmptyColumn;
-  private String description;
+    private String errorType = ErrorType.MISSING_VALUE.getErrorType();
+    private String tableName;
+    private String columnName;
+    private String rule = "Required value";
+    private String cause = "No value found";
+    private String rows;
 
-  public MissingValueErrorBuilder(
-      ColumnReference nonEmptyColumn,
-      String missingRowNumbers) {
-    this.nonEmptyColumn = nonEmptyColumn;
-    this.description = buildDescription(missingRowNumbers);
-  }
+    public MissingValueErrorBuilder(String tableName, String columnName) {
+        this.tableName = tableName;
+        this.columnName = columnName;
+    }
 
-  private String buildDescription(String missingColumns) {
-    return String.format("Missing value(s) in row numbers: %s", missingColumns);
-  }
+    @Override
+    public ValidationErrorBuilder<?> buildCause(String cause) {
+        this.cause = cause;
+        return this;
+    }
 
-  @Override
-  public ValidationError build() {
-    return super.buildValidationErrors(
-        errorType, nonEmptyColumn.table(), description, nonEmptyColumn.column());
-  }
+    @Override
+    public ValidationErrorBuilder<?> buildRule(String rule) {
+        this.rule = rule;
+        return this;
+    }
+
+    public MissingValueErrorBuilder buildRows(String rows) {
+        this.rows = rows;
+        return this;
+    }
+
+    @Override
+    public ValidationError build() {
+        return new ValidationError.Builder(errorType)
+                .setTableName(tableName)
+                .setColumnName(columnName)
+                .setRule(rule)
+                .setCause(cause)
+                .setRow(rows)
+                .build();
+    }
 }

@@ -2,46 +2,114 @@ package org.pdxfinder.validator.tablevalidation.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import java.util.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ValidationError {
 
-  @SerializedName("type")
-  @Expose
-  private String type;
-
   @SerializedName("tableName")
   @Expose
   private String tableName;
 
-  @SerializedName("tableReport")
+  @SerializedName("columnName")
   @Expose
-  private TableReport tableReport = null;
+  private String columnName;
 
-  public TableReport getTableReport() {
-    return tableReport;
+  @SerializedName("row")
+  @Expose
+  private String row;
+
+  @SerializedName("errorType")
+  @Expose
+  private String errorType;
+
+  @SerializedName("rule")
+  @Expose
+  private String rule;
+
+  @SerializedName("cause")
+  @Expose
+  private String cause;
+
+  private ValidationError(Builder builder) {
+    this.tableName = builder.tableName;
+    this.columnName = builder.columnName;
+    this.row = builder.row;
+    this.errorType = builder.errorType;
+    this.rule = builder.rule;
+    this.cause = builder.cause;
   }
 
-  public void setTableReport(TableReport tableReport) {
-    this.tableReport = tableReport;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
+  public String getErrorType() {
+    return errorType;
   }
 
   public String getTableName() {
     return tableName;
   }
 
-  public void setTableName(String tableName) {
-    this.tableName = tableName;
+  public String getCause() {
+    return cause;
+  }
+
+  public String getRule() {
+    return rule;
+  }
+
+  public String getColumnName() {
+    return columnName;
+  }
+
+  public String getRow() {
+    return row;
+  }
+
+  public static class Builder {
+    public String tableName;
+    public String columnName;
+    public String row;
+    public String errorType;
+    public String rule;
+    public String cause;
+
+    public Builder(String ErrorType) {
+      this.errorType = ErrorType;
+    }
+
+    public Builder setTableName(String tableName) {
+      this.tableName = tableName;
+      return this;
+    }
+
+    public Builder setColumnName(String columnName) {
+      this.columnName = columnName;
+      return this;
+    }
+
+    public Builder setRow(String row) {
+      this.row = row;
+      return this;
+    }
+
+    public Builder setErrorType(String errorType) {
+      this.errorType = errorType;
+      return this;
+    }
+
+    public Builder setRule(String rule) {
+      this.rule = rule;
+      return this;
+    }
+
+    public Builder setCause(String cause) {
+      this.cause = cause;
+      return this;
+    }
+
+    public ValidationError build() {
+      return new ValidationError(this);
+    }
+
   }
 
   @Override
@@ -55,25 +123,25 @@ public class ValidationError {
     }
 
     return new EqualsBuilder()
-        .append("message", tableReport.getColumnReport().getMessage())
-        .append("columName", tableReport.getColumnReport().getColumnName())
-        .isEquals();
+            .append("tableName", tableName)
+            .append("columName", columnName)
+            .append("row", row)
+            .append("errorType", errorType)
+            .append("rule", rule)
+            .append("cause", cause)
+            .isEquals();
   }
 
   @Override
   public int hashCode() {
     return new HashCodeBuilder(17, 37)
-        .append(tableReport.getColumnReport().getMessage())
-        .append(tableReport.getColumnReport().getColumnName())
-        .toHashCode();
+            .append(tableName)
+            .append(columnName)
+            .append(row)
+            .append(errorType)
+            .append(rule)
+            .append(cause)
+            .toHashCode();
   }
 
-  public String getColumnMessage() {
-    return Optional.ofNullable(tableReport)
-        .map(TableReport::getColumnReport)
-        .map(ColumnReport::getMessage)
-        .orElseThrow(
-            () -> new IllegalStateException("Column message is null. Error building DTA objects."));
-  }
 }
-

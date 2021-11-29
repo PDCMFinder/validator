@@ -1,12 +1,5 @@
 package org.pdxfinder.validator.tablevalidation.error_creators;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
@@ -18,15 +11,19 @@ import org.springframework.stereotype.Component;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 @Component
 public class IllegalValueErrorCreator extends ErrorCreator {
 
   private static final Logger log = LoggerFactory.getLogger(IllegalValueErrorCreator.class);
 
   public List<ValidationError> generateErrors(
-      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
+          Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     tableSetSpecification
-        .getCharSetRestrictions()
+            .getCharSetRestrictions()
         .forEach(
             (columns, valueRestriction) ->
                 reportIllegalValue(columns, valueRestriction, tableSet));
@@ -37,8 +34,10 @@ public class IllegalValueErrorCreator extends ErrorCreator {
       String tableName,
       int count, String errorDescription,
       String invalidValues, String columnName) {
-    return new IllegalValueErrorBuilder(tableName, count, errorDescription, invalidValues,
-        columnName).build();
+    return new IllegalValueErrorBuilder(tableName, columnName, count)
+            .buildCause(invalidValues)
+            .buildRule(errorDescription)
+            .build();
   }
 
   private void reportIllegalValue(

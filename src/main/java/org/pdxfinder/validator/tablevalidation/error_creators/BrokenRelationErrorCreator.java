@@ -1,13 +1,5 @@
 package org.pdxfinder.validator.tablevalidation.error_creators;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,34 +15,39 @@ import org.springframework.stereotype.Component;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 @Component
 public class BrokenRelationErrorCreator extends ErrorCreator {
 
   private static final Logger log = LoggerFactory.getLogger(BrokenRelationErrorCreator.class);
 
   public List<ValidationError> generateErrors(
-      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
+          Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     for (Relation relation : tableSetSpecification.getRelations()) {
       reportRelationErrors(tableSet, relation, tableSetSpecification);
     }
     return errors;
   }
 
-  public BrokenRelationErrorBuilder create(
-      String tableName, Relation relation, String description) {
-    return new BrokenRelationErrorBuilder(tableName, relation, description);
+  public ValidationError create(
+          String tableName, String columnName, Relation relation, String description) {
+    return new BrokenRelationErrorBuilder(tableName, columnName)
+            .buildCause(description)
+            .buildRule(relation.getValidity().toString())
+            .build();
   }
 
   private void reportRelationErrors(
-      Map<String, Table> tableSet, Relation relation, TableSetSpecification tableSetSpecification) {
-    reportMissingColumnsInRelation(tableSet, relation);
-    if (bothColumnsPresent(tableSet, relation)) {
-      runAppropriateValidation(tableSet, relation, tableSetSpecification);
-    } else {
+          Map<String, Table> tableSet, Relation relation, TableSetSpecification tableSetSpecification) {
+    if (!bothColumnsPresent(tableSet, relation)) {
       String errorMessage = String
-          .format("Columns was not found in relation %s", relation.toString());
-      log.error(errorMessage);
+              .format("Columns was not found in relation %s. Columns should be validated prior to checking relations", relation.toString());
+      throw new IllegalStateException(errorMessage);
     }
+    runAppropriateValidation(tableSet, relation, tableSetSpecification);
   }
 
   private void runAppropriateValidation(
@@ -66,7 +63,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
       reportBrokenOneToManySheetRelation(tableSet, relation);
     }
   }
-
 
   private void reportBrokenOneToOneRelation(
       Map<String, Table> tableSet, Relation relation) {
@@ -86,14 +82,14 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               .collect(Collectors.toList());
       String description =
           String.format(
-              "in [%s] one-to-one found %s relationships with conflicts %s",
-              leftRefColumn.table(), brokenPairs.size(), brokenPairs.toString());
+                  "%s invalid relationships: %s",
+                  leftRefColumn.table(), brokenPairs.size(), brokenPairs.toString());
       errors.add(
-          create(
-              leftRefColumn.table(),
-              relation,
-              description)
-              .build());
+              create(
+                      leftRefColumn.table(),
+                      leftRefColumn.column(),
+                      relation,
+                      description));
     }
   }
 
@@ -151,44 +147,15 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
       int[] invalidRows = unboxSet(getIndexOfDuplicatedColumnValues(oneRestrictedColumn));
       String description =
           String.format(
-              "in [%s] %s relationship found %s relationships with conflicts %s",
-              leftColumn.table(),
-              relation.getValidity().name(),
-              listOfBrokenPairs.size(),
-              listOfBrokenPairs.toString());
+                  "%s invalid relationship: %s",
+                  listOfBrokenPairs.size(),
+                  listOfBrokenPairs.toString());
       errors.add(
-          create(
-              leftColumn.table(),
-              relation,
-              description)
-              .build());
-    }
-  }
-
-  private void reportMissingColumnsInRelation(
-      Map<String, Table> tableSet, Relation relation) {
-    if (tableSet.get(relation.leftTable()) == null || tableSet.get(relation.rightTable()) == null) {
-      return;
-    }
-    if (missingLeftColumn(tableSet, relation)) {
-      errors.add(
-          create(
-              relation.leftTable(),
-              relation,
-              String.format(
-                  "because [%s] is missing column [%s]",
-                  relation.leftTable(), relation.leftColumn()))
-              .build());
-    }
-    if (missingRightColumn(tableSet, relation)) {
-      errors.add(
-          create(
-              relation.rightTable(),
-              relation,
-              String.format(
-                  "because [%s] is missing column [%s]",
-                  relation.rightTable(), relation.rightColumn()))
-              .build());
+              create(
+                      leftColumn.table(),
+                      leftColumn.column(),
+                      relation,
+                      description));
     }
   }
 
@@ -213,10 +180,9 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
             tableSet.get(parent.table()).stringColumn(parent.column()));
     if (orphanTable.rowCount() > 0) {
       String description =
-          String.format("%s orphan row(s) found in [%s]", orphanTable.rowCount(), child.table());
+              String.format("%s values column %s in %s table are not found in this column", orphanTable.rowCount(), child.column(), child.table());
       errors.add(
-          create(parent.table(), relation, description)
-              .build());
+              create(parent.table(), parent.column(), relation, description));
     }
   }
 

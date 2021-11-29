@@ -1,9 +1,5 @@
 package org.pdxfinder.validator.tablevalidation.error_creators;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
@@ -13,6 +9,11 @@ import org.springframework.stereotype.Component;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 @Component
 public class DuplicateValueErrorCreator extends ErrorCreator {
 
@@ -20,7 +21,6 @@ public class DuplicateValueErrorCreator extends ErrorCreator {
       Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     for (ColumnReference tested : tableSetSpecification.getUniqueColumns()) {
       Set<String> duplicates = findDuplicatesInColumn(columnFromTableSet(tableSet, tested));
-
       if (CollectionUtils.isNotEmpty(duplicates)) {
         errors.add(create(tested, duplicates));
       }
@@ -50,6 +50,8 @@ public class DuplicateValueErrorCreator extends ErrorCreator {
 
   public ValidationError create(
       ColumnReference uniqueColumn, Set<String> duplicates) {
-    return new DuplicateValueErrorBuilder(uniqueColumn, duplicates).build();
+    return new DuplicateValueErrorBuilder(uniqueColumn.column(), uniqueColumn.table())
+            .buildCause(duplicates.toString())
+            .build();
   }
 }

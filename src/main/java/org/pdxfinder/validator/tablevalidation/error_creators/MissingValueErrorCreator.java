@@ -1,9 +1,5 @@
 package org.pdxfinder.validator.tablevalidation.error_creators;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
@@ -11,11 +7,16 @@ import org.pdxfinder.validator.tablevalidation.error.MissingValueErrorBuilder;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
+
 @Component
 public class MissingValueErrorCreator extends ErrorCreator {
 
   public List<ValidationError> generateErrors(
-      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
+          Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     for (ColumnReference tested : tableSetSpecification.getRequiredNonEmptyColumns()) {
       Table table = tableSet.get(tested.table());
       Table missing = table.where(table.column(tested.column()).isMissing());
@@ -33,7 +34,9 @@ public class MissingValueErrorCreator extends ErrorCreator {
   public ValidationError create(
       ColumnReference columnReference,
       String missingRowNumbers) {
-    return new MissingValueErrorBuilder(columnReference, missingRowNumbers).build();
+    return new MissingValueErrorBuilder(columnReference.table(), columnReference.column())
+            .buildRows(missingRowNumbers)
+            .build();
   }
 
   public int[] shiftMissingRowNumbers(int[] missingRowNumbers) {
