@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error_creators;
+package org.pdxfinder.validator.tablevalidation.errorCreators;
 
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
@@ -8,7 +8,7 @@ import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.enums.RelationType;
-import org.pdxfinder.validator.tablevalidation.error.BrokenRelationErrorBuilder;
+import org.pdxfinder.validator.tablevalidation.errorBuilders.BrokenRelationErrorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -180,7 +180,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
             tableSet.get(parent.table()).stringColumn(parent.column()));
     if (orphanTable.rowCount() > 0) {
       String description =
-              String.format("%s values column %s in %s table are not found in this column", orphanTable.rowCount(), child.column(), child.table());
+              String.format("%s values in column %s of the %s table are not found in this column", orphanTable.rowCount(), child.column(), child.table());
       errors.add(
               create(parent.table(), parent.column(), relation, description));
     }

@@ -1,16 +1,5 @@
-package org.pdxfinder.validator.tablevalidation.error_creator;
+package org.pdxfinder.validator.tablevalidation.errorCreator;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -19,9 +8,17 @@ import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.DuplicateValueErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.DuplicateValueErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class DuplicateValueErrorCreatorTest {
 
@@ -30,8 +27,8 @@ public class DuplicateValueErrorCreatorTest {
   private final String LEFT_TABLE = "left_table.tsv";
   private final String RIGHT_TABLE = "right_table.tsv";
   private final Relation RELATION =
-      RelationTestUtilities.betweenTableKeys(
-          ColumnReference.of(LEFT_TABLE, "id"), ColumnReference.of(RIGHT_TABLE, "table_1_id"));
+          RelationTestUtilities.betweenTableKeys(
+                  ColumnReference.of(LEFT_TABLE, "id"), ColumnReference.of(RIGHT_TABLE, "table_1_id"));
   private final String PROVIDER = "PROVIDER-BC";
 
   private DuplicateValueErrorCreator duplicateValueErrorCreator = new DuplicateValueErrorCreator();

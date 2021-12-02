@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.collections4.CollectionUtils;
 import org.pdxfinder.validator.tablevalidation.dto.ErrorReport;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.*;
+import org.pdxfinder.validator.tablevalidation.errorCreators.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

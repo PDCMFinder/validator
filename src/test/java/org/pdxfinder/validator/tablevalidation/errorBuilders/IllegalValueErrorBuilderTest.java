@@ -1,8 +1,8 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
 import org.junit.Ignore;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.IllegalValueErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.IllegalValueErrorCreator;
 
 import static org.junit.Assert.assertEquals;
 

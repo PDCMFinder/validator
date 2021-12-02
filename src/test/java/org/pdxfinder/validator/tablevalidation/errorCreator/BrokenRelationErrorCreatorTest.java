@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error_creator;
+package org.pdxfinder.validator.tablevalidation.errorCreator;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
@@ -8,15 +8,14 @@ import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.enums.RelationType;
-import org.pdxfinder.validator.tablevalidation.error_creators.BrokenRelationErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.BrokenRelationErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class BrokenRelationErrorCreatorTest {
 
@@ -64,28 +63,6 @@ public class BrokenRelationErrorCreatorTest {
 
   private final TableSetSpecification ONE_TO_ONE_SPECIFICATION =
       TableSetSpecification.create().setProvider(PROVIDER).addRelations(INTRA_TABLE_ONE_TO_ONE);
-
-  @Test
-  public void checkRelationsValid_givenNoRightTable_noExceptionThrown() {
-    Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
-    tableSetWithSimpleJoin.put(RIGHT_TABLE, null);
-    assertThat(
-        brokenInterTableRelationErrorCreator
-            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION)
-            .isEmpty(),
-        is(true));
-  }
-
-  @Test
-  public void checkRelationsValid_givenNoLeftTable_noExceptionThrown() {
-    Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
-    tableSetWithSimpleJoin.put(LEFT_TABLE, null);
-    assertThat(
-        brokenInterTableRelationErrorCreator
-            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION)
-            .isEmpty(),
-        is(true));
-  }
 
   @Test
   public void oneToManyNoError_givenValidOneToManyJoin_emptyErrorList() {
@@ -153,89 +130,43 @@ public class BrokenRelationErrorCreatorTest {
   }
 
   @Test
-  public void checkRelationsValid_givenNoLeftTable_ErrorListWithMissingRequiredCol() {
-    Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
-    tableSetWithSimpleJoin.get(LEFT_TABLE).removeColumns("id");
-
-    ValidationError expected =
-            brokenInterTableRelationErrorCreator
-                    .create(
-                            LEFT_TABLE,
-                            "LEFT_COLUMN",
-                            INTER_TABLE_RELATION,
-                            String.format("because [%s] is missing column [%s]", LEFT_TABLE, "id")
-                    );
-
-    assertEquals(
-        Collections.singletonList(expected).toString(),
-        brokenInterTableRelationErrorCreator
-            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION)
-            .toString());
-  }
-
-  @Test
-  public void checkRelationsValid_givenNoRightTable_ErrorListWithMissingRequiredCol() {
-    Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
-    tableSetWithSimpleJoin.get(RIGHT_TABLE).removeColumns("table_1_id");
-
-    ValidationError expected =
-            brokenInterTableRelationErrorCreator
-                    .create(
-                            RIGHT_TABLE,
-                            "RIGHT_COLUMN",
-                            INTER_TABLE_RELATION,
-                            String.format("because [%s] is missing column [%s]", RIGHT_TABLE, "table_1_id")
-                    );
-
-    assertEquals(
-        Collections.singletonList(expected).toString(),
-        brokenInterTableRelationErrorCreator
-            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION)
-            .toString());
-  }
-
-  @Test
   public void checkRelationsValid_givenMissingValueInRightColumn_ErrorListWithOrphanLeftRows() {
     Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
     tableSetWithSimpleJoin
-        .get(RIGHT_TABLE)
-        .replaceColumn(StringColumn.create("table_1_id", Collections.EMPTY_LIST));
+            .get(RIGHT_TABLE)
+            .replaceColumn(StringColumn.create("table_1_id", Collections.EMPTY_LIST));
     ValidationError expected =
             brokenInterTableRelationErrorCreator
                     .create(
                             RIGHT_TABLE,
-                            "RIGHT_COLUMN",
+                            "table_1_id",
                             INTER_TABLE_RELATION,
-                            String.format("1 orphan row(s) found in [%s]", LEFT_TABLE)
+                            String.format("1 values in column id of the %s table are not found in this column", LEFT_TABLE)
                     );
-
-    assertEquals(
-        Collections.singletonList(expected).toString(),
-        brokenInterTableRelationErrorCreator
-            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION)
-            .toString());
+    var brokenInterTableRelationErrors = brokenInterTableRelationErrorCreator
+            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION);
+    assertEquals(1, brokenInterTableRelationErrors.size());
+    assertEquals(brokenInterTableRelationErrors.get(0), expected);
   }
 
   @Test
   public void checkRelationsValid_givenMissingValuesInLeftColumn_ErrorListWithOrphanRightRows() {
     Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
     tableSetWithSimpleJoin
-        .get(LEFT_TABLE)
-        .replaceColumn(StringColumn.create("id", Collections.EMPTY_LIST));
+            .get(LEFT_TABLE)
+            .replaceColumn(StringColumn.create("id", Collections.EMPTY_LIST));
     ValidationError expected =
             brokenInterTableRelationErrorCreator
                     .create(
                             LEFT_TABLE,
-                            "LEFT_COLUMN",
+                            "id",
                             INTER_TABLE_RELATION,
-                            String.format("1 orphan row(s) found in [%s]", RIGHT_TABLE)
+                            String.format("1 values in column table_1_id of the %s table are not found in this column", RIGHT_TABLE)
                     );
-
-    assertEquals(
-        Collections.singletonList(expected).toString(),
-        brokenInterTableRelationErrorCreator
-            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION)
-            .toString());
+    var brokenIntertableRelationErrors = brokenInterTableRelationErrorCreator
+            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION);
+    assertEquals(1, brokenIntertableRelationErrors.size());
+    assertTrue(brokenIntertableRelationErrors.get(0).equals(expected));
   }
 
   @Test
@@ -250,24 +181,20 @@ public class BrokenRelationErrorCreatorTest {
                     brokenInterTableRelationErrorCreator
                             .create(
                                     RIGHT_TABLE,
-                                    "RIGHT_COLUMN",
+                                    "table_1_id",
                                     INTER_TABLE_RELATION,
-                                    String.format("1 orphan row(s) found in [%s]", LEFT_TABLE)
+                                    String.format("1 values in column id of the %s table are not found in this column", LEFT_TABLE)
+                            ),
+                    brokenInterTableRelationErrorCreator
+                            .create(
+                                    LEFT_TABLE,
+                                    "id",
+                                    INTER_TABLE_RELATION,
+                                    String.format("2 values in column table_1_id of the %s table are not found in this column", RIGHT_TABLE)
                             ));
-
-    brokenInterTableRelationErrorCreator
-            .create(
-                    LEFT_TABLE,
-                    "LEFT_COLUMN",
-                    INTER_TABLE_RELATION,
-                    String.format("2 orphan row(s) found in [%s]", RIGHT_TABLE)
-            );
-
-    assertEquals(
-        expected.toString(),
-        brokenInterTableRelationErrorCreator
-            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION)
-            .toString());
+    var brokenInterTableRelationError = brokenInterTableRelationErrorCreator
+            .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION);
+    assertEquals(new HashSet<>(brokenInterTableRelationError), new HashSet<>(expected));
   }
 
   @Test

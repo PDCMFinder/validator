@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 

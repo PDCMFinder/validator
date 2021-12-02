@@ -1,23 +1,20 @@
-package org.pdxfinder.validator.tablevalidation.error_creator;
+package org.pdxfinder.validator.tablevalidation.errorCreator;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.MissingTableErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.MissingTableErrorCreator;
 import tech.tablesaw.api.Table;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class MissingTableErrorCreatorTest {
 

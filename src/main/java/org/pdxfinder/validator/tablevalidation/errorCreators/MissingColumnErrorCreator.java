@@ -1,9 +1,9 @@
-package org.pdxfinder.validator.tablevalidation.error_creators;
+package org.pdxfinder.validator.tablevalidation.errorCreators;
 
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error.MissingColumnErrorBuilder;
+import org.pdxfinder.validator.tablevalidation.errorBuilders.MissingColumnErrorBuilder;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 

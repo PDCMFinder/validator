@@ -1,10 +1,10 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
 import org.junit.Ignore;
 import org.pdxfinder.validator.tablevalidation.RelationTestUtilities;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.Relation;
-import org.pdxfinder.validator.tablevalidation.error_creators.BrokenRelationErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.BrokenRelationErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 

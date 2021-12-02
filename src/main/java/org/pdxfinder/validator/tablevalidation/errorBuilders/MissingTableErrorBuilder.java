@@ -1,29 +1,22 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.enums.ErrorType;
 
-public class IllegalValueErrorBuilder extends ValidationErrorBuilder {
+public class MissingTableErrorBuilder extends ValidationErrorBuilder {
 
-    private final int count;
-    private String errorType = ErrorType.ILLEGAL_VALUE.getErrorType();
+    private String errorType = ErrorType.MISSING_COLUMN.getErrorType();
     private String tableName;
-    private String description;
-    private String columnName;
+    private String cause = "Required table is not found";
     private String rule;
-    private String cause;
 
-
-    public IllegalValueErrorBuilder(String tableName, String columnName, int count) {
-
+    public MissingTableErrorBuilder(String tableName) {
         this.tableName = tableName;
-        this.columnName = columnName;
-        this.count = count;
     }
 
     @Override
     public ValidationErrorBuilder<?> buildCause(String cause) {
-        this.cause = String.format("found %s invalid values %s", count, cause);
+        this.cause = cause;
         return this;
     }
 
@@ -37,7 +30,6 @@ public class IllegalValueErrorBuilder extends ValidationErrorBuilder {
     public ValidationError build() {
         return new ValidationError.Builder(errorType)
                 .setTableName(tableName)
-                .setColumnName(columnName)
                 .setRule(rule)
                 .setCause(cause)
                 .build();

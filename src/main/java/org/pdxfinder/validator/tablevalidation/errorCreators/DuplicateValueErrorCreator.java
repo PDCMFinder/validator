@@ -1,10 +1,10 @@
-package org.pdxfinder.validator.tablevalidation.error_creators;
+package org.pdxfinder.validator.tablevalidation.errorCreators;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error.DuplicateValueErrorBuilder;
+import org.pdxfinder.validator.tablevalidation.errorBuilders.DuplicateValueErrorBuilder;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;

@@ -1,10 +1,10 @@
-package org.pdxfinder.validator.tablevalidation.error_creators;
+package org.pdxfinder.validator.tablevalidation.errorCreators;
 
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error.IllegalValueErrorBuilder;
+import org.pdxfinder.validator.tablevalidation.errorBuilders.IllegalValueErrorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

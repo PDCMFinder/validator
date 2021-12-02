@@ -1,9 +1,9 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
 import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.MissingValueErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.MissingValueErrorCreator;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,7 +13,7 @@ public class EmptyValueErrorBuilderTest {
 
   @Test
   public void message_givenMissingValue_returnsAppropriateError() {
-    String expected = "Missing value";
+    String expected = "No value found";
     String expectedRowMessage = "[0]";
     ColumnReference columnReference = ColumnReference.of("table", "column");
     ValidationError error =

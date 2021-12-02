@@ -123,12 +123,12 @@ public class ValidationError {
     }
 
     return new EqualsBuilder()
-            .append("tableName", tableName)
-            .append("columName", columnName)
-            .append("row", row)
-            .append("errorType", errorType)
-            .append("rule", rule)
-            .append("cause", cause)
+            .append(((ValidationError) o).getTableName(), tableName)
+            .append(((ValidationError) o).getColumnName(), columnName)
+            .append(((ValidationError) o).getRow(), row)
+            .append(((ValidationError) o).getErrorType(), errorType)
+            .append(((ValidationError) o).getRule(), rule)
+            .append(((ValidationError) o).getCause(), cause)
             .isEquals();
   }
 

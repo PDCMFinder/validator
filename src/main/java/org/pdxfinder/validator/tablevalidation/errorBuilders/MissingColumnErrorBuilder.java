@@ -1,24 +1,24 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
 import org.pdxfinder.validator.tablevalidation.enums.ErrorType;
 
-public class DuplicateValueErrorBuilder extends ValidationErrorBuilder {
+public class MissingColumnErrorBuilder extends ValidationErrorBuilder {
 
-  private String errorType = ErrorType.DUPLICATE_VALUES.getErrorType();
-  private String tableName;
+  private String errorType = ErrorType.MISSING_COLUMN.getErrorType();
+  private String tablename;
   private String columnName;
-  private String cause = "";
+  private String cause = "Required column not found in table";
   private String rule = "";
 
-  public DuplicateValueErrorBuilder(String tableName, String columnName) {
-    this.tableName = tableName;
+  public MissingColumnErrorBuilder(String tableName, String columnName) {
+    this.tablename = tableName;
     this.columnName = columnName;
   }
 
   @Override
-  public ValidationErrorBuilder<?> buildCause(String duplicates) {
-    this.cause = String.format("Duplicated values found: %s", duplicates);
+  public ValidationErrorBuilder<?> buildCause(String cause) {
+    this.cause = cause;
     return this;
   }
 
@@ -28,13 +28,13 @@ public class DuplicateValueErrorBuilder extends ValidationErrorBuilder {
     return this;
   }
 
+  @Override
   public ValidationError build() {
     return new ValidationError.Builder(errorType)
-            .setTableName(tableName)
+            .setTableName(tablename)
             .setColumnName(columnName)
             .setCause(cause)
             .setRule(rule)
             .build();
-
   }
 }

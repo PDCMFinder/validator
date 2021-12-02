@@ -1,4 +1,4 @@
-package org.pdxfinder.validator.tablevalidation.error_creator;
+package org.pdxfinder.validator.tablevalidation.errorCreator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import org.pdxfinder.validator.tableutilities.TableUtilities;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.MissingValueErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.MissingValueErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 
