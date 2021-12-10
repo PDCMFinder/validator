@@ -104,13 +104,13 @@ workbooks:
               - not treatment naive
               - not collected
               - not provided
-          - name: treated
+          - name: treated_at_collection
             categories:
               - yes
               - no
               - not provided
               - not collected
-          - name: prior_treatment
+          - name: treated_prior_to_collection
             categories:
               - yes
               - no
