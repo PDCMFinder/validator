@@ -10,7 +10,6 @@ import tech.tablesaw.api.Table;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 @Component
 public class MissingValueErrorCreator extends ErrorCreator {
@@ -22,7 +21,7 @@ public class MissingValueErrorCreator extends ErrorCreator {
       Table missing = table.where(table.column(tested.column()).isMissing());
       if (missing.rowCount() > 0) {
         int[] missingRowNumbers = table.column(tested.column()).isMissing().toArray();
-        String missRowNumberPrint = Arrays.toString(shiftMissingRowNumbers(missingRowNumbers));
+        String missRowNumberPrint = Arrays.toString(missingRowNumbers);
         errors.add(
             create(tested, missRowNumberPrint)
         );

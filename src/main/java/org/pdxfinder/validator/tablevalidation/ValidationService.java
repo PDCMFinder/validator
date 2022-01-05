@@ -102,7 +102,9 @@ public class ValidationService {
   }
 
   public String getJsonReport(String reportName) {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    Gson gson = new GsonBuilder().setPrettyPrinting()
+            .disableHtmlEscaping()
+            .create();
     ErrorReport errorReport = new ErrorReport();
     if (!reportName.isBlank()) {
       errorReport.setId(reportName);
