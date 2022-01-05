@@ -10,14 +10,14 @@ public enum Charsets {
   ),
   FREE_TEXT(
           "^[\\p{Alpha}\\p{Space}\\p{Digit}().',<>%:;_\\/-]+$",
-          "characters must be contained in US ASCII Alphanumeric set or in these symbols ().',:;-/"),
+          "characters must be contained in the US ASCII Alphanumeric set and in these symbols ().',:;-/"),
   URL_SAFE(
           "^[\\p{Alpha}\\p{Digit}\\p{Space}._~-]+$",
-          "characters must be contained in US ASCII Alphanumeric set or in these symbols: ._~-"
+          "characters must be contained in the US ASCII Alphanumeric set and in these symbols: ._~-"
   ),
   NUMERIC(
           "^[\\p{Digit}\\p{Space}pP\\.,-]+$",
-          "characters must be contained in US ASCII numbers set and or in these symbols: pP-.,"
+          "characters must be contained in the US ASCII numbers set and the in these symbols: pP-.,"
   ),
   COLLECTION_EVENT(
           "(?i)(^collection event [0-9]{1,3})?",

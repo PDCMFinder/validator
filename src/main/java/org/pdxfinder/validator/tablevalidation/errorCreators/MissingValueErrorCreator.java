@@ -38,10 +38,4 @@ public class MissingValueErrorCreator extends ErrorCreator {
             .buildRows(missingRowNumbers)
             .build();
   }
-
-  public int[] shiftMissingRowNumbers(int[] missingRowNumbers) {
-    return IntStream.range(0, missingRowNumbers.length)
-        .map(i -> missingRowNumbers[i] + 6)
-        .toArray();
-  }
 }

@@ -1,7 +1,5 @@
 package org.pdxfinder.validator.tablevalidation.errorCreators;
 
-import org.apache.commons.collections4.MultiValuedMap;
-import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
@@ -53,14 +51,21 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   private void runAppropriateValidation(
       Map<String, Table> tableSet, Relation relation, TableSetSpecification tableSetSpecification) {
     RelationType validity = relation.getValidity();
-    if (validity.equals(RelationType.TABLE_KEY)) {
+    if (validity.equals(RelationType.TABLE_KEY))
+    //TABLE KEY compares two sets and reports what is missing for both sets. Generates an error for each column in the relation.
+    //Uses sets and tolerates duplicate values
+    {
       reportOrphanRowsWhenMissingValuesInRelation(tableSet, relation);
     } else if (validity.equals(RelationType.TABLE_KEY_MANY_TO_ONE)) {
       reportOneSidedOrphanedRosWhenMissingValuesInRelation(tableSet, relation);
-    } else if (validity.equals(RelationType.ONE_TO_ONE)) {
+      //Used for Omic data. Uses same implementation as TABLE_KEY, but only runs on oneside of the relationship.
+      //takes of a set of a column and reports if they are represented in the other set.
+    } else if (validity.equals(RelationType.ONE_TO_ONE))
+    //Looks for duplicates in both columns of the relation. Do not use on columns that are not unique values
+    //The duplicate column will be paired with the other column value and
+    //printed. Could be improved by checking if the duplicate values are the same or different.
+    {
       reportBrokenOneToOneRelation(tableSet, relation);
-    } else if (validity.equals(RelationType.ONE_TO_MANY)) {
-      reportBrokenOneToManySheetRelation(tableSet, relation);
     }
   }
 
@@ -71,19 +76,17 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     StringColumn leftRestrictedColumn =
         tableSet.get(rightRefColumn.table()).stringColumn(leftRefColumn.column());
     StringColumn rightRestrictedColumn =
-        tableSet.get(leftRefColumn.table()).stringColumn(rightRefColumn.column());
-    Table workingTable = tableSet.get(leftRefColumn.table());
-    int[] indexOfDuplicates =
-        getIndexOfDuplicatedForPair(leftRestrictedColumn, rightRestrictedColumn);
+            tableSet.get(leftRefColumn.table()).stringColumn(rightRefColumn.column());
+    int[] indexOfDuplicates = getIndexOfDuplicatedForPair(leftRestrictedColumn, rightRestrictedColumn);
     if (indexOfDuplicates.length > 0) {
       List<Pair<String, String>> brokenPairs =
-          IntStream.of(indexOfDuplicates)
-              .mapToObj(x -> Pair.of(leftRestrictedColumn.get(x), rightRestrictedColumn.get(x)))
-              .collect(Collectors.toList());
+              IntStream.of(indexOfDuplicates)
+                      .mapToObj(x -> Pair.of(leftRestrictedColumn.get(x), rightRestrictedColumn.get(x)))
+                      .collect(Collectors.toList());
       String description =
-          String.format(
-                  "%s invalid relationships: %s",
-                  leftRefColumn.table(), brokenPairs.size(), brokenPairs.toString());
+              String.format(
+                      "%s invalid relationships between column %s in table %s: %s",
+                      brokenPairs.size(), rightRefColumn.column(), rightRefColumn.table(), brokenPairs);
       errors.add(
               create(
                       leftRefColumn.table(),
@@ -118,45 +121,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
 
   private int[] unboxSet(Set<Integer> box) {
     return box.stream().mapToInt(x -> x).toArray();
-  }
-
-  private void reportBrokenOneToManySheetRelation(
-      Map<String, Table> tableSet, Relation relation) {
-    ColumnReference leftColumn = relation.leftColumnReference();
-    ColumnReference rightColumn = relation.getOtherColumn(leftColumn);
-    StringColumn oneRestrictedColumn =
-        tableSet.get(rightColumn.table()).stringColumn(leftColumn.column());
-    StringColumn manyRestrictedColumn =
-        tableSet.get(leftColumn.table()).stringColumn(rightColumn.column());
-    Table workingTable = tableSet.get(leftColumn.table());
-
-    MultiValuedMap<String, Pair<String, String>> columnPairs = new HashSetValuedHashMap<>();
-    for (int i = 0; i < manyRestrictedColumn.size(); i++) {
-      columnPairs.put(
-          oneRestrictedColumn.get(i),
-          Pair.of(manyRestrictedColumn.get(i), oneRestrictedColumn.get(i)));
-    }
-    List<Pair<String, String>> listOfBrokenPairs =
-        oneRestrictedColumn.asList().stream()
-            .filter(x -> oneRestrictedColumn.countOccurrences(x) > 1)
-            .map(columnPairs::get)
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
-
-    if (!listOfBrokenPairs.isEmpty()) {
-      int[] invalidRows = unboxSet(getIndexOfDuplicatedColumnValues(oneRestrictedColumn));
-      String description =
-          String.format(
-                  "%s invalid relationship: %s",
-                  listOfBrokenPairs.size(),
-                  listOfBrokenPairs.toString());
-      errors.add(
-              create(
-                      leftColumn.table(),
-                      leftColumn.column(),
-                      relation,
-                      description));
-    }
   }
 
   private void reportOrphanRowsWhenMissingValuesInRelation(
