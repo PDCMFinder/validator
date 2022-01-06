@@ -1,5 +1,7 @@
 package org.pdxfinder.validator.tablevalidation.errorCreators;
 
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
@@ -26,7 +28,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   public List<ValidationError> generateErrors(
           Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     for (Relation relation : tableSetSpecification.getRelations()) {
-      reportRelationErrors(tableSet, relation, tableSetSpecification);
+      reportRelationErrors(tableSet, relation);
     }
     return errors;
   }
@@ -40,17 +42,17 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   }
 
   private void reportRelationErrors(
-          Map<String, Table> tableSet, Relation relation, TableSetSpecification tableSetSpecification) {
+          Map<String, Table> tableSet, Relation relation) {
     if (!bothColumnsPresent(tableSet, relation)) {
       String errorMessage = String
               .format("Columns was not found in relation %s. Columns should be validated prior to checking relations", relation.toString());
       throw new IllegalStateException(errorMessage);
     }
-    runAppropriateValidation(tableSet, relation, tableSetSpecification);
+    runAppropriateValidation(tableSet, relation);
   }
 
   private void runAppropriateValidation(
-      Map<String, Table> tableSet, Relation relation, TableSetSpecification tableSetSpecification) {
+          Map<String, Table> tableSet, Relation relation) {
     RelationType validity = relation.getValidity();
     if (validity.equals(RelationType.TABLE_KEY))
     //TABLE KEY compares two sets and reports what is missing for both sets. Generates an error for each column in the relation.
@@ -80,10 +82,8 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
             tableSet.get(leftRefColumn.table()).stringColumn(rightRefColumn.column());
     int[] indexOfDuplicates = getIndexOfDuplicatedForPair(leftRestrictedColumn, rightRestrictedColumn);
     if (indexOfDuplicates.length > 0) {
-      List<Pair<String, String>> brokenPairs =
-              IntStream.of(indexOfDuplicates)
-                      .mapToObj(x -> Pair.of(leftRestrictedColumn.get(x), rightRestrictedColumn.get(x)))
-                      .collect(Collectors.toList());
+      List<Pair<String, String>> brokenPairs = getSortedPairsFromIndex(indexOfDuplicates, leftRestrictedColumn, rightRestrictedColumn);
+
       String description =
               String.format(
                       "%s invalid relationships between column %s in table %s: %s",
@@ -97,14 +97,40 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     }
   }
 
+  private List<Pair<String, String>> getSortedPairsFromIndex(int[] indexOfDuplicates, StringColumn leftRestrictedColumn, StringColumn rightRestrictedColumn) {
+    MultiValuedMap<String, Pair<String, String>> leftPairsByValue;
+    MultiValuedMap<String, Pair<String, String>> rightPairsByValue;
+    leftPairsByValue = buildMultiValueMap(indexOfDuplicates, leftRestrictedColumn, leftRestrictedColumn, rightRestrictedColumn);
+    rightPairsByValue = buildMultiValueMap(indexOfDuplicates, rightRestrictedColumn, leftRestrictedColumn, rightRestrictedColumn);
+    var leftPairs = flattenPairsByValue(leftPairsByValue);
+    var rightPairs = flattenPairsByValue(rightPairsByValue);
+    leftPairs.addAll(rightPairs);
+    return leftPairs;
+  }
+
+  private List<Pair<String, String>> flattenPairsByValue(MultiValuedMap<String, Pair<String, String>> pairsByValue) {
+    return pairsByValue.entries().stream()
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toList());
+
+  }
+
+  private MultiValuedMap<String, Pair<String, String>> buildMultiValueMap(int[] indexOfDuplicates, StringColumn keyColumn, StringColumn leftRestrictedColumn, StringColumn rightRestrictedColumn) {
+    MultiValuedMap<String, Pair<String, String>> pairsByValue = new HashSetValuedHashMap<>();
+    for (int index : indexOfDuplicates) {
+      pairsByValue.put(keyColumn.get(index), Pair.of(leftRestrictedColumn.get(index), rightRestrictedColumn.get(index)));
+    }
+    return pairsByValue;
+  }
+
   private int[] getIndexOfDuplicatedForPair(
-      StringColumn leftRestrictedColumn, StringColumn rightRestrictedColumn) {
-    Set<Integer> leftIndexOfDuplicates = getIndexOfDuplicatedColumnValues(leftRestrictedColumn);
-    Set<Integer> rightIndexOfDuplicates = getIndexOfDuplicatedColumnValues(rightRestrictedColumn);
-    Set<Integer> allDuplicates = new HashSet<>();
-    allDuplicates.addAll(leftIndexOfDuplicates);
-    allDuplicates.addAll(rightIndexOfDuplicates);
-    return unboxSet(allDuplicates);
+          StringColumn leftColumn, StringColumn rightColumn) {
+    Set<Integer> leftIndexOfDuplicates = getIndexOfDuplicatedColumnValues(leftColumn);
+    Set<Integer> rightIndexOfDuplicates = getIndexOfDuplicatedColumnValues(rightColumn);
+    Set<Integer> duplicates = new HashSet<>();
+    duplicates.addAll(leftIndexOfDuplicates);
+    duplicates.addAll(rightIndexOfDuplicates);
+    return unboxSet(duplicates);
   }
 
   private Set<Integer> getIndexOfDuplicatedColumnValues(StringColumn column) {
