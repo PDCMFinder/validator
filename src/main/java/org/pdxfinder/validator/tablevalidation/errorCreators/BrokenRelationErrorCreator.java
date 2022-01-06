@@ -1,5 +1,6 @@
 package org.pdxfinder.validator.tablevalidation.errorCreators;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
@@ -143,8 +144,16 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
             tableSet.get(child.table()).stringColumn(child.column()),
             tableSet.get(parent.table()).stringColumn(parent.column()));
     if (orphanTable.rowCount() > 0) {
+      List<String> orphanedColumnList = (List<String>) orphanTable.column(relation.rightColumn()).asList();
+      String orphanedColumnValues = StringUtils.join(orphanedColumnList, ", ");
       String description =
-              String.format("%s values in column %s of the %s table are not found in this column", orphanTable.rowCount(), child.column(), child.table());
+              String.format(
+                      "%s values in column %s of the %s table are not found in this column: %s",
+                      orphanTable.rowCount(),
+                      child.column(),
+                      child.table(),
+                      orphanedColumnValues
+              );
       errors.add(
               create(parent.table(), parent.column(), relation, description));
     }

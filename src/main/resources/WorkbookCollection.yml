@@ -220,7 +220,7 @@ workbooks:
 
   - workbook_title: molecular_metadata
     workbook:
-      - table: patient_sample
+      - table: sample
         column_references:
           - name: model_id
             attributes:
@@ -397,7 +397,6 @@ workbooks:
                 right_table: platform
                 right_column: platform_id
 
-
   - workbook_title: cna
     workbook:
       - table: cna
@@ -434,7 +433,6 @@ workbooks:
                 right_table: platform
                 right_column: platform_id
 
-
   - workbook_title: cyto
     workbook:
       - table: cyto
@@ -460,7 +458,6 @@ workbooks:
                 right_table: platform
                 right_column: platform_id
 
-
   - workbook_title: treatment
     workbook:
       - table: treatment
@@ -485,7 +482,6 @@ workbooks:
               - type: TABLE_KEY_MANY_TO_ONE
                 right_table: patient_sample
                 right_column: model_id
-
   - workbook_title: drug
     workbook:
       - table: drug

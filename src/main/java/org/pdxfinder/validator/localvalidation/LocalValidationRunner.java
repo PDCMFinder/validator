@@ -1,23 +1,26 @@
 package org.pdxfinder.validator.localvalidation;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
 import org.pdxfinder.validator.CommandCli;
 import org.pdxfinder.validator.tableutilities.FileReader;
 import org.pdxfinder.validator.tableutilities.TableSetCleaner;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class LocalValidationRunner implements CommandLineRunner {
 
   private ValidationRunnerService validationRunnerService;
   private VariationValidationService variationValidation;
+  private static final Logger log = LoggerFactory.getLogger(LocalValidationRunner.class);
 
   @Autowired
   LocalValidationRunner(ValidationRunnerService validationRunnerService,
@@ -44,16 +47,18 @@ public class LocalValidationRunner implements CommandLineRunner {
       var metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
       var allMetadataTables = readTablesAndCleanTables(providerPath, metadataWorkbookName);
       validationRunnerService.validateWorkbook(providerPath, allMetadataTables,
-          metadataSpecification,
-          metadataWorkbookName);
-      if (molecularMetadataExists(providerPath) && molecularMetadataIsInTableset(
-          allMetadataTables)) {
+              metadataSpecification, metadataWorkbookName);
+      if (molecularMetadataIsInTableset(
+              allMetadataTables)) {
         var molecularMetadataSpecification = getTablSetSpecificiation(molecularMetadataName,
-            providerName);
+                providerName);
         validationRunnerService.validateWorkbook(providerPath, allMetadataTables,
-            molecularMetadataSpecification, molecularMetadataName);
+                molecularMetadataSpecification, molecularMetadataName);
         variationValidation.validateVariantData(providerPath, allMetadataTables);
+      } else {
+        log.info("Complete molecular metadata not found");
       }
+
     }
   }
 
@@ -72,15 +77,4 @@ public class LocalValidationRunner implements CommandLineRunner {
         workbookName);
     return TableSetCleaner.cleanPdxTables(metadataTableSet);
   }
-
-  private boolean molecularMetadataExists(Path providerPath) {
-    int urlLen = providerPath.getNameCount();
-    Path providerName = providerPath.getName(urlLen - 1);
-    String metatadaWorkbook = String.format("%s/%s_molecular_metadata.xlsx", providerPath,
-        providerName.getFileName());
-    File metadataWorkbookFile = new File(metatadaWorkbook);
-    return metadataWorkbookFile.exists();
-  }
-
-
 }
