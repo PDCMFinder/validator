@@ -482,6 +482,7 @@ workbooks:
               - type: TABLE_KEY_MANY_TO_ONE
                 right_table: patient_sample
                 right_column: model_id
+
   - workbook_title: drug
     workbook:
       - table: drug

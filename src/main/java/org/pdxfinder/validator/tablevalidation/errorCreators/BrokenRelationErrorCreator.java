@@ -83,7 +83,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     int[] indexOfDuplicates = getIndexOfDuplicatedForPair(leftRestrictedColumn, rightRestrictedColumn);
     if (indexOfDuplicates.length > 0) {
       List<Pair<String, String>> brokenPairs = getSortedPairsFromIndex(indexOfDuplicates, leftRestrictedColumn, rightRestrictedColumn);
-
       String description =
               String.format(
                       "%s invalid relationships between column %s in table %s: %s",
@@ -153,7 +152,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
   private void reportOrphanRowsWhenMissingValuesInRelation(
       Map<String, Table> tableSet, Relation relation) {
     reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference());
-    reportOrphanRowsFor(tableSet, relation, relation.rightColumnReference());
   }
 
   private void reportOneSidedOrphanedRosWhenMissingValuesInRelation(Map<String, Table> tableSet,
