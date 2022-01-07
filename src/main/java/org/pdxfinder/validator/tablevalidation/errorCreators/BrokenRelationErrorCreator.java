@@ -60,7 +60,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     {
       reportOrphanRowsWhenMissingValuesInRelation(tableSet, relation);
     } else if (validity.equals(RelationType.TABLE_KEY_MANY_TO_ONE)) {
-      reportOneSidedOrphanedRosWhenMissingValuesInRelation(tableSet, relation);
+      reportOrphanRowsWhenMissingValuesInRelation(tableSet, relation);
       //Used for Omic data. Uses same implementation as TABLE_KEY, but only runs on oneside of the relationship.
       //takes of a set of a column and reports if they are represented in the other set.
     } else if (validity.equals(RelationType.ONE_TO_ONE))
@@ -83,7 +83,6 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     int[] indexOfDuplicates = getIndexOfDuplicatedForPair(leftRestrictedColumn, rightRestrictedColumn);
     if (indexOfDuplicates.length > 0) {
       List<Pair<String, String>> brokenPairs = getSortedPairsFromIndex(indexOfDuplicates, leftRestrictedColumn, rightRestrictedColumn);
-
       String description =
               String.format(
                       "%s invalid relationships between column %s in table %s: %s",
@@ -152,13 +151,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
 
   private void reportOrphanRowsWhenMissingValuesInRelation(
       Map<String, Table> tableSet, Relation relation) {
-    reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference());
     reportOrphanRowsFor(tableSet, relation, relation.rightColumnReference());
-  }
-
-  private void reportOneSidedOrphanedRosWhenMissingValuesInRelation(Map<String, Table> tableSet,
-      Relation relation) {
-    reportOrphanRowsFor(tableSet, relation, relation.leftColumnReference());
   }
 
   private void reportOrphanRowsFor(

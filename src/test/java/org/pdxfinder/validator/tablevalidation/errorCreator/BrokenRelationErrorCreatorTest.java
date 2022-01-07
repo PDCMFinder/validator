@@ -30,9 +30,9 @@ public class BrokenRelationErrorCreatorTest {
 
   private final Relation INTRA_TABLE_ONE_TO_MANY =
       RelationTestUtilities.betweenTableColumns(
-          RelationType.ONE_TO_MANY,
-          ColumnReference.of(LEFT_TABLE, "id"),
-          ColumnReference.of(LEFT_TABLE, "table_1_id"));
+              RelationType.TABLE_KEY_MANY_TO_ONE,
+              ColumnReference.of(LEFT_TABLE, "id"),
+              ColumnReference.of(LEFT_TABLE, "table_1_id"));
 
   private final Relation INTRA_TABLE_ONE_TO_ONE =
       RelationTestUtilities.betweenTableColumns(
@@ -83,17 +83,14 @@ public class BrokenRelationErrorCreatorTest {
   @Test
   public void oneToManyError_givenInvalidValidOneToManyJoin_hasErrorEntry() {
     Table leftTable =
-        Table.create(LEFT_TABLE)
-            .addColumns(
-                StringColumn.create("id", Arrays.asList("1", "1", "1")),
-                StringColumn.create("table_1_id", Arrays.asList("1", "2", "3")));
+            Table.create(LEFT_TABLE)
+                    .addColumns(
+                            StringColumn.create("id", Arrays.asList("1", "1", "1")),
+                            StringColumn.create("table_1_id", Arrays.asList("1", "2", "3")));
     Map<String, Table> tableSetWithOneToManyWithErrors = new HashMap<>();
     tableSetWithOneToManyWithErrors.put(LEFT_TABLE, leftTable);
-    assertThat(
-        brokenInterTableRelationErrorCreator
-            .generateErrors(tableSetWithOneToManyWithErrors, ONE_TO_MANY_SPECIFICATION)
-            .isEmpty(),
-        is(false));
+    var brokenTableErrors = brokenInterTableRelationErrorCreator.generateErrors(tableSetWithOneToManyWithErrors, ONE_TO_MANY_SPECIFICATION);
+    assertEquals(brokenTableErrors.size(), 1);
   }
 
   @Test
@@ -133,20 +130,20 @@ public class BrokenRelationErrorCreatorTest {
   public void checkRelationsValid_givenMissingValueInRightColumn_ErrorListWithOrphanLeftRows() {
     Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
     tableSetWithSimpleJoin
-            .get(RIGHT_TABLE)
-            .replaceColumn(StringColumn.create("table_1_id", Collections.EMPTY_LIST));
+            .get(LEFT_TABLE)
+            .replaceColumn(StringColumn.create("id", Collections.EMPTY_LIST));
     ValidationError expected =
             brokenInterTableRelationErrorCreator
                     .create(
-                            RIGHT_TABLE,
-                            "table_1_id",
+                            LEFT_TABLE,
+                            "id",
                             INTER_TABLE_RELATION,
-                            String.format("1 values in column id of the %s table are not found in this column", LEFT_TABLE)
+                            String.format("1 values in column table_1_id of the %s table are not found in this column: 1", RIGHT_TABLE)
                     );
     var brokenInterTableRelationErrors = brokenInterTableRelationErrorCreator
             .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION);
     assertEquals(1, brokenInterTableRelationErrors.size());
-    assertEquals(brokenInterTableRelationErrors.get(0), expected);
+    assertTrue(brokenInterTableRelationErrors.get(0).equals(expected));
   }
 
   @Test
@@ -161,7 +158,7 @@ public class BrokenRelationErrorCreatorTest {
                             LEFT_TABLE,
                             "id",
                             INTER_TABLE_RELATION,
-                            String.format("1 values in column table_1_id of the %s table are not found in this column", RIGHT_TABLE)
+                            String.format("1 values in column table_1_id of the %s table are not found in this column: 1", RIGHT_TABLE)
                     );
     var brokenIntertableRelationErrors = brokenInterTableRelationErrorCreator
             .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION);
@@ -174,23 +171,16 @@ public class BrokenRelationErrorCreatorTest {
       checkRelationsValid_givenMissingValueInLeftAndRightColumn_ErrorListWithMissingValueRows() {
     Map<String, Table> tableSetWithSimpleJoin = makeTableSetWithSimpleJoin();
     tableSetWithSimpleJoin
-            .get(RIGHT_TABLE)
-            .replaceColumn(StringColumn.create("table_1_id", Arrays.asList("not 1", "not 1")));
+            .get(LEFT_TABLE)
+            .replaceColumn(StringColumn.create("id", Arrays.asList("not 1", "not 1")));
     List<ValidationError> expected =
             Arrays.asList(
-                    brokenInterTableRelationErrorCreator
-                            .create(
-                                    RIGHT_TABLE,
-                                    "table_1_id",
-                                    INTER_TABLE_RELATION,
-                                    String.format("1 values in column id of the %s table are not found in this column", LEFT_TABLE)
-                            ),
                     brokenInterTableRelationErrorCreator
                             .create(
                                     LEFT_TABLE,
                                     "id",
                                     INTER_TABLE_RELATION,
-                                    String.format("2 values in column table_1_id of the %s table are not found in this column", RIGHT_TABLE)
+                                    String.format("1 values in column table_1_id of the %s table are not found in this column: 1", RIGHT_TABLE)
                             ));
     var brokenInterTableRelationError = brokenInterTableRelationErrorCreator
             .generateErrors(tableSetWithSimpleJoin, SIMPLE_JOIN_SPECIFICATION);
