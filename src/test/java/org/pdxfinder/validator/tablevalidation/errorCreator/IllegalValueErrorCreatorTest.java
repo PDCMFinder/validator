@@ -1,20 +1,15 @@
-package org.pdxfinder.validator.tablevalidation.error_creator;
+package org.pdxfinder.validator.tablevalidation.errorCreator;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.enums.Charsets;
-import org.pdxfinder.validator.tablevalidation.error_creators.IllegalValueErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.IllegalValueErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
+
+import java.util.*;
 
 public class IllegalValueErrorCreatorTest {
 

@@ -1,11 +1,5 @@
 package org.pdxfinder.validator.localvalidation;
 
-import java.io.InputStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.util.List;
-import java.util.Map;
 import org.pdxfinder.validator.tableutilities.FileReader;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecificationBuilder;
@@ -18,6 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.tablesaw.api.Table;
+
+import java.io.InputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -51,7 +52,7 @@ public class ValidationRunnerService {
     validationService.validate(cleanedMetadataTables, tableSetSpecification);
     String reportId = String.format("Provider:%s Filename:%s",
         providerPath.getFileName().toString(), reportName);
-    log.info(validationService.getJsonReport(reportId));
+    System.out.print(validationService.getJsonReport(reportId));
   }
 
   public TableSetSpecification getTablSetSpecificiation(String workbookName, String providerName) {

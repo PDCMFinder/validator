@@ -1,15 +1,16 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
 import org.junit.Ignore;
 import org.pdxfinder.validator.tablevalidation.RelationTestUtilities;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.Relation;
-import org.pdxfinder.validator.tablevalidation.error_creators.BrokenRelationErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.BrokenRelationErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
 
 public class BrokenRelationErrorBuilderTest {
 
@@ -27,13 +28,14 @@ public class BrokenRelationErrorBuilderTest {
         RelationTestUtilities.betweenTableKeys(
             ColumnReference.of("foo.tsv", "foo_id"), ColumnReference.of("bar.tsv", "foo_id"));
 
-    BrokenRelationErrorBuilder error =
-        brokenTableRelationErrorCreator.create(
-            "bar.tsv",
-            relation,
-            "because [bar.tsv] is missing column [foo_id]");
+    var error =
+            brokenTableRelationErrorCreator.create(
+                    "bar.tsv",
+                    "left_column",
+                    relation,
+                    "because [bar.tsv] is missing column [foo_id]");
 
-    assertEquals(expected, error.build().toString());
+    assertEquals(expected, error.toString());
   }
 
   @Ignore
@@ -50,12 +52,13 @@ public class BrokenRelationErrorBuilderTest {
         RelationTestUtilities.betweenTableKeys(
             ColumnReference.of("foo.tsv", "foo_id"), ColumnReference.of("bar.tsv", "foo_id"));
     Table tableMissingValues =
-        Table.create().addColumns(StringColumn.create("foo_id", Arrays.asList("1", "1")));
-    BrokenRelationErrorBuilder error =
-        brokenTableRelationErrorCreator.create(
-            "bar.tsv",
-            relation,
-            "2 orphan row(s) found in [bar.tsv]");
+            Table.create().addColumns(StringColumn.create("foo_id", Arrays.asList("1", "1")));
+    var error =
+            brokenTableRelationErrorCreator.create(
+                    "bar.tsv",
+                    "left_column",
+                    relation,
+                    "2 orphan row(s) found in [bar.tsv]");
 
     assertEquals(expected, error);
   }
@@ -70,12 +73,13 @@ public class BrokenRelationErrorBuilderTest {
         RelationTestUtilities.betweenTableKeys(
             ColumnReference.of("foo.tsv", "foo_id"), ColumnReference.of("bar.tsv", "foo_id"));
     Table tableMissingValues =
-        Table.create().addColumns(StringColumn.create("foo_id", Arrays.asList("1", "1")));
-    BrokenRelationErrorBuilder error =
-        brokenTableRelationErrorCreator.create(
-            "bar.tsv",
-            relation,
-            "2 orphan row(s) found in [bar.tsv]");
+            Table.create().addColumns(StringColumn.create("foo_id", Arrays.asList("1", "1")));
+    var error =
+            brokenTableRelationErrorCreator.create(
+                    "bar.tsv",
+                    "left_column",
+                    relation,
+                    "2 orphan row(s) found in [bar.tsv]");
     assertEquals(expected, error);
   }
 }

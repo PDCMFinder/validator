@@ -1,6 +1,6 @@
 package org.pdxfinder.validator.tablevalidation.enums;
 
-public enum ErrorTypes {
+public enum ErrorType {
   BROKEN_RELATION("Broken Relation"),
   DUPLICATE_VALUES("Duplicate Values"),
   MISSING_VALUE("Missing Value"),
@@ -11,7 +11,7 @@ public enum ErrorTypes {
 
   private String errorType;
 
-  ErrorTypes(String errorType) {
+  ErrorType(String errorType) {
     this.errorType = errorType;
   }
 

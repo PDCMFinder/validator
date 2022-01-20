@@ -2,22 +2,18 @@ package org.pdxfinder.validator.tablevalidation;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.pdxfinder.validator.tablevalidation.dto.ErrorReport;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.BrokenRelationErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error_creators.DuplicateValueErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error_creators.IllegalValueErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error_creators.MissingColumnErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error_creators.MissingTableErrorCreator;
-import org.pdxfinder.validator.tablevalidation.error_creators.MissingValueErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tech.tablesaw.api.Table;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ValidationService {
@@ -26,13 +22,12 @@ public class ValidationService {
   private List<ValidationError> validationErrors;
 
   public List<ValidationError> validate(Map<String, Table> tableSet,
-      TableSetSpecification tableSetSpecification) {
-    return validateWithDependency(tableSet, tableSetSpecification, Map.of("empty", Table.create()));
+                                        TableSetSpecification tableSetSpecification) {
+    return validateWithDependency(tableSet, tableSetSpecification);
   }
 
   public List<ValidationError> validateWithDependency(
-      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification,
-      Map<String, Table> relationDependencies) {
+          Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     validationErrors = new ArrayList<>();
     checkRequiredTablesPresent(tableSet, tableSetSpecification);
     if (thereAreNoErrors(validationErrors, tableSetSpecification)) {
@@ -107,7 +102,9 @@ public class ValidationService {
   }
 
   public String getJsonReport(String reportName) {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    Gson gson = new GsonBuilder().setPrettyPrinting()
+            .disableHtmlEscaping()
+            .create();
     ErrorReport errorReport = new ErrorReport();
     if (!reportName.isBlank()) {
       errorReport.setId(reportName);

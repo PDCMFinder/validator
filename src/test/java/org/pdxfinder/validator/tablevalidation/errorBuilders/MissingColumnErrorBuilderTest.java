@@ -1,12 +1,12 @@
-package org.pdxfinder.validator.tablevalidation.error;
-
-import static org.junit.Assert.assertEquals;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
 import org.junit.Test;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.enums.ErrorTypes;
-import org.pdxfinder.validator.tablevalidation.error_creators.MissingColumnErrorCreator;
+import org.pdxfinder.validator.tablevalidation.enums.ErrorType;
+import org.pdxfinder.validator.tablevalidation.errorCreators.MissingColumnErrorCreator;
+
+import static org.junit.Assert.assertEquals;
 
 public class MissingColumnErrorBuilderTest {
 
@@ -14,13 +14,13 @@ public class MissingColumnErrorBuilderTest {
 
   @Test
   public void message_givenMissingValue_returnsAppropriateError() {
-    String expected = "Missing column: [column]";
+    String expected = "Required column not found in table";
     String expected_table = "table1";
     ColumnReference columnReference = ColumnReference.of(expected_table, "column");
     ValidationError error = missingColumnErrorCreator.create(columnReference);
-    assertEquals(expected, error.getColumnMessage());
+    assertEquals(expected, error.getCause());
     assertEquals(expected_table, error.getTableName());
-    assertEquals(ErrorTypes.MISSING_COLUMN.getErrorType(), error.getType());
+    assertEquals(ErrorType.MISSING_COLUMN.getErrorType(), error.getErrorType());
   }
 }
 

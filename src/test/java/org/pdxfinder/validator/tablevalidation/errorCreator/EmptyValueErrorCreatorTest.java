@@ -1,16 +1,5 @@
-package org.pdxfinder.validator.tablevalidation.error_creator;
+package org.pdxfinder.validator.tablevalidation.errorCreator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -18,9 +7,16 @@ import org.pdxfinder.validator.tableutilities.TableUtilities;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.MissingValueErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.MissingValueErrorCreator;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class EmptyValueErrorCreatorTest {
 
@@ -78,9 +74,9 @@ public class EmptyValueErrorCreatorTest {
         requireColumn);
     var table_error = error.get(0);
     ValidationError expected_error = expected.get(0);
-    assertEquals(expected_error.getColumnMessage(), table_error.getColumnMessage());
+    assertEquals(expected_error.getCause(), table_error.getCause());
     assertEquals(expected_error.getTableName(), table_error.getTableName());
-    assertEquals(expected_error.getType(), expected_error.getType());
+    assertEquals(expected_error.getErrorType(), expected_error.getErrorType());
   }
 
   @Test
@@ -103,8 +99,8 @@ public class EmptyValueErrorCreatorTest {
         requireColumn);
     ValidationError missing_error = error.get(0);
     ValidationError expected_error = expected.get(0);
-    assertEquals(expected_error.getColumnMessage(), missing_error.getColumnMessage());
+    assertEquals(expected_error.getCause(), missing_error.getCause());
     assertEquals(expected_error.getTableName(), missing_error.getTableName());
-    assertEquals(expected_error.getType(), expected_error.getType());
+    assertEquals(expected_error.getErrorType(), expected_error.getErrorType());
   }
 }

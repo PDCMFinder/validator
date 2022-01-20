@@ -1,10 +1,10 @@
-package org.pdxfinder.validator.tablevalidation.error;
-
-import static org.junit.Assert.assertEquals;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
 import org.junit.Ignore;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.IllegalValueErrorCreator;
+import org.pdxfinder.validator.tablevalidation.errorCreators.IllegalValueErrorCreator;
+
+import static org.junit.Assert.assertEquals;
 
 public class IllegalValueErrorBuilderTest {
 
@@ -14,15 +14,16 @@ public class IllegalValueErrorBuilderTest {
   @Ignore
   public void columnMissing_givenIllegalValueError_returnsAppropriateMessage() {
     String expected =
-        "Error in [bar.tsv] for provider [TEST]: because [bar.tsv] is missing column [foo_id]:\n"
-            + " not_foo_id  |\n"
-            + "--------------";
+            "Error in [bar.tsv] for provider [TEST]: because [bar.tsv] is missing column [foo_id]:\n"
+                    + " not_foo_id  |\n"
+                    + "--------------";
     ValidationError error =
-        illegalValueErrorCreator.create(
-            "bar.tsv",
-            10, "because [bar.tsv] is missing column [foo_id]",
-            "invalidValue", "food_id");
-    assertEquals(expected, error.getColumnMessage());
+            illegalValueErrorCreator.create(
+                    "bar.tsv",
+                    10, "because [bar.tsv] is missing column [foo_id]",
+                    "invalidValue", "food_id");
+    assertEquals(expected, error.getCause());
+    assertEquals(expected, error.getRule());
   }
 
   @Ignore
@@ -54,6 +55,6 @@ public class IllegalValueErrorBuilderTest {
             10,
             "in column [foo_id] found 1 values has characters not contained in US ASCII Alphabet and ._~- : TE#/ST",
             "invalidValues", "foo_id");
-    assertEquals(expected, error.getColumnMessage());
+    assertEquals(expected, error.getRule());
   }
 }

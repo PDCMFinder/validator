@@ -1,14 +1,15 @@
-package org.pdxfinder.validator.tablevalidation.error;
+package org.pdxfinder.validator.tablevalidation.errorBuilders;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
+import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
+import org.pdxfinder.validator.tablevalidation.errorCreators.DuplicateValueErrorCreator;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Test;
-import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
-import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error_creators.DuplicateValueErrorCreator;
+
+import static org.junit.Assert.assertEquals;
 
 public class DuplicateValueErrorBuilderTest {
 
@@ -16,11 +17,11 @@ public class DuplicateValueErrorBuilderTest {
 
   @Test
   public void message() {
-    String expected = "Duplicates values found: [a]";
+    String expected = "Duplicated values found: [a]";
     ColumnReference uniqueColumn = ColumnReference.of("table", "column");
     Set<String> duplicateValues = new HashSet<>(Arrays.asList("a"));
     ValidationError error =
         duplicateValueErrorCreator.create(uniqueColumn, duplicateValues);
-    assertEquals(expected, error.getColumnMessage());
+    assertEquals(expected, error.getCause());
   }
 }

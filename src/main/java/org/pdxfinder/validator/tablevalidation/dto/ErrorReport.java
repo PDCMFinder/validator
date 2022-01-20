@@ -2,6 +2,7 @@ package org.pdxfinder.validator.tablevalidation.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ public class ErrorReport {
   @Expose
   private String id;
 
-  @SerializedName("tableErrors")
+  @SerializedName("fileErrors")
   @Expose
   private List<ValidationError> validationErrors;
 

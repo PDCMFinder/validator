@@ -1,19 +1,20 @@
-package org.pdxfinder.validator.tablevalidation.error_creators;
+package org.pdxfinder.validator.tablevalidation.errorCreators;
 
-import java.util.List;
-import java.util.Map;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dto.ValidationError;
-import org.pdxfinder.validator.tablevalidation.error.MissingColumnErrorBuilder;
+import org.pdxfinder.validator.tablevalidation.errorBuilders.MissingColumnErrorBuilder;
 import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class MissingColumnErrorCreator extends ErrorCreator {
 
   public List<ValidationError> generateErrors(
-      Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
+          Map<String, Table> tableSet, TableSetSpecification tableSetSpecification) {
     for (ColumnReference required : tableSetSpecification.getRequiredColumns()) {
       if (tableIsMissingColumn(tableSet, required)) {
         errors.add(create(required));
@@ -28,6 +29,6 @@ public class MissingColumnErrorCreator extends ErrorCreator {
   }
 
   public ValidationError create(ColumnReference columnReference) {
-    return new MissingColumnErrorBuilder(columnReference).build();
+    return new MissingColumnErrorBuilder(columnReference.table(), columnReference.column()).build();
   }
 }
