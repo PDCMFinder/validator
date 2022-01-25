@@ -112,10 +112,10 @@ public class TableSetCleanerTest {
   public void cleanTablenames_givenHashMarkAndNewlines_clean() {
     List<Column<?>> tableColumns =
         Collections.singletonList(
-            StringColumn.create("column_1", Collections.singletonList("test")));
+            StringColumn.create("column_1", Collections.singletonList("test_data")));
     List<Column<?>> expectedColumns =
         Collections.singletonList(
-            StringColumn.create("column_1", Collections.singletonList("test")));
+            StringColumn.create("column_1", Collections.singletonList("test_data")));
 
     Map<String, Table> tableSet =
         Map.of("#tableName\n\n", Table.create("#tableName\n\n", tableColumns));

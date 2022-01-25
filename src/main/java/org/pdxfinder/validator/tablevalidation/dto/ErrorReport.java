@@ -2,6 +2,7 @@ package org.pdxfinder.validator.tablevalidation.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -9,18 +10,18 @@ public class ErrorReport {
 
   @SerializedName("ID")
   @Expose
-  private String ID;
+  private String id;
 
-  @SerializedName("tableErrors")
+  @SerializedName("fileErrors")
   @Expose
   private List<ValidationError> validationErrors;
 
   public ErrorReport() {
-    this.ID = UUID.randomUUID().toString();
+    this.id = UUID.randomUUID().toString();
   }
 
-  public void setID(String ID) {
-    this.ID = ID;
+  public void setId(String id) {
+    this.id = id;
   }
 
   public List<ValidationError> getValidationErrors() {

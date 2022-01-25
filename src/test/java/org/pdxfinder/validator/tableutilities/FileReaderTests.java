@@ -113,7 +113,8 @@ public class FileReaderTests {
   private void writeTestHeaderToFile(File file) throws IOException {
     Writer output;
     output = new BufferedWriter(new FileWriter(file)); // clears file every time
-    output.append("test\theader");
+    output.append("test\theader\theader2\n");
+    output.append("1\t1\t1");
     output.close();
   }
 }

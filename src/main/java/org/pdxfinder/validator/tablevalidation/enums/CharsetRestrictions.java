@@ -41,7 +41,7 @@ public class CharsetRestrictions {
 
 
   public enum Yml {
-    WORKBOOK_COLLECTION("./data/WorkbookCollection.yml");
+    WORKBOOK_COLLECTION("/WorkbookCollection.yml");
     private String fileUrl;
 
     Yml(String fileLocation) {

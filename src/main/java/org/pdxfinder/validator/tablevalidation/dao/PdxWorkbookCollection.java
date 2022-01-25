@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -20,13 +20,13 @@ public class PdxWorkbookCollection {
   @JsonProperty("workbooks")
   private List<Workbook> workbooks;
 
-  public static PdxWorkbookCollection fromYaml(String yamlUrl) {
+  public static PdxWorkbookCollection fromYaml(InputStream inputStream) {
     PdxWorkbookCollection workbookCollection = new PdxWorkbookCollection();
     var mapper = new ObjectMapper(new YAMLFactory());
     try {
-      workbookCollection = mapper.readValue(new File(yamlUrl), PdxWorkbookCollection.class);
+      workbookCollection = mapper.readValue(inputStream, PdxWorkbookCollection.class);
     } catch (IOException ex) {
-      log.error("Failure to map yml {}", yamlUrl, ex);
+      log.error("Failure to map yml %s", ex);
     }
     workbookCollection.init();
     return workbookCollection;
