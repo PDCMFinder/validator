@@ -167,7 +167,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
       String orphanedColumnValues = StringUtils.join(orphanedColumnList, ", ");
       String description =
               String.format(
-                      "%s values in column %s of the %s table are not found in this column: %s",
+                      "%s values in this column are not found in column %s of the %s table: %s",
                       orphanTable.rowCount(),
                       child.column(),
                       child.table(),
