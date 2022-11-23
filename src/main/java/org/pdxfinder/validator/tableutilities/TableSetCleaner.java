@@ -27,8 +27,8 @@ public class TableSetCleaner {
           "internal_dosing_url");
 
   public static Map<String, Table> cleanPdxTables(Map<String, Table> pdxTableSet) {
-    removeDescriptionColumn(pdxTableSet);
     pdxTableSet = removeHeaderRows(pdxTableSet);
+    removeDescriptionColumn(pdxTableSet);
     pdxTableSet = cleanValues(pdxTableSet, defaultColumnsExemptFromLowercasing);
     pdxTableSet = cleanTableNames(pdxTableSet);
     return pdxTableSet;
@@ -53,7 +53,7 @@ public class TableSetCleaner {
     return tableSet.entrySet().stream()
         .collect(
             Collectors.toMap(
-                Map.Entry::getKey, e -> TableCleaner.removeHeaderRows(e.getValue(), 4)));
+                Map.Entry::getKey, e -> e.getValue().dropWhere(e.getValue().stringColumn("Field").startsWith("#")) ));
   }
 
   static Map<String, Table> cleanValues(

@@ -7,7 +7,8 @@ public enum RelationType {
   TABLE_KEY_MANY_TO_ONE,
   ONE_TO_ONE,
   ONE_TO_MANY,
-  MISSING;
+  MISSING,
+  MODEL_SAMPLE;
 
   public static RelationType parseRelationType(String type) {
     return Arrays.stream(RelationType.values())

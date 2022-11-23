@@ -18,6 +18,7 @@ workbooks:
             categories:
               - male
               - female
+              - other
               - not collected
               - not provided
           - name: history
@@ -27,6 +28,7 @@ workbooks:
             categories:
               - self-assessed
               - genetic
+              - not provided
           - name: initial_diagnosis
             charset: free_text
       - table: patient_sample
@@ -67,6 +69,8 @@ workbooks:
               - metastatic
               - recurrent
               - refractory
+              - not provided
+              - not collected
           - name: primary_site
             attributes:
               - not_empty
@@ -230,12 +234,17 @@ workbooks:
             attributes:
               - not_empty
             charset: url_safe
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: sample
+                right_column: model_id
           - name: sample_origin
             attributes:
               - not_empty
             categories:
               - xenograft
               - patient
+              - cell
           - name: passage
             charset: NUMERIC
           - name: host_strain_name
@@ -277,7 +286,7 @@ workbooks:
               - expression
               - mutation
               - drug dosing
-              - cytogenetic
+              - cytogenetics
           - name: instrument_model
             attributes:
               - not_empty

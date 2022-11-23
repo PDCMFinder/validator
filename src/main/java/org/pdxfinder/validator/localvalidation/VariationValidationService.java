@@ -60,8 +60,12 @@ public class VariationValidationService {
         .map(path -> FileReader.readTsvOrReturnEmpty(path.toFile()))
         .filter(Predicate.not(Table::isEmpty))
         .forEach(
-            table -> validateVariantTable(providerPath, tableName, table, tableSetSpecification));
+            table -> validateVariantTable(providerPath, tableName, lowercaseColumnPlatformID(table), tableSetSpecification));
   }
+  private static Table lowercaseColumnPlatformID(Table table){
+    return table.columnNames().contains("platform_id") ? table.replaceColumn("platform_id", table.column("platform_id")
+            .asStringColumn().lowerCase().setName("platform_id")) : table;
+    }
 
   private void validateVariantTable(Path providerpath, String tableName, Table table,
       TableSetSpecification tableSetSpecification) {
