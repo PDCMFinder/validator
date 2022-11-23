@@ -60,7 +60,7 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     {
       reportOrphanRowsWhenMissingValuesInRelation(tableSet, relation);
     } else if (validity.equals(RelationType.TABLE_KEY_MANY_TO_ONE)) {
-      reportOrphanRowsWhenMissingValuesInRelation(tableSet, relation);
+      reportOrphanRowsWhenMissingValuesForManyToOne(tableSet, relation);
       //Used for Omic data. Uses same implementation as TABLE_KEY, but only runs on oneside of the relationship.
       //takes of a set of a column and reports if they are represented in the other set.
     } else if (validity.equals(RelationType.ONE_TO_ONE))
@@ -69,7 +69,57 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     //printed. Could be improved by checking if the duplicate values are the same or different.
     {
       reportBrokenOneToOneRelation(tableSet, relation);
+    }else if (validity.equals(RelationType.MODEL_SAMPLE))
+    //Validates the patient-sample to model relation using similar implementation  as ONE to ONE
+    //while looping over platform id
+    {
+      reportBrokenPatientSampleModelInMolecularMetadata(tableSet, relation);
     }
+  }
+  private void reportBrokenPatientSampleModelInMolecularMetadata(Map<String, Table> tableSet, Relation relation){
+      if (checkIfRequiredColumnsPresent(tableSet, relation)) {
+        String platform_column = "platform_id";
+        Table subsetTable = tableSet.get(relation.leftTable()).select(relation.rightColumn(), relation.leftColumn(), platform_column);
+        List<String> platform_ids = subsetTable.column(platform_column).unique().asStringColumn().asList();
+        //MultiValuedMap<String, List> brokenPairs = new HashSetValuedHashMap<>();
+        String description = "";
+        int numBrokenPairs= 0;
+        List<Pair<String, String>> brokenPairs = null;
+        for (String platform : platform_ids) {
+          HashMap<String, Table> subsetTableSet = new HashMap<>();
+          subsetTableSet.put(relation.leftTable(), subsetTable.where(subsetTable.stringColumn(platform_column).isEqualTo(platform)));
+          brokenPairs = reportBrokenPatientSampleModelRelation(subsetTableSet, relation, platform);
+          if (brokenPairs != null) {
+            description = description + String.format(" platform id: %s and (sample, model) pairs: %s,",platform, brokenPairs);
+            numBrokenPairs += brokenPairs.size();
+          }
+        }
+        if (description.length()>0) {
+          description = String.format(
+                          "%s invalid relationships between column %s in table %s with%s",
+                          numBrokenPairs, relation.rightColumn(), relation.rightTable(), description.substring(0, description.length() - 1));
+          errors.add(
+                  create(
+                          relation.leftTable(),
+                          relation.leftColumn(),
+                          relation,
+                          description));
+        }
+      }
+  }
+  private List<Pair<String, String>> reportBrokenPatientSampleModelRelation(Map<String, Table> tableSet, Relation relation, String platform) {
+    ColumnReference leftRefColumn = relation.leftColumnReference();
+    ColumnReference rightRefColumn = relation.getOtherColumn(leftRefColumn);
+    StringColumn leftRestrictedColumn =
+            tableSet.get(rightRefColumn.table()).stringColumn(leftRefColumn.column());
+    StringColumn rightRestrictedColumn =
+            tableSet.get(leftRefColumn.table()).stringColumn(rightRefColumn.column());
+    int[] indexOfDuplicates = getIndexOfDuplicatedForPair(leftRestrictedColumn, rightRestrictedColumn);
+    List<Pair<String, String>> brokenPairs = null;
+    if (indexOfDuplicates.length > 0) {
+      brokenPairs = getSortedPairsFromIndex(indexOfDuplicates, leftRestrictedColumn, rightRestrictedColumn);
+    }
+    return brokenPairs;
   }
 
   private void reportBrokenOneToOneRelation(
@@ -160,8 +210,8 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
     Table orphanTable =
         getTableOfOrphanRows(
             tableSet.get(child.table()),
-            tableSet.get(child.table()).stringColumn(child.column()),
-            tableSet.get(parent.table()).stringColumn(parent.column()));
+            tableSet.get(child.table()).column(child.column()).asStringColumn(),
+            tableSet.get(parent.table()).column(parent.column()).asStringColumn());
     if (orphanTable.rowCount() > 0) {
       List<String> orphanedColumnList = (List<String>) orphanTable.column(relation.rightColumn()).asList();
       String orphanedColumnValues = StringUtils.join(orphanedColumnList, ", ");
@@ -177,10 +227,43 @@ public class BrokenRelationErrorCreator extends ErrorCreator {
               create(parent.table(), parent.column(), relation, description));
     }
   }
+  private void reportOrphanRowsWhenMissingValuesForManyToOne(
+          Map<String, Table> tableSet, Relation relation) {
+    reportOrphanRowsForManyToOne(tableSet, relation, relation.rightColumnReference());
+  }
+  private void reportOrphanRowsForManyToOne(
+          Map<String, Table> tableSet, Relation relation, ColumnReference child) {
+    ColumnReference parent = relation.getOtherColumn(child);
+    Table orphanTable =
+            getTableOfOrphanRows(
+                    tableSet.get(parent.table()),
+                    tableSet.get(parent.table()).column(parent.column()).asStringColumn(),
+                    tableSet.get(child.table()).column(child.column()).asStringColumn());
+    if (orphanTable.rowCount() > 0) {
+      List<String> orphanedColumnList = (List<String>) orphanTable.column(relation.rightColumn()).asList();
+      String orphanedColumnValues = StringUtils.join(orphanedColumnList, ", ");
+      String description =
+              String.format(
+                      "%s values are present in this column but missing in column %s of the %s table: %s",
+                      orphanTable.rowCount(),
+                      child.column(),
+                      child.table(),
+                      orphanedColumnValues
+              );
+      errors.add(
+              create(parent.table(), parent.column(), relation, description));
+    }
+  }
 
   private Table getTableOfOrphanRows(Table childTable, StringColumn child, StringColumn parent) {
     Set<String> parentSet = parent.asSet();
     return childTable.where(child.isNotIn(parentSet));
+  }
+  private boolean checkIfRequiredColumnsPresent(Map<String, Table> tableSet, Relation relation){
+    return (!tableMissingColumn(tableSet.get(relation.leftTable()), "platform_id", "sample") &&
+            !tableMissingColumn(tableSet.get(relation.leftTable()), "sample_origin", "sample") &&
+            !tableMissingColumn(tableSet.get(relation.leftTable()), "passage", "sample")
+            );
   }
 
   private boolean bothColumnsPresent(Map<String, Table> tableSet, Relation relation) {
