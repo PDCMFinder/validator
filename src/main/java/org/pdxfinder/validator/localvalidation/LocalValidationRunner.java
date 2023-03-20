@@ -44,8 +44,22 @@ public class LocalValidationRunner implements CommandLineRunner {
     for (String provider : directories) {
       Path providerPath = Path.of(provider);
       String providerName = providerPath.getFileName().toString();
-      var metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
       var allMetadataTables = readTablesAndCleanTables(providerPath, metadataWorkbookName);
+      var metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
+      if(allMetadataTables.containsKey("cell_model") & !allMetadataTables.containsKey("pdx_model")){
+        metadataWorkbookName = "metadata_cell";
+        metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
+        log.info("No pdx model information found.");
+      } else if (allMetadataTables.containsKey("pdx_model") & !allMetadataTables.containsKey("cell_model")) {
+        metadataWorkbookName = "metadata_pdx";
+        metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
+        log.info("No cell model information found.");
+      }else if (allMetadataTables.containsKey("pdx_model") & allMetadataTables.containsKey("cell_model")){
+        metadataWorkbookName = "metadata";
+        metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
+      }else{
+        log.info("No model information table found");
+      }
       validationRunnerService.validateWorkbook(providerPath, allMetadataTables,
               metadataSpecification, metadataWorkbookName);
       if (molecularMetadataIsInTableset(
