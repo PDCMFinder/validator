@@ -4,7 +4,10 @@ import org.pdxfinder.validator.tableutilities.FileReader;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecification;
 import org.pdxfinder.validator.tablevalidation.TableSetSpecificationBuilder;
 import org.pdxfinder.validator.tablevalidation.ValidationService;
+import org.pdxfinder.validator.tablevalidation.ValueRestrictions;
+import org.pdxfinder.validator.tablevalidation.dao.ColumnReference;
 import org.pdxfinder.validator.tablevalidation.dao.PdxWorkbookCollection;
+import org.pdxfinder.validator.tablevalidation.dao.Relation;
 import org.pdxfinder.validator.tablevalidation.dao.Workbook;
 import org.pdxfinder.validator.tablevalidation.enums.CharsetRestrictions.Yml;
 import org.slf4j.Logger;
@@ -19,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @Service

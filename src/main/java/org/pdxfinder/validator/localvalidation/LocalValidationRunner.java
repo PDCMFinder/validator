@@ -48,18 +48,19 @@ public class LocalValidationRunner implements CommandLineRunner {
       var metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
       if(allMetadataTables.containsKey("cell_model") & !allMetadataTables.containsKey("pdx_model")){
         metadataWorkbookName = "metadata_cell";
-        metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
+        metadataSpecification = TableSetSpecification.merge(metadataSpecification, getTablSetSpecificiation(metadataWorkbookName, providerName));
         log.info("No pdx model information found.");
       } else if (allMetadataTables.containsKey("pdx_model") & !allMetadataTables.containsKey("cell_model")) {
         metadataWorkbookName = "metadata_pdx";
-        metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
+        metadataSpecification = TableSetSpecification.merge(metadataSpecification, getTablSetSpecificiation(metadataWorkbookName, providerName));
         log.info("No cell model information found.");
       }else if (allMetadataTables.containsKey("pdx_model") & allMetadataTables.containsKey("cell_model")){
-        metadataWorkbookName = "metadata";
-        metadataSpecification = getTablSetSpecificiation(metadataWorkbookName, providerName);
+        metadataSpecification = TableSetSpecification.merge(metadataSpecification, getTablSetSpecificiation("metadata_pdx", providerName),
+                getTablSetSpecificiation("metadata_cell", providerName));
       }else{
         log.info("No model information table found");
       }
+      metadataSpecification.setTablesetSpecificationName("metadata");
       validationRunnerService.validateWorkbook(providerPath, allMetadataTables,
               metadataSpecification, metadataWorkbookName);
       if (molecularMetadataIsInTableset(
