@@ -273,6 +273,10 @@ workbooks:
             attributes:
               - not_empty
             charset: url_safe
+            relation:
+              - type: TABLE_KEY_MANY_TO_ONE
+                right_table: sample
+                right_column: model_id
           - name: sample_id
             attributes:
               - not_empty
@@ -280,7 +284,7 @@ workbooks:
             relation:
               - type: TABLE_KEY_MANY_TO_ONE
                 right_table: sample
-                right_column: model_id
+                right_column: sample_id
           - name: sample_origin
             attributes:
               - not_empty
