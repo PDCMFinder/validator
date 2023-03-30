@@ -69,6 +69,7 @@ workbooks:
               - metastatic
               - recurrent
               - refractory
+              - pre-malignant
               - not provided
               - not collected
           - name: primary_site
@@ -159,7 +160,7 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - type: TABLE_KEY
+              - type: TABLE_KEY_MANY_TO_ONE
                 right_table: patient_sample
                 right_column: model_id
           - name: name
@@ -203,7 +204,7 @@ workbooks:
               - not_empty
               - unique
             relation:
-              - type: TABLE_KEY
+              - type: TABLE_KEY_MANY_TO_ONE
                 right_table: patient_sample
                 right_column: model_id
           - name: host_strain_name
