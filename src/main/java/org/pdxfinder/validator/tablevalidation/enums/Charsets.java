@@ -28,7 +28,7 @@ public enum Charsets {
           "Value must be of the correct format. Format:[MMM YYYY]"
   ),
   PMID_FORMAT(
-      "(?i)^(?:pmid:\\s?[0-9]{8},?\\s?)*$",
+      "(?i)^(?:pmid:\\s?[0-9]{1,8},?\\s?)*$",
           "Value must be of the correct format. Requires comma separated list if multiple values. Format: PMID: [8 digit id]"
   );
 

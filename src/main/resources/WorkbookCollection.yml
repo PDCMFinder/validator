@@ -148,6 +148,7 @@ workbooks:
             categories:
               - transnational access
               - collaboration only
+              - not provided
           - name: form_url
           - name: database_url
 

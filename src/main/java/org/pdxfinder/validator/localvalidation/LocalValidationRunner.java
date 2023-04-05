@@ -60,7 +60,9 @@ public class LocalValidationRunner implements CommandLineRunner {
       }else{
         log.info("No model information table found");
       }
-      metadataSpecification.setTablesetSpecificationName("metadata");
+      metadataWorkbookName = "metadata";
+      metadataSpecification.setTablesetSpecificationName(metadataWorkbookName);
+
       validationRunnerService.validateWorkbook(providerPath, allMetadataTables,
               metadataSpecification, metadataWorkbookName);
       if (molecularMetadataIsInTableset(
